@@ -1,10 +1,11 @@
 %{ open Ast %}
-%token PRINT
+
+%token QUOTE PRINT
 %token <string> LITERAL
 
 %start expr
 %type <Ast.expr> expr %%
 
 expr:
-expr PLUS expr { Binop ( $1 , Add, $3 ) }
+QUOTE expr QUOTE { quote }
 | LITERAL { Lit ( $1 ) }

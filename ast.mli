@@ -1,4 +1,5 @@
 type operator = Print
 
 type expr =
-| Lit of string
+  Stmt of Lit
+  | Lit of string

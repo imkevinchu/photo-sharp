@@ -1,5 +1,5 @@
 open Ast
-let print exp = 
+let rec print exp str= 
   match exp with
   Lit ( x ) -> x
 let _ =
