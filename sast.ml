@@ -16,7 +16,7 @@ type sstmt =
   | SExpr of sexpr
   | SIf of sexpr * sstmt * sstmt
   | SWhile of sexpr * sstmt
-  | SPrint of expr
+  | SPrint of sexpr
 
 type sprogram = {
   slocals : (typ * string) list;
