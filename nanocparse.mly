@@ -48,7 +48,7 @@ stmt:
   | LBRACE stmt_list RBRACE                 { Block $2              }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If ($3, $5, $7)       }
   | WHILE LPAREN expr RPAREN stmt           { While ($3, $5)        }
-  | PRINT LPAREN STRLIT RPAREN              { Print($3)             }
+  | PRINT LPAREN expr RPAREN              { Print($3)             }
 
 expr:
     LITERAL          { Literal($1)            }
