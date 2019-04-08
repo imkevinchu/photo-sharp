@@ -6,6 +6,7 @@ type sexpr = typ * sx
 and sx =
     SLiteral of int
   | SFliteral of string
+  | SStrLit of string
   | SBoolLit of bool
   | SId of string
   | SBinop of sexpr * op * sexpr

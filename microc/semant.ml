@@ -38,7 +38,8 @@ let check (globals, functions) =
       fname = name; 
       formals = [(ty, "x")];
       locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", Int);
+    in List.fold_left add_bind StringMap.empty [ ("prints", String);
+                                                 ("print", Int);
 			                         ("printb", Bool);
 			                         ("printf", Float);
 			                         ("printbig", Int) ]
@@ -95,6 +96,7 @@ let check (globals, functions) =
         Literal  l -> (Int, SLiteral l)
       | Fliteral l -> (Float, SFliteral l)
       | BoolLit l  -> (Bool, SBoolLit l)
+      | StrLit l -> (String, SStrLit l)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
