@@ -57,11 +57,11 @@ let translate (globals, functions) =
   let printf_func : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
 
-  let prints_t : L.lltype = 
+(*  let prints_t : L.lltype = 
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
-  let printf_func : L.llvalue = 
+  let prints_func : L.llvalue = 
       L.declare_function "prints" prints_t the_module in
-
+*)
 
   let printbig_t : L.lltype =
       L.function_type i32_t [| i32_t |] in
@@ -85,7 +85,7 @@ let translate (globals, functions) =
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
     let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
-    and str_str = L.build_global_stringptr "s\n" "fmt" builder
+    and str_str = L.build_global_stringptr "%s\n" "fmt" builder
     and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
 
     (* Construct the function's "locals": formal arguments and locally
