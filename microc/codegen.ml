@@ -32,7 +32,7 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and void_t     = L.void_type   context
-  and string_t   = L.pointer_type (L.i8_type context) in
+  and string_t   = L.i8_type context in
 
   (* Return the LLVM type for a MicroC type *)
   let ltype_of_typ = function
