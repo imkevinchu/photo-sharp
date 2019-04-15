@@ -32,7 +32,7 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and void_t     = L.void_type   context
-  and string_t   = L.i8_type context in
+  and string_t   = L.pointer_type (L.i8_type context) in
 
   (* Return the LLVM type for a MicroC type *)
   let ltype_of_typ = function
@@ -56,12 +56,6 @@ let translate (globals, functions) =
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
   let printf_func : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
-
-(*  let prints_t : L.lltype = 
-      L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
-  let prints_func : L.llvalue = 
-      L.declare_function "prints" prints_t the_module in
-*)
 
   let printbig_t : L.lltype =
       L.function_type i32_t [| i32_t |] in

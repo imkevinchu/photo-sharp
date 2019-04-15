@@ -27,6 +27,7 @@ microc.native :
 clean :
 	ocamlbuild -clean
 	rm -rf testall.log ocamlllvm *.diff
+	rm *.s *.err *.ll
 
 # Testing the "printbig" example
 
