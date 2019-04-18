@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN
+%token SEMI SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN
 %token NOT EQ NEQ LT LEQ GT GEQ AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING
 %token <int> LITERAL
@@ -38,12 +38,19 @@ decls:
  | decls fdecl { (fst $1, ($2 :: snd $1)) }
 
 fdecl:
-   typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
+  typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE SEMI
      { { typ = $1;
 	 fname = $2;
 	 formals = List.rev $4;
 	 locals = List.rev $7;
 	 body = List.rev $8 } }
+
+  | typ ID LPAREN formals_opt RPAREN SEMI LBRACE SEMI vdecl_list stmt_list RBRACE SEMI
+     { { typ = $1;
+	 fname = $2;
+	 formals = List.rev $4;
+	 locals = List.rev $9;
+	 body = List.rev $10 } }
 
 formals_opt:
     /* nothing */ { [] }
@@ -74,12 +81,13 @@ stmt_list:
 stmt:
     expr SEMI                               { Expr $1               }
   | RETURN expr_opt SEMI                    { Return $2             }
-  | LBRACE stmt_list RBRACE                 { Block(List.rev $2)    }
+  | LBRACE SEMI stmt_list RBRACE SEMI       { Block(List.rev $3)    }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7)        }
-  | FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
+  | FOR LPAREN expr_opt SEMICOL expr SEMICOL expr_opt RPAREN stmt
                                             { For($3, $5, $7, $9)   }
   | WHILE LPAREN expr RPAREN stmt           { While($3, $5)         }
+
 
 expr_opt:
     /* nothing */ { Noexpr }
@@ -108,6 +116,8 @@ expr:
   | ID ASSIGN expr   { Assign($1, $3)         }
   | ID LPAREN args_opt RPAREN { Call($1, $3)  }
   | LPAREN expr RPAREN { $2                   }
+  | LPAREN expr RPAREN SEMI { $2                   }
+  | SEMI                                    { Noexpr }
 
 args_opt:
     /* nothing */ { [] }
