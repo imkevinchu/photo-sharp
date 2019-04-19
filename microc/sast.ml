@@ -23,19 +23,21 @@ type sstmt =
   | SFor of sexpr * sexpr * sexpr * sstmt
   | SWhile of sexpr * sstmt
 
+type svar_decl = typ * string * sexpr
+
 type sfunc_decl = {
     styp : typ;
     sfname : string;
-    sformals : bind list;
-    slocals : bind list;
+    sformals : var_decl list;
+    slocals : var_decl list;
     sbody : sstmt list;
   }
 
-type sprogram = bind list * sfunc_decl list
+type sprogram = svar_decl list * sfunc_decl list
 
 (* Pretty-printing functions *)
 
-let rec string_of_sexpr (t, e) =
+(* let rec string_of_sexpr (t, e) =
   "(" ^ string_of_typ t ^ " : " ^ (match e with
     SLiteral(l) -> string_of_int l
   | SBoolLit(true) -> "true"
@@ -50,7 +52,7 @@ let rec string_of_sexpr (t, e) =
   | SCall(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
   | SNoexpr -> ""
-				  ) ^ ")"				     
+				  ) ^ ")"
 
 let rec string_of_sstmt = function
     SBlock(stmts) ->
@@ -76,4 +78,4 @@ let string_of_sfdecl fdecl =
 
 let string_of_sprogram (vars, funcs) =
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
-  String.concat "\n" (List.map string_of_sfdecl funcs)
+  String.concat "\n" (List.map string_of_sfdecl funcs) *)

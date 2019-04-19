@@ -36,6 +36,7 @@ decls:
    /* nothing */ { ([], [])               }
  | decls vdecl { (($2 :: fst $1), snd $1) }
  | decls fdecl { (fst $1, ($2 :: snd $1)) }
+ | decls vardecl {  }
 
 fdecl:
    typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
@@ -65,7 +66,10 @@ vdecl_list:
   | vdecl_list vdecl { $2 :: $1 }
 
 vdecl:
-   typ ID SEMI { ($1, $2) }
+    typ ID SEMI { ($1, $2) }
+
+vardecl:
+    typ ID ASSIGN expr SEMI { VDecl($1, $2, $4) }
 
 stmt_list:
     /* nothing */  { [] }

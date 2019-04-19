@@ -32,10 +32,12 @@ type stmt =
 type func_decl = {
     typ : typ;
     fname : string;
-    formals : bind list;
-    locals : bind list;
+    formals : var_decl list;
+    locals : var_decl list;
     body : stmt list;
   }
+
+type var_decl = VDecl of typ * string * expr
 
 type program = bind list * func_decl list
 
@@ -92,9 +94,16 @@ let string_of_typ = function
   | Bool -> "bool"
   | Float -> "float"
   | Void -> "void"
-  | String -> "string" 
+  | String -> "string"
 
-let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
+(* let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
+
+let string_of_vardecl = function
+  VDecl (t, id, e) -> string_of_typ t ^ " " ^ id ^ " = " ^ string_of_expr e ^ ";\n" *)
+
+let string_of_vdecl = function
+    VDecl(t, id, Noexpr) -> string_of_typ t ^ " " ^ id ^ ";\n"
+  | VDecl(t, id, e) -> string_of_typ t ^ " " ^ id ^ " = " ^ string_of_expr e ^ ";\n"
 
 let string_of_fdecl fdecl =
   string_of_typ fdecl.typ ^ " " ^
