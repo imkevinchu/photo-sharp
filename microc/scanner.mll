@@ -6,14 +6,16 @@ let digit = ['0' - '9']
 let digits = digit+
 
 rule token = parse
-  [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
+  [' ' '\t' '\r'] { token lexbuf } (* Whitespace *)
 | "/*"     { comment lexbuf }           (* Comments *)
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | '{'      { LBRACE }
 | '}'      { RBRACE }
-| ';'      { SEMI }
+| ['\n']+      { SEMI }
 | ','      { COMMA }
+| ':'      { COL }
+| ';'      { SEMICOL }
 | '+'      { PLUS }
 | '-'      { MINUS }
 | '*'      { TIMES }
@@ -48,5 +50,5 @@ rule token = parse
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
 and comment = parse
-  "*/" { token lexbuf }
+  ['*']['/']['\n']* { token lexbuf }
 | _    { comment lexbuf }

@@ -1,4 +1,5 @@
-int main()
+int main():
 {
-  return true; /* Should return int */
+  return true
+  /* Should return int */
 }

@@ -1,8 +1,11 @@
-int main()
+int main():
 {
-  int i;
+  int i
 
-  for (i = 0; i ; i = i + 1) {} /* i is an integer, not Boolean */
+  for (i = 0; i ; i = i + 1):
+  {
+  }
+  /* i is an integer, not Boolean */
 
-  return 0;
+  return 0
 }

@@ -1,10 +1,10 @@
-void foo(int a)
+void foo(int a):
 {
-  print(a + 3);
+  print(a + 3)
 }
 
-int main()
+int main():
 {
-  foo(40);
-  return 0;
+  foo(40)
+  return 0
 }

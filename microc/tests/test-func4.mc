@@ -1,14 +1,14 @@
-int add(int a, int b)
+int add(int a, int b):
 {
-  int c;
-  c = a + b;
-  return c;
+  int c
+  c = a + b
+  return c
 }
 
-int main()
+int main():
 {
-  int d;
-  d = add(52, 10);
-  print(d);
-  return 0;
+  int d
+  d = add(52, 10)
+  print(d)
+  return 0
 }

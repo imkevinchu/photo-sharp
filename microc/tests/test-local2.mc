@@ -1,14 +1,15 @@
-int foo(int a, bool b)
+int foo(int a, bool b):
 {
-  int c;
-  bool d;
+  int c
+  bool d
 
-  c = a;
+  c = a
 
-  return c + 10;
+  return c + 10
 }
 
-int main() {
- print(foo(37, false));
- return 0;
+int main():
+{
+ print(foo(37, false))
+ return 0
 }

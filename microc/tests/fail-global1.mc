@@ -1,9 +1,10 @@
-int c;
-bool b;
-void a; /* global variables should not be void */
+int c
+bool b
+void a
+/* global variables should not be void */
 
 
-int main()
+int main():
 {
-  return 0;
+  return 0
 }

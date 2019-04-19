@@ -1,14 +1,15 @@
-int a;
-bool b;
+int a
+bool b
 
-void foo(int c, bool d)    
+void foo(int c, bool d):
 {
-  int d;
-  bool e;
-  b + a; /* Error: bool + int */
+  int d
+  bool e
+  b + a
+  /* Error: bool + int */
 }
 
-int main()
+int main():
 {
-  return 0;
+  return 0
 }

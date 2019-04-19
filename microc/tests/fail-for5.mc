@@ -1,10 +1,12 @@
-int main()
+int main():
 {
-  int i;
+  int i
 
-  for (i = 0; i < 10 ; i = i + 1) {
-    foo(); /* Error: no function foo */
+  for (i = 0; i < 10 ; i = i + 1):
+  {
+    foo()
+    /* Error: no function foo */
   }
 
-  return 0;
+  return 0
 }

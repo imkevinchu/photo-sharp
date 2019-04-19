@@ -1,5 +1,5 @@
-int main()
+int main():
 {
-  prints("hello world");
-  return 0;
+  prints("hello world")
+  return 0
 }

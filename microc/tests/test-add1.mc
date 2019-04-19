@@ -1,10 +1,10 @@
-int add(int x, int y)
+int add(int x, int y):
 {
-  return x + y;
+  return x + y
 }
 
-int main()
+int main():
 {
-  print( add(17, 25) );
-  return 0;
+  print( add(17, 25) )
+  return 0
 }

@@ -1,8 +1,11 @@
-int main()
+int main():
 {
-  int i;
+  int i
 
-  for (i = 0; j < 10 ; i = i + 1) {} /* j undefined */
+  for (i = 0; j < 10 ; i = i + 1):
+  {
+  }
+  /* j undefined */
 
-  return 0;
+  return 0
 }

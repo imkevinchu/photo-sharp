@@ -1,10 +1,17 @@
-void foo()
+void foo():
 {
-  if (true) return 42; /* Should return void */
-  else return;
+  if (true):
+  {
+    return 42
+    /* Should return void */
+  }
+  else:
+  {
+    return
+  }
 }
 
-int main()
+int main():
 {
-  return 42;
+  return 42
 }

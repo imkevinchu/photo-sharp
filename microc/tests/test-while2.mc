@@ -1,16 +1,17 @@
-int foo(int a)
+int foo(int a):
 {
-  int j;
-  j = 0;
-  while (a > 0) {
-    j = j + 2;
-    a = a - 1;
+  int j
+  j = 0
+  while (a > 0):
+  {
+    j = j + 2
+    a = a - 1
   }
-  return j;
+  return j
 }
 
-int main()
+int main():
 {
-  print(foo(7));
-  return 0;
+  print(foo(7))
+  return 0
 }

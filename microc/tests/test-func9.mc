@@ -1,11 +1,11 @@
-void foo(int a)
+void foo(int a):
 {
-  print(a + 3);
-  return;
+  print(a + 3)
+  return
 }
 
-int main()
+int main():
 {
-  foo(40);
-  return 0;
+  foo(40)
+  return 0
 }

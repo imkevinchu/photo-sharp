@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token SEMI SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN
+%token SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN
 %token NOT EQ NEQ LT LEQ GT GEQ AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING
 %token <int> LITERAL
@@ -38,19 +38,12 @@ decls:
  | decls fdecl { (fst $1, ($2 :: snd $1)) }
 
 fdecl:
-  typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE SEMI
+  typ ID LPAREN formals_opt RPAREN COL SEMI LBRACE SEMI vdecl_list stmt_list RBRACE SEMI
      { { typ = $1;
 	 fname = $2;
 	 formals = List.rev $4;
-	 locals = List.rev $7;
-	 body = List.rev $8 } }
-
-  | typ ID LPAREN formals_opt RPAREN SEMI LBRACE SEMI vdecl_list stmt_list RBRACE SEMI
-     { { typ = $1;
-	 fname = $2;
-	 formals = List.rev $4;
-	 locals = List.rev $9;
-	 body = List.rev $10 } }
+	 locals = List.rev $10;
+	 body = List.rev $11 } }
 
 formals_opt:
     /* nothing */ { [] }
@@ -81,12 +74,13 @@ stmt_list:
 stmt:
     expr SEMI                               { Expr $1               }
   | RETURN expr_opt SEMI                    { Return $2             }
+  | RETURN SEMI                             { Return Noexpr         }
   | LBRACE SEMI stmt_list RBRACE SEMI       { Block(List.rev $3)    }
-  | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
-  | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7)        }
-  | FOR LPAREN expr_opt SEMICOL expr SEMICOL expr_opt RPAREN stmt
-                                            { For($3, $5, $7, $9)   }
-  | WHILE LPAREN expr RPAREN stmt           { While($3, $5)         }
+  | IF LPAREN expr RPAREN COL SEMI stmt %prec NOELSE { If($3, $7, Block([])) }
+  | IF LPAREN expr RPAREN COL SEMI stmt ELSE COL SEMI stmt   { If($3, $7, $11)        }
+  | FOR LPAREN expr_opt SEMICOL expr SEMICOL expr_opt RPAREN COL SEMI stmt
+                                            { For($3, $5, $7, $11)   }
+  | WHILE LPAREN expr RPAREN COL SEMI stmt           { While($3, $7)         }
 
 
 expr_opt:
@@ -117,7 +111,6 @@ expr:
   | ID LPAREN args_opt RPAREN { Call($1, $3)  }
   | LPAREN expr RPAREN { $2                   }
   | LPAREN expr RPAREN SEMI { $2                   }
-  | SEMI                                    { Noexpr }
 
 args_opt:
     /* nothing */ { [] }
