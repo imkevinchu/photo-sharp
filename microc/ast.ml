@@ -37,9 +37,10 @@ type func_decl = {
     body : stmt list;
   }
 
-type var_decl = VDecl of typ * string * expr
+(* type var_decl = VDecl of typ * string * expr *)
 
-type program = bind list * func_decl list * var_decl
+(* type program = bind list * func_decl list * var_decl *)
+type program = bind list * func_decl list
 
 (* Pretty-printing functions *)
 
@@ -98,8 +99,8 @@ let string_of_typ = function
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
-let string_of_vardecl = function
-  VDecl (t, id, e) -> string_of_typ t ^ " " ^ id ^ " = " ^ string_of_expr e ^ ";\n"
+(* let string_of_vardecl = function
+  VDecl (t, id, e) -> string_of_typ t ^ " " ^ id ^ " = " ^ string_of_expr e ^ ";\n" *)
 
 let string_of_fdecl fdecl =
   string_of_typ fdecl.typ ^ " " ^
