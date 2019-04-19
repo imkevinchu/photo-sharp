@@ -12,6 +12,8 @@ open Ast
 %token <string> STRLIT
 %token <string> ID FLIT
 %token EOF
+%token ARRAY PIX PXGREEN PXBLUE PXRED RED GREEN BLUE IMAGE ALBUM CAPT GRAD
+%token NULL IMPORT SAVE IN
 
 %start program
 %type <Ast.program> program
