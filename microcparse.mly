@@ -6,7 +6,7 @@ open Ast
 
 %token SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN
 %token NOT EQ NEQ LT LEQ GT GEQ AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING IMAGE CAPTION ALBUM ARR PRESET
+%token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> STRLIT
@@ -38,12 +38,12 @@ decls:
  | decls fdecl { (fst $1, ($2 :: snd $1)) }
 
 fdecl:
-  PRESET typ ID LPAREN formals_opt RPAREN COL SEMI LBRACE SEMI vdecl_list stmt_list RBRACE SEMI
-     { { typ = $2;
-	 fname = $3;
-	 formals = List.rev $5;
-	 locals = List.rev $11;
-	 body = List.rev $12 } }
+  typ ID LPAREN formals_opt RPAREN COL SEMI LBRACE SEMI vdecl_list stmt_list RBRACE SEMI
+     { { typ = $1;
+	 fname = $2;
+	 formals = List.rev $4;
+	 locals = List.rev $10;
+	 body = List.rev $11 } }
 
 formals_opt:
     /* nothing */ { [] }
@@ -59,10 +59,6 @@ typ:
   | FLOAT { Float }
   | VOID  { Void  }
   | STRING { String }
-  | IMAGE  { Image }
-  | CAPTION { Caption }
-  | ALBUM { Album }
-  | ARR { Array }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -93,7 +89,7 @@ expr_opt:
 
 expr:
     LITERAL          { Literal($1)            }
-  | FLIT	            { Fliteral($1)           }
+  | FLIT	     { Fliteral($1)           }
   | BLIT             { BoolLit($1)            }
   | ID               { Id($1)                 }
   | STRLIT           { StrLit($1)             }

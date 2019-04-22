@@ -39,7 +39,7 @@ let check (globals, functions) =
       formals = [(ty, "x")];
       locals = []; body = [] } map
     in List.fold_left add_bind StringMap.empty [ ("prints", String);
-                                                 ("print", Int);
+                                                 ("print", Default);
 			                         ("printb", Bool);
 			                         ("printf", Float);
 			                         ("printbig", Int) ]
@@ -75,8 +75,13 @@ let check (globals, functions) =
     check_binds "local" func.locals;
 
     (* Raise an exception if the given rvalue type cannot be assigned to
-       the given lvalue type *)
+      the given lvalue type *)
     let check_assign lvaluet rvaluet err =
+       if lvaluet = rvaluet then lvaluet else raise (Failure err)
+    in   
+
+    let check_assign2 lvaluet rvaluet err =
+       if lvaluet = Ast.Default then rvaluet else
        if lvaluet = rvaluet then lvaluet else raise (Failure err)
     in   
 
@@ -142,7 +147,7 @@ let check (globals, functions) =
             let (et, e') = expr e in 
             let err = "illegal argument found " ^ string_of_typ et ^
               " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
-            in (check_assign ft et err, e')
+            in (check_assign2 ft et err, e')
           in 
           let args' = List.map2 check_call fd.formals args
           in (fd.typ, SCall(fname, args'))

@@ -4,7 +4,6 @@ open Ast
 
 type sexpr = typ * sx
 and sx =
-
     SLiteral of int
   | SFliteral of string
   | SStrLit of string

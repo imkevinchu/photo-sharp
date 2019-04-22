@@ -32,10 +32,6 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and void_t     = L.void_type   context
-  and image_t   = L.pointer_type (L.i8_type context)
-  and caption_t   = L.pointer_type (L.i8_type context)
-  and albumt_t   = L.pointer_type (L.i8_type context)
-  and array_t   = L.pointer_type (L.i8_type context)
   and string_t   = L.pointer_type (L.i8_type context) in
 
   (* Return the LLVM type for a MicroC type *)
@@ -45,10 +41,6 @@ let translate (globals, functions) =
     | A.Float -> float_t
     | A.Void  -> void_t
     | A.String -> string_t
-    | A.Image -> string_t
-    | A.Caption -> string_t
-    | A.Album-> string_t
-    | A.Array -> string_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -169,7 +161,12 @@ let translate (globals, functions) =
 	  | A.Neg                  -> L.build_neg
           | A.Not                  -> L.build_not) e' "tmp" builder
       | SCall ("print", [e]) | SCall ("printb", [e]) ->
-	  L.build_call printf_func [| int_format_str ; (expr builder e) |]
+        let (t, a) = e in
+          (match t with
+             A.Int -> L.build_call printf_func [| int_format_str ; (expr builder e) |]
+           | A.Float -> L.build_call printf_func [| float_format_str ; (expr builder e) |]
+           | A.String -> L.build_call printf_func [| str_str; (expr builder e) |]
+           | A.Bool -> L.build_call printf_func [| int_format_str ; (expr builder e) |])
 	    "printf" builder
       | SCall ("prints", [e]) ->
           L.build_call printf_func [| str_str; (expr builder e) |]
