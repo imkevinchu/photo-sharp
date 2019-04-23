@@ -41,6 +41,10 @@ let translate (globals, functions) =
     | A.Float -> float_t
     | A.Void  -> void_t
     | A.String -> string_t
+    | A.Image -> string_t
+    | A.Caption -> string_t
+    | A.Album -> string_t
+    | A.Array -> string_t
   in
 
   (* Create a map of global variables after creating each *)
