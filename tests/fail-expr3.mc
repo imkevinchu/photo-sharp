@@ -1,7 +1,7 @@
-int a
-float b
+preset int a
+preset float b
 
-void foo(int c, float d):
+preset void foo(int c, float d):
 {
   int d
   float e
@@ -9,7 +9,7 @@ void foo(int c, float d):
   /* Error: float + int */
 }
 
-int main():
+preset int main():
 {
   return 0
 }

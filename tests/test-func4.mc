@@ -1,11 +1,11 @@
-int add(int a, int b):
+preset int add(int a, int b):
 {
   int c
   c = a + b
   return c
 }
 
-int main():
+preset int main():
 {
   int d
   d = add(52, 10)

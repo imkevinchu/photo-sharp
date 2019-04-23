@@ -1,12 +1,12 @@
-void foo(int a, bool b):
+preset void foo(int a, bool b):
 {
 }
 
-void bar():
+preset void bar():
 {
 }
 
-int main():
+preset int main():
 {
   foo(42, true)
   foo(42, bar())

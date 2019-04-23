@@ -1,4 +1,4 @@
-int main():
+preset int main():
 {
   print(42)
   print(71)

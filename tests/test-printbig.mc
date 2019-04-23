@@ -8,7 +8,7 @@
  * an executable
  */
 
-int main():
+preset int main():
 {
   /*print HELLO WORLD*/
   printbig(72)

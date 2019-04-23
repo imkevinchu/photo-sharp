@@ -1,10 +1,10 @@
-void foo(int a):
+preset void foo(int a):
 {
   print(a + 3)
   return
 }
 
-int main():
+preset int main():
 {
   foo(40)
   return 0

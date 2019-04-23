@@ -1,4 +1,4 @@
 /* Should be illegal to redefine */
-void print():
+preset void print():
 {
 }

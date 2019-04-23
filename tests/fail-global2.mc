@@ -1,10 +1,10 @@
-int b
-bool c
-int a
-int b
+preset int b
+preset bool c
+preset int a
+preset int b
 /* Duplicate global variable */
 
-int main():
+preset int main():
 {
   return 0
 }

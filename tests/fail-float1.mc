@@ -1,4 +1,4 @@
-int main():
+preset int main():
 {
   -3.5 && 1
   /* Float with AND? */

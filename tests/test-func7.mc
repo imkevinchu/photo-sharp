@@ -1,11 +1,11 @@
-int a
+preset int a
 
-void foo(int c):
+preset void foo(int c):
 {
   a = c + 42
 }
 
-int main():
+preset int main():
 {
   foo(73)
   print(a)

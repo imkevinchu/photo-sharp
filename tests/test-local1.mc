@@ -1,4 +1,4 @@
-void foo(bool i):
+preset void foo(bool i):
 {
   int i
   /* Should hide the formal i */
@@ -7,7 +7,7 @@ void foo(bool i):
   print(i + i)
 }
 
-int main():
+preset int main():
 {
   foo(true)
   return 0

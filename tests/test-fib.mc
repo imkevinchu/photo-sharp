@@ -1,4 +1,4 @@
-int fib(int x):
+preset int fib(int x):
 {
   if (x < 2):
   {
@@ -7,7 +7,7 @@ int fib(int x):
   return fib(x-1) + fib(x-2)
 }
 
-int main():
+preset int main():
 {
   print(fib(0))
   print(fib(1))

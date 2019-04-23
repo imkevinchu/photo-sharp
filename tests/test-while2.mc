@@ -1,4 +1,4 @@
-int foo(int a):
+preset int foo(int a):
 {
   int j
   j = 0
@@ -10,7 +10,7 @@ int foo(int a):
   return j
 }
 
-int main():
+preset int main():
 {
   print(foo(7))
   return 0

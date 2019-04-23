@@ -1,8 +1,8 @@
-int i
-bool b
-int j
+preset int i
+preset bool b
+preset int j
 
-int main():
+preset int main():
 {
   i = 42
   j = 10

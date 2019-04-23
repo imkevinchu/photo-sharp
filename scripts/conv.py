@@ -6,12 +6,26 @@ def main():
   f = open(sys.argv[1], "r")
   o = open("temp.txt", "w")
 
+
+  for line in f:
+    if line[0] != " " and line[0] != '\t':
+      o.write("preset")
+
+    o.write(line)
+
+
+'''
   for line in f:
     for word in line:
-      if "print" in word:
-        o.write("print")
-      else:
-        o.write(word)
+      if "printb" in word and "printbig" not in word:
+        line = line.replace("printb", "print")
+      if "printf" in word:
+        line = line.replace("printf", "print")
+      if "prints" in word:
+        line = line.replace("prints", "print")
+        
+      o.write(line)
+'''
 '''
   semi = False
   for line in f:

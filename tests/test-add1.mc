@@ -1,9 +1,9 @@
-int add(int x, int y):
+preset int add(int x, int y):
 {
   return x + y
 }
 
-int main():
+preset int main():
 {
   print( add(17, 25) )
   return 0

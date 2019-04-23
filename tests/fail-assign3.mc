@@ -1,9 +1,9 @@
-void myvoid():
+preset void myvoid():
 {
   return
 }
 
-int main():
+preset int main():
 {
   int i
 

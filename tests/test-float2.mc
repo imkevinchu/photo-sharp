@@ -1,4 +1,4 @@
-int main():
+preset int main():
 {
   float a
   float b

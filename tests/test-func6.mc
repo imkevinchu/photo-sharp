@@ -1,13 +1,13 @@
-void foo():
+preset void foo():
 {
 }
 
-int bar(int a, bool b, int c):
+preset int bar(int a, bool b, int c):
 { 
   return a + c 
 }
 
-int main():
+preset int main():
 {
   print(bar(17, false, 25))
   return 0

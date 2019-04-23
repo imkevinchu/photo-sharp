@@ -1,8 +1,8 @@
-void foo(int a, bool b):
+preset void foo(int a, bool b):
 {
 }
 
-int main():
+preset int main():
 {
   foo(42, true)
   foo(42, true, false)

@@ -1,6 +1,6 @@
-bool i
+preset bool i
 
-int main():
+preset int main():
 {
   /* Should hide the global i */
   int i

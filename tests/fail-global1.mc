@@ -1,10 +1,10 @@
-int c
-bool b
-void a
+preset int c
+preset bool b
+preset void a
 /* global variables should not be void */
 
 
-int main():
+preset int main():
 {
   return 0
 }

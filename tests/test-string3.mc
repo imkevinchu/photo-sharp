@@ -1,4 +1,4 @@
-int main():
+preset int main():
 {
   print("hello world")
   return 0

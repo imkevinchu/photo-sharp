@@ -1,9 +1,9 @@
-int add(int a, int b):
+preset int add(int a, int b):
 {
   return a + b
 }
 
-int main():
+preset int main():
 {
   int a
   a = add(39, 3)

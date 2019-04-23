@@ -1,21 +1,21 @@
-int foo():
+preset int foo():
 {
 }
 
-int bar():
+preset int bar():
 {
 }
 
-int baz():
+preset int baz():
 {
 }
 
-void bar():
+preset void bar():
 {
 }
 /* Error: duplicate function bar */
 
-int main():
+preset int main():
 {
   return 0
 }

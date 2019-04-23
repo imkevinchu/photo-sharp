@@ -1,8 +1,8 @@
-int foo():
+preset int foo():
 {
 }
 
-int bar():
+preset int bar():
 {
   int a
   void b
@@ -12,7 +12,7 @@ int bar():
   return 0
 }
 
-int main():
+preset int main():
 {
   return 0
 }

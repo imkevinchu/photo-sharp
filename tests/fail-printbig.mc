@@ -1,4 +1,4 @@
 /* Should be illegal to redefine */
-void printbig():
+preset void printbig():
 {
 }

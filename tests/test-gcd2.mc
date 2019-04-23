@@ -1,4 +1,4 @@
-int gcd(int a, int b):
+preset int gcd(int a, int b):
 {
   while (a != b):
   {
@@ -14,7 +14,7 @@ int gcd(int a, int b):
   return a
 }
 
-int main():
+preset int main():
 {
   print(gcd(14,21))
   print(gcd(8,36))

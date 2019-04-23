@@ -1,4 +1,4 @@
-int main():
+preset int main():
 {
   int i
   i = 0

@@ -1,4 +1,4 @@
-int main():
+preset int main():
 {
   string x
   x = "hello"

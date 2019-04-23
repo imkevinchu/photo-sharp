@@ -1,23 +1,23 @@
-int a
-int b
+preset int a
+preset int b
 
-void printa():
+preset void printa():
 {
   print(a)
 }
 
-void printbb():
+preset void printbb():
 {
   print(b)
 }
 
-void incab():
+preset void incab():
 {
   a = a + 1
   b = b + 1
 }
 
-int main():
+preset int main():
 {
   a = 42
   b = 21

@@ -1,9 +1,9 @@
-int foo(int a):
+preset int foo(int a):
 {
   return a
 }
 
-int main():
+preset int main():
 {
   int a
   a = 42

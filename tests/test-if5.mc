@@ -1,4 +1,4 @@
-int cond(bool b):
+preset int cond(bool b):
 {
   int x
   if (b):
@@ -12,7 +12,7 @@ int cond(bool b):
   return x
 }
 
-int main():
+preset int main():
 {
  print(cond(true))
  print(cond(false))

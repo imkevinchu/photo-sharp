@@ -1,4 +1,4 @@
-void foo():
+preset void foo():
 {
   if (true):
   {
@@ -11,7 +11,7 @@ void foo():
   }
 }
 
-int main():
+preset int main():
 {
   return 42
 }

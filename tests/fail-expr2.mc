@@ -1,7 +1,7 @@
-int a
-bool b
+preset int a
+preset bool b
 
-void foo(int c, bool d):
+preset void foo(int c, bool d):
 {
   int d
   bool e
@@ -9,7 +9,7 @@ void foo(int c, bool d):
   /* Error: bool + int */
 }
 
-int main():
+preset int main():
 {
   return 0
 }

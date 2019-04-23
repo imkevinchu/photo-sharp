@@ -1,4 +1,4 @@
-void testfloat(float a, float b):
+preset void testfloat(float a, float b):
 {
   print(a + b)
   print(a - b)
@@ -14,7 +14,7 @@ void testfloat(float a, float b):
   print(a <= b)
 }
 
-int main():
+preset int main():
 {
   float c
   float d

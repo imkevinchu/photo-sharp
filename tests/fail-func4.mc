@@ -1,21 +1,21 @@
-int foo():
+preset int foo():
 {
 }
 
-void bar():
+preset void bar():
 {
 }
 
-int print():
+preset int print():
 {
 }
 /* Should not be able to define print */
 
-void baz():
+preset void baz():
 {
 }
 
-int main():
+preset int main():
 {
   return 0
 }
