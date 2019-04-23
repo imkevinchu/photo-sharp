@@ -1,4 +1,4 @@
-preset int a
+int a
 
 preset void foo(int c):
 {

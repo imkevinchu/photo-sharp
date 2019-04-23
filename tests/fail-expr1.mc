@@ -1,5 +1,5 @@
-preset int a
-preset bool b
+int a
+bool b
 
 preset void foo(int c, bool d):
 {

@@ -1,5 +1,5 @@
-preset int a
-preset float b
+int a
+float b
 
 preset void foo(int c, float d):
 {

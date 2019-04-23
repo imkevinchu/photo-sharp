@@ -1,6 +1,6 @@
-preset int i
-preset bool b
-preset int j
+int i
+bool b
+int j
 
 preset int main():
 {

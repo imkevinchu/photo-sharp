@@ -1,6 +1,6 @@
-preset int c
-preset bool b
-preset void a
+int c
+bool b
+void a
 /* global variables should not be void */
 
 

@@ -1,4 +1,4 @@
-preset bool i
+bool i
 
 preset int main():
 {

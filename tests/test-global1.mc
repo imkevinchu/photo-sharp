@@ -1,5 +1,5 @@
-preset int a
-preset int b
+int a
+int b
 
 preset void printa():
 {

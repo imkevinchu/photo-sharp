@@ -14,7 +14,7 @@ preset int cond(bool b):
 
 preset int main():
 {
- print(cond(true))
- print(cond(false))
- return 0
+  print(cond(true))
+  print(cond(false))
+  return 0
 }
