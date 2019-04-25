@@ -3,9 +3,11 @@
 type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
           And | Or
 
+type pval = Red | Green | Blue
+
 type uop = Neg | Not
 
-type typ = Int | Bool | Float | Void | String | Image | Caption | Album | Array
+type typ = Int | Bool | Float | Void | String | Default | Image| Caption | Album | Array | Pixel
 
 type bind = typ * string
 
@@ -14,6 +16,8 @@ type expr =
   | Fliteral of string
   | BoolLit of bool
   | StrLit of string
+  | PixelLit of expr * expr * expr
+  | Setpval of string * pval * expr
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
@@ -59,6 +63,12 @@ let string_of_uop = function
     Neg -> "-"
   | Not -> "!"
 
+let string_of_value= function
+   Red -> "R"
+  | Blue -> "B"
+  | Green -> "G"
+
+
 let rec string_of_expr = function
     Literal(l) -> string_of_int l
   | Fliteral(l) -> l
@@ -70,6 +80,8 @@ let rec string_of_expr = function
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
+  | PixelLit(v1,v2,v3) -> "(" ^ string_of_expr v1 ^ "," ^ string_of_expr v2 ^ "," ^ string_of_expr v3 ^ ")"
+  | Setpval(id, v, e1) -> id ^ "." ^ string_of_value v ^ "=" ^ string_of_expr e1
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
@@ -93,10 +105,12 @@ let string_of_typ = function
   | Float -> "float"
   | Void -> "void"
   | String -> "string" 
-  | Image -> "image"
-  | Caption -> "caption"
-  | Album -> "album"
-  | Array -> "array"
+  | Default -> "default"
+  | Pixel -> "Pixel"
+  | Image -> "Image"
+  | Caption -> "Caption"
+  | Album -> "Album"
+  | Array -> "Array"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 

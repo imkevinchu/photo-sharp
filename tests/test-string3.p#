@@ -1,5 +1,5 @@
 preset int main():
 {
-  prints("hello world")
+  print("hello world")
   return 0
 }

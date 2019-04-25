@@ -1,6 +1,6 @@
 (* Ocamllex scanner for MicroC *)
 
-{ open Microcparse }
+{ open Parser }
 
 let digit = ['0' - '9']
 let digits = digit+
@@ -8,6 +8,7 @@ let digits = digit+
 rule token = parse
   [' ' '\t' '\r'] { token lexbuf } (* Whitespace *)
 | "/*"     { comment lexbuf }           (* Comments *)
+| "#"       { sl_comment lexbuf }
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | '{'      { LBRACE }
@@ -21,6 +22,7 @@ rule token = parse
 | '*'      { TIMES }
 | '/'      { DIVIDE }
 | '='      { ASSIGN }
+| '.'      { DOT }
 | "=="     { EQ }
 | "!="     { NEQ }
 | '<'      { LT }
@@ -37,11 +39,15 @@ rule token = parse
 | "return" { RETURN }
 | "int"    { INT }
 | "bool"   { BOOL }
+| "red"      { RED }
+| "green"      { GREEN }
+| "blue"      { BLUE }
 | "float"  { FLOAT }
 | "void"   { VOID }
 | "string" { STRING }
 | "true"   { BLIT(true)  }
 | "false"  { BLIT(false) }
+| "Pixel"   { PIXEL }
 | "Image"   { IMAGE }
 | "Caption" { CAPTION }
 | "Album"   { ALBUM }
@@ -57,3 +63,7 @@ rule token = parse
 and comment = parse
   ['*']['/']['\n']* { token lexbuf }
 | _    { comment lexbuf }
+
+and sl_comment = parse
+  ['\n'] { token lexbuf }
+| _       { sl_comment lexbuf }

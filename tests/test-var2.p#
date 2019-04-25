@@ -9,5 +9,6 @@ preset int main():
 {
   foo(73)
   print(a)
+  # IGNORE THIS
   return 0
 }

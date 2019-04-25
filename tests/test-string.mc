@@ -1,5 +1,6 @@
 preset int main():
 {
-  prints("hello")
+  print("hello")
+
   return 0
 }

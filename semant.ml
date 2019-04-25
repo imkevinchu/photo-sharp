@@ -39,7 +39,7 @@ let check (globals, functions) =
       formals = [(ty, "x")];
       locals = []; body = [] } map
     in List.fold_left add_bind StringMap.empty [ ("prints", String);
-                                                 ("print", Int);
+                                                 ("print", Default);
 			                         ("printb", Bool);
 			                         ("printf", Float);
 			                         ("printbig", Int) ]
@@ -75,8 +75,13 @@ let check (globals, functions) =
     check_binds "local" func.locals;
 
     (* Raise an exception if the given rvalue type cannot be assigned to
-       the given lvalue type *)
+      the given lvalue type *)
     let check_assign lvaluet rvaluet err =
+       if lvaluet = rvaluet then lvaluet else raise (Failure err)
+    in   
+
+    let check_assign2 lvaluet rvaluet err =
+       if lvaluet = Ast.Default then rvaluet else
        if lvaluet = rvaluet then lvaluet else raise (Failure err)
     in   
 
@@ -97,6 +102,11 @@ let check (globals, functions) =
       | Fliteral l -> (Float, SFliteral l)
       | BoolLit l  -> (Bool, SBoolLit l)
       | StrLit l -> (String, SStrLit l)
+      | PixelLit(r,g,b) -> (Pixel, SPixelLit(expr r,expr g,expr b))
+      | Setpval(i,v,e)  -> 
+          if type_of_identifier i != Pixel then raise(Failure("Can only set r/g/b of Pixels"))
+          else (Int, SSetpval(i,v,expr e))
+            
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
@@ -142,7 +152,7 @@ let check (globals, functions) =
             let (et, e') = expr e in 
             let err = "illegal argument found " ^ string_of_typ et ^
               " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
-            in (check_assign ft et err, e')
+            in (check_assign2 ft et err, e')
           in 
           let args' = List.map2 check_call fd.formals args
           in (fd.typ, SCall(fname, args'))

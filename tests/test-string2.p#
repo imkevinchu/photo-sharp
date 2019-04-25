@@ -2,6 +2,6 @@ preset int main():
 {
   string x
   x = "hello"
-  prints(x)
+  print(x)
   return 0
 }

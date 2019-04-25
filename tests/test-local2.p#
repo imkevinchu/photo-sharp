@@ -10,6 +10,6 @@ preset int foo(int a, bool b):
 
 preset int main():
 {
- print(foo(37, false))
- return 0
+  print(foo(37, false))
+  return 0
 }
