@@ -68,6 +68,11 @@ let translate (globals, functions) =
   let printbig_func : L.llvalue =
       L.declare_function "printbig" printbig_t the_module in
 
+  let hello_t : L.lltype = 
+      L.function_type i32_t [| i32_t |] in
+  let hello_func : L.llvalue = 
+      L.declare_function "hello" hello_t the_module in
+
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -194,6 +199,8 @@ let translate (globals, functions) =
              "printf" builder
       | SCall ("printbig", [e]) ->
 	  L.build_call printbig_func [| (expr builder e) |] "printbig" builder
+      | SCall ("hello", [e]) ->
+          L.build_call hello_func [| (expr builder e) |] "hello" builder
       | SCall ("printf", [e]) -> 
 	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
 	    "printf" builder
