@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 struct pixel {
   int red;
@@ -6,12 +7,15 @@ struct pixel {
   int blue;
 };
 
-struct pixel makePix() {
-  struct Pixel *p = (struct Pixel *)malloc(sizeof(struct Pixel)); 
+
+struct pixel *makePix() {
+  struct pixel *p = (struct pixel *)malloc(sizeof(struct pixel)); 
   
   p->red = 255;
   p->green = 255;
   p->blue = 255;
+  
+  return p;
 
 }
 
@@ -23,9 +27,9 @@ void printPix(struct pixel *pix) {
 }
 
 int main() {
-  struct pixel p = { 255, 255, 255 };
+  struct pixel *p = makePix();
   
-  printPix(&p);
+  printPix(p);
 
   return 0;
 }
