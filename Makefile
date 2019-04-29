@@ -8,7 +8,7 @@ test : all testall.sh
 # to test linking external code
 
 .PHONY : all
-all : microc.native printbig.o hello.o
+all : microc.native printbig.o hello.o pixel.o
 
 # "make microc.native" compiles the compiler
 #
@@ -27,7 +27,7 @@ microc.native :
 clean :
 	ocamlbuild -clean
 	rm -rf testall.log ocamlllvm *.diff
-	rm *.err *.ll *.exe *.s *.out
+	rm *.err *.ll *.exe *.s *.out *.o
 
 # Testing the "printbig" example
 
@@ -36,6 +36,9 @@ printbig : printbig.c
 
 hello : hello.c
 	cc -o hello -DBUILD_TEST hello.c
+
+pixel : pixel.c
+	cc -o pixel -DBUILD_TEST pixel.c
 
 
 # Building the tarball
@@ -59,6 +62,7 @@ TARFILES = ast.ml sast.ml codegen.ml Makefile _tags microc.ml microcparse.mly \
 	README scanner.mll semant.ml testall.sh \
 	printbig.c arcade-font.pbm font2c \
         hello.c \
+        pixel.c \
 	Dockerfile \
 	$(TESTFILES:%=tests/%) 
 

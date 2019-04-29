@@ -33,7 +33,9 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and void_t     = L.void_type   context
+  and pix_t      = L.pointer_type (L.i32_type context)
   and string_t   = L.pointer_type (L.i8_type context) in
+
 
   (* Return the LLVM type for a MicroC type *)
   let ltype_of_typ = function
@@ -46,7 +48,7 @@ let translate (globals, functions) =
     | A.Caption -> string_t
     | A.Album -> string_t
     | A.Array -> string_t
-    | A.Pixel -> L.pointer_type(L.i64_type context)
+    | A.Pixel -> pix_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -72,6 +74,16 @@ let translate (globals, functions) =
       L.function_type i32_t [| i32_t |] in
   let hello_func : L.llvalue = 
       L.declare_function "hello" hello_t the_module in
+
+  let printPix_t : L.lltype = 
+      L.function_type pix_t [| pix_t |] in
+  let printPix_func : L.llvalue = 
+      L.declare_function "printPix" printPix_t the_module in
+
+  let setPix_t : L.lltype = 
+      L.function_type pix_t [| i32_t; i32_t; i32_t|] in
+  let setPix_func : L.llvalue = 
+      L.declare_function "setPix" setPix_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -107,7 +119,7 @@ let translate (globals, functions) =
        * resulting registers to our map *)
       and add_local m (t, n) =
 	let local_var = L.build_alloca (ltype_of_typ t) n builder
-	in StringMap.add n local_var m 
+	in StringMap.add n local_var m
       in
 
       let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
@@ -123,25 +135,14 @@ let translate (globals, functions) =
 
     (* Construct code for an expression; return its value *)
     let rec expr builder ((_, e) : sexpr) = match e with
-	    SLiteral i  -> L.const_int i32_t i
+	SLiteral i  -> L.const_int i32_t i
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
       | SFliteral l -> L.const_float_of_string float_t l
       | SStrLit s   -> L.build_global_stringptr s "" builder
-      | SPixelLit(r,g,b)-> let size = L.const_int i64_t 3 in
-            let typ = L.pointer_type i64_t in
-            let arr = L.build_array_malloc typ size "pixel1" builder in
-                            let arr = L.build_pointercast arr typ "pixel2" builder in 
-            let arr_ptr = L.build_gep arr [|L.const_int i64_t 0|] "pixel3" builder in ignore(L.build_store (expr builder r) arr_ptr builder);
-            let arr_ptr = L.build_gep arr [|L.const_int i64_t 1|] "pixel4" builder in ignore(L.build_store (expr builder g) arr_ptr builder);
-            let arr_ptr = L.build_gep arr [|L.const_int i64_t 2|] "pixel5" builder in ignore(L.build_store (expr builder b) arr_ptr builder);
-            arr
-      | SSetpval(s,v,e) -> let arr = L.build_load (lookup s) s builder
-            and value = expr builder e in 
-            (match v with
-            A.Red ->   let arr_ptr = L.build_gep arr [|L.const_int i64_t 0|] "pixel3" builder in ignore(L.build_store (value) arr_ptr builder)
-          | A.Green ->  let arr_ptr = L.build_gep arr [|L.const_int i64_t 1|] "pixel3" builder in ignore(L.build_store (value) arr_ptr builder)
-          | A.Blue ->  let arr_ptr = L.build_gep arr [|L.const_int i64_t 2|] "pixel3" builder in ignore(L.build_store (value) arr_ptr builder));
-          arr
+      | SPixelLit(r,g,b)-> let r' = expr builder r
+                           and g' = expr builder g
+                           and b' = expr builder b in
+                           L.build_call setPix_func [| r'; g'; b' |] "setPix" builder
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
@@ -190,10 +191,15 @@ let translate (globals, functions) =
         let (t, a) = e in
           (match t with
              A.Int -> L.build_call printf_func [| int_format_str ; (expr builder e) |]
-           | A.Float -> L.build_call printf_func [| float_format_str ; (expr builder e) |]
-           | A.String -> L.build_call printf_func [| str_str; (expr builder e) |]
-           | A.Bool -> L.build_call printf_func [| int_format_str ; (expr builder e) |])
 	    "printf" builder
+           | A.Float -> L.build_call printf_func [| float_format_str ; (expr builder e) |]
+	    "printf" builder
+           | A.String -> L.build_call printf_func [| str_str; (expr builder e) |]
+	    "printf" builder
+           | A.Bool -> L.build_call printf_func [| int_format_str ; (expr builder e) |]
+	    "printf" builder
+           | A.Pixel -> L.build_call printPix_func [| (expr builder e) |]
+	    "printPix" builder)
       | SCall ("prints", [e]) ->
           L.build_call printf_func [| str_str; (expr builder e) |]
              "printf" builder
@@ -281,5 +287,10 @@ let translate (globals, functions) =
       | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
   in
 
+
+
   List.iter build_function_body functions;
   the_module
+  
+
+

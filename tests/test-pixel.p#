@@ -1,0 +1,10 @@
+preset int main():
+{
+  Pixel p
+
+  p = (12, 3, 4)
+
+  print(p)
+
+  return 0
+}
