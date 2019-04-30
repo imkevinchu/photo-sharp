@@ -81,7 +81,7 @@ let translate (globals, functions) =
       L.declare_function "printPix" printPix_t the_module in
 
   let setPix_t : L.lltype = 
-      L.function_type pix_t [| i32_t; i32_t; i32_t|] in
+      L.function_type pix_t [|i32_t; i32_t; i32_t; i32_t|] in
   let setPix_func : L.llvalue = 
       L.declare_function "setPix" setPix_t the_module in
 
@@ -139,10 +139,11 @@ let translate (globals, functions) =
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
       | SFliteral l -> L.const_float_of_string float_t l
       | SStrLit s   -> L.build_global_stringptr s "" builder
-      | SPixelLit(r,g,b)-> let r' = expr builder r
+      | SPixelLit(r,g,b,a)-> let r' = expr builder r
                            and g' = expr builder g
-                           and b' = expr builder b in
-                           L.build_call setPix_func [| r'; g'; b' |] "setPix" builder
+                           and b' = expr builder b 
+                           and a' = expr builder a in
+                           L.build_call setPix_func [| r'; g'; b'; a' |] "setPix" builder
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in

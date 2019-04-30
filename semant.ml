@@ -103,7 +103,7 @@ let check (globals, functions) =
       | Fliteral l -> (Float, SFliteral l)
       | BoolLit l  -> (Bool, SBoolLit l)
       | StrLit l -> (String, SStrLit l)
-      | PixelLit(r,g,b) -> (Pixel, SPixelLit(expr r,expr g,expr b))
+      | PixelLit(r,g,b,a) -> (Pixel, SPixelLit(expr r,expr g,expr b, expr a))
       | Setpval(i,v,e)  -> 
           if type_of_identifier i != Pixel then raise(Failure("Can only set r/g/b of Pixels"))
           else (Int, SSetpval(i,v,expr e))

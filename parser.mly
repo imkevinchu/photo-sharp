@@ -97,7 +97,7 @@ expr:
   | BLIT             { BoolLit($1)            }
   | ID               { Id($1)                 }
   | STRLIT           { StrLit($1)             }
-  | LPAREN expr COMMA expr COMMA expr RPAREN { PixelLit($2, $4, $6) }
+  | LPAREN expr COMMA expr COMMA expr COMMA expr RPAREN { PixelLit($2, $4, $6, $8) }
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }

@@ -16,7 +16,7 @@ type expr =
   | Fliteral of string
   | BoolLit of bool
   | StrLit of string
-  | PixelLit of expr * expr * expr
+  | PixelLit of expr * expr * expr * expr
   | Setpval of string * pval * expr
   | Id of string
   | Binop of expr * op * expr
@@ -80,7 +80,7 @@ let rec string_of_expr = function
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
-  | PixelLit(v1,v2,v3) -> "(" ^ string_of_expr v1 ^ "," ^ string_of_expr v2 ^ "," ^ string_of_expr v3 ^ ")"
+  | PixelLit(v1,v2,v3,v4) -> "(" ^ string_of_expr v1 ^ "," ^ string_of_expr v2 ^ "," ^ string_of_expr v3 ^ "," ^ string_of_expr v4 ^ ")"
   | Setpval(id, v, e1) -> id ^ "." ^ string_of_value v ^ "=" ^ string_of_expr e1
   | Call(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"

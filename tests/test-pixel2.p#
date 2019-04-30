@@ -2,11 +2,11 @@ preset int main():
 {
   Pixel p
 
-  p = (12, 3, 4)
+  p = (12, 3, 4, 1)
 
   print(p)
 
-  p = (1, 2, 3)
+  p = (1, 2, 3, 4)
 
   print(p)
 
