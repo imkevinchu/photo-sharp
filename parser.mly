@@ -4,9 +4,9 @@
 open Ast
 %}
 
-%token SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN
+%token SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN DOT 
 %token NOT EQ NEQ LT LEQ GT GEQ AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING IMAGE CAPTION ALBUM ARR PRESET
+%token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING IMAGE CAPTION ALBUM ARR PRESET PIXEL RED GREEN BLUE
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> STRLIT
@@ -63,6 +63,7 @@ typ:
   | CAPTION { Caption }
   | ALBUM { Album }
   | ARR { Array }
+  | PIXEL { Pixel }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -86,6 +87,8 @@ stmt:
                                             { For($3, $5, $7, $11)   }
   | WHILE LPAREN expr RPAREN COL SEMI stmt           { While($3, $7)         }
 
+pixel_lit:
+    LPAREN expr COMMA expr COMMA expr RPAREN { PixelLit($2, $4, $6) }
 
 expr_opt:
     /* nothing */ { Noexpr }
@@ -108,7 +111,11 @@ expr:
   | expr GT     expr { Binop($1, Greater, $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3)   }
   | expr AND    expr { Binop($1, And,   $3)   }
+  | ID DOT RED ASSIGN expr       { Setpval($1, Red, $5) }
+  | ID DOT GREEN ASSIGN expr     { Setpval($1, Green, $5) }
+  | ID DOT BLUE ASSIGN expr      { Setpval($1, Blue, $5) }
   | expr OR     expr { Binop($1, Or,    $3)   }
+  | pixel_lit                           { $1 }
   | MINUS expr %prec NOT { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
