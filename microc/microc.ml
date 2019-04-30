@@ -2,6 +2,8 @@
    check the resulting AST and generate an SAST from it, generate LLVM IR,
    and dump the module *)
 
+open indentation
+
 type action = Ast | Sast | LLVM_IR | Compile
 
 let () =
@@ -18,7 +20,7 @@ let () =
   let channel = ref stdin in
   Arg.parse speclist (fun filename -> channel := open_in filename) usage_msg;
   
-  let lexbuf = Lexing.from_channel !channel in
+  let lexbuf = Lexing.from_channel Indentation.indentations !channel in
   let ast = Microcparse.program Scanner.token lexbuf in  
   match !action with
     Ast -> print_string (Ast.string_of_program ast)
