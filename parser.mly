@@ -87,19 +87,17 @@ stmt:
                                             { For($3, $5, $7, $11)   }
   | WHILE LPAREN expr RPAREN COL SEMI stmt           { While($3, $7)         }
 
-pixel_lit:
-    LPAREN expr COMMA expr COMMA expr RPAREN { PixelLit($2, $4, $6) }
-
 expr_opt:
     /* nothing */ { Noexpr }
   | expr          { $1 }
 
 expr:
     LITERAL          { Literal($1)            }
-  | FLIT	            { Fliteral($1)           }
+  | FLIT	     { Fliteral($1)           }
   | BLIT             { BoolLit($1)            }
   | ID               { Id($1)                 }
   | STRLIT           { StrLit($1)             }
+  | LPAREN expr COMMA expr COMMA expr COMMA expr RPAREN { PixelLit($2, $4, $6, $8) }
   | expr PLUS   expr { Binop($1, Add,   $3)   }
   | expr MINUS  expr { Binop($1, Sub,   $3)   }
   | expr TIMES  expr { Binop($1, Mult,  $3)   }
@@ -115,7 +113,6 @@ expr:
   | ID DOT GREEN ASSIGN expr     { Setpval($1, Green, $5) }
   | ID DOT BLUE ASSIGN expr      { Setpval($1, Blue, $5) }
   | expr OR     expr { Binop($1, Or,    $3)   }
-  | pixel_lit                           { $1 }
   | MINUS expr %prec NOT { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
