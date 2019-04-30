@@ -8,7 +8,7 @@ test : all testall.sh
 # to test linking external code
 
 .PHONY : all
-all : microc.native printbig.o
+all : microc.native printbig.o printhello.o
 
 # "make microc.native" compiles the compiler
 #
@@ -34,18 +34,22 @@ clean :
 printbig : printbig.c
 	cc -o printbig -DBUILD_TEST printbig.c
 
+#testing the "printhello" example
+printhello : printhello.c
+	cc -o printhello -DBUILD_HELLO printhello.c
+
 # Building the tarball
 
 TESTS = \
   add1 arith1 arith2 arith3 fib float1 float2 float3 for1 for2 func1 \
   func2 func3 func4 func5 func6 func7 func8 func9 gcd2 gcd global1 \
   global2 global3 hello if1 if2 if3 if4 if5 if6 local1 local2 ops1 \
-  ops2 printbig var1 var2 while1 while2
+  ops2 printbig printhello var1 var2 while1 while2
 
 FAILS = \
   assign1 assign2 assign3 dead1 dead2 expr1 expr2 expr3 float1 float2 \
   for1 for2 for3 for4 for5 func1 func2 func3 func4 func5 func6 func7 \
-  func8 func9 global1 global2 if1 if2 if3 nomain printbig printb print \
+  func8 func9 global1 global2 if1 if2 if3 nomain printbig printhello printb print \
   return1 return2 while1 while2
 
 TESTFILES = $(TESTS:%=test-%.mc) $(TESTS:%=test-%.out) \
@@ -53,9 +57,9 @@ TESTFILES = $(TESTS:%=test-%.mc) $(TESTS:%=test-%.out) \
 
 TARFILES = ast.ml sast.ml codegen.ml Makefile _tags microc.ml microcparse.mly \
 	README scanner.mll semant.ml testall.sh \
-	printbig.c arcade-font.pbm font2c \
+	printbig.c arcade-font.pbm font2c printhello.c\
 	Dockerfile \
-	$(TESTFILES:%=tests/%) 
+	$(TESTFILES:%=tests/%)
 
 microc.tar.gz : $(TARFILES)
 	cd .. && tar czf microc/microc.tar.gz \
