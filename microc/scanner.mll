@@ -54,4 +54,5 @@ and comment = parse
 | _    { comment lexbuf }
 
 and indent = parse
-  ['\t'] {  indent }
+  ['\t'] { INDENT }
+  '{'    { INDENT }
