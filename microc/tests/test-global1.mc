@@ -1,30 +1,30 @@
-int a;
-int b;
+int a
+int b
 
-void printa()
+void printa():
 {
-  print(a);
+  print(a)
 }
 
-void printbb()
+void printbb():
 {
-  print(b);
+  print(b)
 }
 
-void incab()
+void incab():
 {
-  a = a + 1;
-  b = b + 1;
+  a = a + 1
+  b = b + 1
 }
 
-int main()
+int main():
 {
-  a = 42;
-  b = 21;
-  printa();
-  printbb();
-  incab();
-  printa();
-  printbb();
-  return 0;
+  a = 42
+  b = 21
+  printa()
+  printbb()
+  incab()
+  printa()
+  printbb()
+  return 0
 }

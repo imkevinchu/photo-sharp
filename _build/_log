@@ -1,0 +1,86 @@
+### Starting build.
+# Target: microc.ml.depends, tags: { extension:ml, file:microc.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules microc.ml > microc.ml.depends
+# Target: ast.ml.depends, tags: { extension:ml, file:ast.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules ast.ml > ast.ml.depends
+# Target: codegen.ml.depends, tags: { extension:ml, file:codegen.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules codegen.ml > codegen.ml.depends
+# Target: ast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:ast.cmo, file:ast.ml, implem, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o ast.cmo ast.ml
+# Target: sast.ml.depends, tags: { extension:ml, file:sast.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules sast.ml > sast.ml.depends
+# Target: sast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:sast.cmo, file:sast.ml, implem, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o sast.cmo sast.ml
++ ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o sast.cmo sast.ml
+File "sast.ml", line 41, characters 34-523:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+(SPixelLit (_, _, _)|SSetpval (_, _, _))
+# Target: parser.mly, tags: { extension:mly, file:parser.mly, infer, ocaml, ocamlyacc, package(llvm), package(llvm.analysis), parser, quiet, traverse, warn(+a-4) }
+/Users/k4vglitcher/.opam/default/bin/ocamlyacc parser.mly
++ /Users/k4vglitcher/.opam/default/bin/ocamlyacc parser.mly
+2 shift/reduce conflicts.
+# Target: parser.mli.depends, tags: { extension:mli, file:parser.mli, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules parser.mli > parser.mli.depends
+# Target: scanner.mll, tags: { extension:mll, file:scanner.mll, lexer, ocaml, ocamllex, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+/Users/k4vglitcher/.opam/default/bin/ocamllex.opt -q scanner.mll
+# Target: scanner.ml.depends, tags: { extension:ml, file:scanner.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules scanner.ml > scanner.ml.depends
+# Target: parser.cmi, tags: { byte, compile, extension:mli, file:parser.mli, interf, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o parser.cmi parser.mli
+# Target: semant.ml.depends, tags: { extension:ml, file:semant.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules semant.ml > semant.ml.depends
+# Target: codegen.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:codegen.cmo, file:codegen.ml, implem, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmo codegen.ml
++ ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmo codegen.ml
+File "codegen.ml", line 39, characters 21-308:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+Default
+File "codegen.ml", line 191, characters 10-372:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+(Void|Default|Image|Caption|Album|Array|Pixel)
+File "codegen.ml", line 190, characters 16-17:
+Warning 27: unused variable a.
+# Target: scanner.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:scanner.cmo, file:scanner.ml, implem, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o scanner.cmo scanner.ml
+# Target: semant.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:semant.cmo, file:semant.ml, implem, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmo semant.ml
+# Target: microc.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:microc.cmo, file:microc.ml, implem, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o microc.cmo microc.ml
+# Target: ast.cmx, tags: { compile, extension:cmx, extension:ml, file:ast.cmx, file:ast.ml, implem, native, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o ast.cmx ast.ml
+# Target: sast.cmx, tags: { compile, extension:cmx, extension:ml, file:sast.cmx, file:sast.ml, implem, native, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o sast.cmx sast.ml
++ ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o sast.cmx sast.ml
+File "sast.ml", line 41, characters 34-523:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+(SPixelLit (_, _, _)|SSetpval (_, _, _))
+# Target: parser.ml.depends, tags: { extension:ml, file:parser.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules parser.ml > parser.ml.depends
+# Target: parser.cmx, tags: { compile, extension:cmx, extension:ml, file:parser.cmx, file:parser.ml, implem, native, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o parser.cmx parser.ml
+# Target: codegen.cmx, tags: { compile, extension:cmx, extension:ml, file:codegen.cmx, file:codegen.ml, implem, native, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmx codegen.ml
++ ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmx codegen.ml
+File "codegen.ml", line 39, characters 21-308:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+Default
+File "codegen.ml", line 191, characters 10-372:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a value that is not matched:
+(Void|Default|Image|Caption|Album|Array|Pixel)
+File "codegen.ml", line 190, characters 16-17:
+Warning 27: unused variable a.
+# Target: scanner.cmx, tags: { compile, extension:cmx, extension:ml, file:scanner.cmx, file:scanner.ml, implem, native, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o scanner.cmx scanner.ml
+# Target: semant.cmx, tags: { compile, extension:cmx, extension:ml, file:semant.cmx, file:semant.ml, implem, native, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmx semant.ml
+# Target: microc.cmx, tags: { compile, extension:cmx, extension:ml, file:microc.cmx, file:microc.ml, implem, native, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o microc.cmx microc.ml
+# Target: microc.native, tags: { dont_link_with, extension:native, file:microc.native, link, native, ocaml, package(llvm), package(llvm.analysis), program, quiet, traverse, warn(+a-4) }
+ocamlfind ocamlopt -linkpkg -package llvm -package llvm.analysis ast.cmx sast.cmx codegen.cmx parser.cmx scanner.cmx semant.cmx microc.cmx -o microc.native
+# Compilation successful.

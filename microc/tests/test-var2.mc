@@ -1,13 +1,13 @@
-int a;
+int a
 
-void foo(int c)
+void foo(int c):
 {
-  a = c + 42;
+  a = c + 42
 }
 
-int main()
+int main():
 {
-  foo(73);
-  print(a);
-  return 0;
+  foo(73)
+  print(a)
+  return 0
 }

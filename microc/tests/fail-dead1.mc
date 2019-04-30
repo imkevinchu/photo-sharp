@@ -1,8 +1,9 @@
-int main()
+int main():
 {
-  int i;  
+  int i
 
-  i = 15;
-  return i;
-  i = 32; /* Error: code after a return */
+  i = 15
+  return i
+  i = 32
+  /* Error: code after a return */
 }

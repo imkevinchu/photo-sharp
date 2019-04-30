@@ -1,14 +1,15 @@
-int a;
-float b;
+int a
+float b
 
-void foo(int c, float d)    
+void foo(int c, float d):
 {
-  int d;
-  float e;
-  b + a; /* Error: float + int */
+  int d
+  float e
+  b + a
+  /* Error: float + int */
 }
 
-int main()
+int main():
 {
-  return 0;
+  return 0
 }

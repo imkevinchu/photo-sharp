@@ -1,2 +1,4 @@
 /* Should be illegal to redefine */
-void printbig() {}
+void printbig():
+{
+}

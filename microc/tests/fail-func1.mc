@@ -1,12 +1,21 @@
-int foo() {}
-
-int bar() {}
-
-int baz() {}
-
-void bar() {} /* Error: duplicate function bar */
-
-int main()
+int foo():
 {
-  return 0;
+}
+
+int bar():
+{
+}
+
+int baz():
+{
+}
+
+void bar():
+{
+}
+/* Error: duplicate function bar */
+
+int main():
+{
+  return 0
 }

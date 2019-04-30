@@ -1,13 +1,23 @@
-int main()
+int main():
 {
-  int i;
-  for ( ; true ; ) {} /* OK: Forever */
+  int i
+  for ( ; true ; ):
+  {
+  }
+  /* OK: Forever */
 
-  for (i = 0 ; i < 10 ; i = i + 1) {
-    if (i == 3) return 42;
+  for (i = 0 ; i < 10 ; i = i + 1):
+  {
+    if (i == 3):
+    {
+      return 42
+    }
   }
 
-  for (j = 0; i < 10 ; i = i + 1) {} /* j undefined */
+  for (j = 0; i < 10 ; i = i + 1):
+  {
+  }
+  /* j undefined */
 
-  return 0;
+  return 0
 }

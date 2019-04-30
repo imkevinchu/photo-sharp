@@ -1,11 +1,12 @@
-void myvoid()
+void myvoid():
 {
-  return;
+  return
 }
 
-int main()
+int main():
 {
-  int i;
+  int i
 
-  i = myvoid(); /* Fail: assigning a void to an integer */
+  i = myvoid()
+  /* Fail: assigning a void to an integer */
 }

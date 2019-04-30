@@ -1,11 +1,11 @@
-int i;
-bool b;
-int j;
+int i
+bool b
+int j
 
-int main()
+int main():
 {
-  i = 42;
-  j = 10;
-  print(i + j);
-  return 0;
+  i = 42
+  j = 10
+  print(i + j)
+  return 0
 }

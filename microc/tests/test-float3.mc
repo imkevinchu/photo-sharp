@@ -1,30 +1,30 @@
-void testfloat(float a, float b)
+void testfloat(float a, float b):
 {
-  printf(a + b);
-  printf(a - b);
-  printf(a * b);
-  printf(a / b);
-  printb(a == b);
-  printb(a == a);
-  printb(a != b);
-  printb(a != a);
-  printb(a > b);
-  printb(a >= b);
-  printb(a < b);
-  printb(a <= b);
+  printf(a + b)
+  printf(a - b)
+  printf(a * b)
+  printf(a / b)
+  printb(a == b)
+  printb(a == a)
+  printb(a != b)
+  printb(a != a)
+  printb(a > b)
+  printb(a >= b)
+  printb(a < b)
+  printb(a <= b)
 }
 
-int main()
+int main():
 {
-  float c;
-  float d;
+  float c
+  float d
 
-  c = 42.0;
-  d = 3.14159;
+  c = 42.0
+  d = 3.14159
 
-  testfloat(c, d);
+  testfloat(c, d)
 
-  testfloat(d, d);
+  testfloat(d, d)
 
-  return 0;
+  return 0
 }

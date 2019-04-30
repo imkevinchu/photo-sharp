@@ -1,10 +1,11 @@
-bool i;
+bool i
 
-int main()
+int main():
 {
-  int i; /* Should hide the global i */
+  /* Should hide the global i */
+  int i
 
-  i = 42;
-  print(i + i);
-  return 0;
+  i = 42
+  print(i + i)
+  return 0
 }

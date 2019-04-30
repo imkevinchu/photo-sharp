@@ -1,13 +1,16 @@
-int main()
+int main():
 {
-  int i;
+  int i
 
-  while (true) {
-    i = i + 1;
+  while (true):
+  {
+    i = i + 1
   }
 
-  while (true) {
-    foo(); /* foo undefined */
+  while (true):
+  {
+    foo()
+    /* foo undefined */
   }
 
 }
