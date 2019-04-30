@@ -52,3 +52,6 @@ rule token = parse
 and comment = parse
   ['*']['/']['\n']* { token lexbuf }
 | _    { comment lexbuf }
+
+and indent = parse
+  ['\t'] {  indent }

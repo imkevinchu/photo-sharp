@@ -29,4 +29,13 @@ let () =
     | LLVM_IR -> print_string (Llvm.string_of_llmodule (Codegen.translate sast))
     | Compile -> let m = Codegen.translate sast in
 	Llvm_analysis.assert_valid_module m;
-	print_string (Llvm.string_of_llmodule m)
+  print_string (Llvm.string_of_llmodule m)
+  
+  # LIST OF LINES FROM CHANNEL THEN TO SPLIT TO INITAL TABS
+  # in the udpate state we would keep the int and the output list
+  # the scanner is only going to accept a string
+  #need some trnaslation on the string itself to store all the information 
+  on indenats and dedents 
+  # translate somethning taht is easier to scan then 
+  can trnaslate tabs to curly braces to pass to scanner
+  # beginning of line 

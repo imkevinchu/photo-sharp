@@ -71,6 +71,9 @@ stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
+stmt_block:
+
+
 stmt:
     expr SEMI                               { Expr $1               }
   | RETURN expr_opt SEMI                    { Return $2             }
@@ -81,7 +84,7 @@ stmt:
   | FOR LPAREN expr_opt SEMICOL expr SEMICOL expr_opt RPAREN COL SEMI stmt
                                             { For($3, $5, $7, $11)   }
   | WHILE LPAREN expr RPAREN COL SEMI stmt           { While($3, $7)         }
-
+  | INDENT SMEI expr DEDENT SEMI  { } 
 
 expr_opt:
     /* nothing */ { Noexpr }
