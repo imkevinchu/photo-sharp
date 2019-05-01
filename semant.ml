@@ -33,17 +33,20 @@ let check (globals, functions) =
 
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls = 
-    let add_bind map (name, ty) = StringMap.add name {
-      typ = Void;
+    let add_bind map (name, forms, ret) = StringMap.add name {
+      typ = ret;
       fname = name; 
-      formals = [(ty, "x")];
+      formals = forms;
       locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("prints", String);
-                                                 ("print", Default);
-			                         ("printb", Bool);
-			                         ("printf", Float);
-			                         ("printbig", Int);
-                                                 ("hello", Int) ]
+    in List.fold_left add_bind StringMap.empty [ ("prints", [(String, "x")], Void);
+                                                 ("print", [(Default, "x")], Void);
+			                         ("printb", [(Bool, "x")], Void);
+			                         ("printf", [(Float, "x")], Void);
+			                         ("printbig", [(Int, "x")], Void);
+                                                 ("hello", [(Int, "x")], Int);
+                                                 ("open", [(String, "x")], Image);
+                                                 ("save", [(String, "x"); (Image, "y")], Void)]
+                                                 
   in
 
   (* Add function name to symbol table *)

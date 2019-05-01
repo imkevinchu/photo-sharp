@@ -1,0 +1,6 @@
+preset int main():
+{
+    Image i
+    i = open("test.jpg")
+    save("new.jpg", i)
+}

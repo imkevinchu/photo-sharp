@@ -34,6 +34,7 @@ let translate (globals, functions) =
   and float_t    = L.double_type context
   and void_t     = L.void_type   context
   and pix_t      = L.pointer_type (L.i32_type context)
+  and image_t    = L.pointer_type (L.i32_type context)
   and string_t   = L.pointer_type (L.i8_type context) in
 
 
@@ -44,7 +45,7 @@ let translate (globals, functions) =
     | A.Float -> float_t
     | A.Void  -> void_t
     | A.String -> string_t
-    | A.Image -> string_t
+    | A.Image -> image_t
     | A.Caption -> string_t
     | A.Album -> string_t
     | A.Array -> string_t
@@ -76,7 +77,7 @@ let translate (globals, functions) =
       L.declare_function "hello" hello_t the_module in
 
   let printPix_t : L.lltype = 
-      L.function_type pix_t [| pix_t |] in
+      L.function_type i32_t [| pix_t |] in
   let printPix_func : L.llvalue = 
       L.declare_function "printPix" printPix_t the_module in
 
@@ -84,6 +85,22 @@ let translate (globals, functions) =
       L.function_type pix_t [|i32_t; i32_t; i32_t; i32_t|] in
   let setPix_func : L.llvalue = 
       L.declare_function "setPix" setPix_t the_module in
+
+  let open_t : L.lltype = 
+      L.function_type image_t [| L.pointer_type i8_t |] in
+  let open_func : L.llvalue = 
+      L.declare_function "open" open_t the_module in
+
+  let save_t : L.lltype = 
+      L.function_type image_t [| L.pointer_type i8_t; image_t |] in
+  let save_func : L.llvalue = 
+      L.declare_function "save" save_t the_module in
+
+
+  let printImageArr_t : L.lltype = 
+      L.function_type i32_t [| image_t |] in
+  let printImageArr_func : L.llvalue = 
+      L.declare_function "printImageArr" printImageArr_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -200,7 +217,9 @@ let translate (globals, functions) =
            | A.Bool -> L.build_call printf_func [| int_format_str ; (expr builder e) |]
 	    "printf" builder
            | A.Pixel -> L.build_call printPix_func [| (expr builder e) |]
-	    "printPix" builder)
+	    "printPix" builder
+           | A.Image -> L.build_call printImageArr_func [| (expr builder e) |]
+	    "printImageArr" builder)
       | SCall ("prints", [e]) ->
           L.build_call printf_func [| str_str; (expr builder e) |]
              "printf" builder
@@ -211,6 +230,10 @@ let translate (globals, functions) =
       | SCall ("printf", [e]) -> 
 	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
 	    "printf" builder
+      | SCall ("open", [e]) ->
+          L.build_call open_func [| (expr builder e) |] "open" builder
+      | SCall ("save", e) ->
+          L.build_call save_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "save" builder
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let llargs = List.rev (List.map (expr builder) (List.rev args)) in

@@ -1,0 +1,6 @@
+preset int main():
+{
+    Image i
+    i = open("test.jpg")
+    return 0
+}

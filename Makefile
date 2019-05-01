@@ -8,7 +8,7 @@ test : all testall.sh
 # to test linking external code
 
 .PHONY : all
-all : microc.native printbig.o hello.o pixel.o
+all : microc.native printbig.o hello.o imageArr.o
 
 # "make microc.native" compiles the compiler
 #
@@ -37,9 +37,8 @@ printbig : printbig.c
 hello : hello.c
 	cc -o hello -DBUILD_TEST hello.c
 
-pixel : pixel.c
-	cc -o pixel -DBUILD_TEST pixel.c
-
+imageArr: imageArr.c
+	cc -o imageArr -DBUILD_TEST imageArr.c
 
 # Building the tarball
 
@@ -62,7 +61,7 @@ TARFILES = ast.ml sast.ml codegen.ml Makefile _tags microc.ml microcparse.mly \
 	README scanner.mll semant.ml testall.sh \
 	printbig.c arcade-font.pbm font2c \
         hello.c \
-        pixel.c \
+        imageArr.c \
 	Dockerfile \
 	$(TESTFILES:%=tests/%) 
 

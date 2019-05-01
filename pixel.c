@@ -19,7 +19,6 @@ struct pixel *setPix(int r, int g, int b, int a) {
   return p;
 
 }
-  
 
 struct pixel *makePix() {
   struct pixel *p = (struct pixel *)malloc(sizeof(struct pixel)); 

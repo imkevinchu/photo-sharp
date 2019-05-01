@@ -8,6 +8,6 @@ int hello(int x) {
 #ifdef BUILD_TEST
 int main() {
   hello(1);
-  return 0;
+  return 1;
 }
 #endif
