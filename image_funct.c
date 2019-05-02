@@ -1,61 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "imageArr.c"
 
-struct ImageArr {
-  double h;
-  double w;
-  struct pixel **imgPixelData;
-};
 
-struct pixel {
-  double red;
-  double green;
-  double blue;
-  double alpha;
-};
+void Brightness(struct ImageArr* img, int value) {
 
-void Brightness(struct ImageArr* img, double value) {
+  for(int i = 0; i < (img->h)*(img->w); i++) {
 
-  for(int i = 0; i < img->h; i++) {
+    img->imgPixelData[i]->red = img->imgPixelData[i]->red + value < 255 ? img->imgPixelData[i]->red + value : 255;
+    img->imgPixelData[i]->blue = img->imgPixelData[i]->blue + value < 255 ? img->imgPixelData[i]->blue + value : 255;
+    img->imgPixelData[i]->green = img->imgPixelData[i]->green + value < 255 ? img->imgPixelData[i]->green + value : 255;
 
-    for(int y = 0; y< img->w; y++) {
-      img->imgPixelData[i][y].red = img->imgPixelData[i][y].red + value < 255 ? img->imgPixelData[i][y].red + value : 255;
-      img->imgPixelData[i][y].green = img->imgPixelData[i][y].green + value < 255 ? img->imgPixelData[i][y].green + value : 255;
-      img->imgPixelData[i][y].blue = img->imgPixelData[i][y].blue + value < 255 ? img->imgPixelData[i][y].blue + value : 255;
-    }
   }
+  save("new.jpg", img);
 }
 
 void GrayScale(struct ImageArr* img) {
 
-  for(int i = 0; i < img->h; i++) {
+  for(int i = 0; i < (img->h)*(img->w); i++) {
+    double gamma = 0;
 
-    for(int y = 0; y< img->w; y++) {
-      double gamma = 0.0;
+    //compute the linear transform variable
+    double red = img->imgPixelData[i]->red / 255;
+    double green = img->imgPixelData[i]->green / 255;
+    double blue = img->imgPixelData[i]->blue / 255;
 
-      //compute the linear transform variable
-      double red = img->imgPixelData[i][y].red / 255.0;
-      double green = img->imgPixelData[i][y].green / 255.0;
-      double blue = img->imgPixelData[i][y].blue / 255.0;
+    double c_linear = 0.2126*red + 0.7152*green + 0.0722*blue;
 
-      double c_linear = 0.2126*red + 0.7152*green + 0.0722*blue;
-
-      //compute the nonlinear gamma correction variable
-      if(c_linear <= 0.0031308) {
-        gamma = 12.92 * c_linear;
-      }
-      else {
-        gamma = 1.055 * pow(c_linear, 1/2.4) - 0.055;
-      }
-
-      //Set each RGB of a pixel to the conventional non-linear rep: gamma
-      img->imgPixelData[i][y].red = gamma * 255;
-      img->imgPixelData[i][y].green = gamma * 255;
-      img->imgPixelData[i][y].blue = gamma * 255;
-
+    //compute the nonlinear gamma correction variable
+    if(c_linear <= 0.0031308) {
+      gamma = 12.92 * c_linear;
     }
+    else {
+      gamma = 1.055 * pow(c_linear, 1/2.4) - 0.055;
+    }
+
+    //Set each RGB of a pixel to the conventional non-linear rep: gamma
+    img->imgPixelData[i]->red = (int)(gamma * 255);
+    img->imgPixelData[i]->green = (int)(gamma * 255);
+    img->imgPixelData[i]->blue = (int)(gamma * 255);
+
   }
+  save("new.jpg", img);
 
 }
 
@@ -101,38 +88,41 @@ struct ImageArr *CropDimensions(struct ImageArr* img, double newstartdx, double 
 
 
 int main() {
-  struct ImageArr *img = malloc(sizeof(struct ImageArr));
+  //struct ImageArr *img = malloc(sizeof(struct ImageArr));
 
-  img->h = 2.0;
-  img->w = 2.0;
-  img->imgPixelData[0][1].red = 10.0;
-  img->imgPixelData[0][1].green = 20.0;
-  img->imgPixelData[0][1].blue = 30.0;
-  img->imgPixelData[0][1].alpha = 40.0;
-  img->imgPixelData[0][0].red = 10.0;
-  img->imgPixelData[0][0].green = 20.0;
-  img->imgPixelData[0][0].blue = 30.0;
-  img->imgPixelData[0][0].alpha = 40.0;
-  img->imgPixelData[1][1].red = 10.0;
-  img->imgPixelData[1][1].green = 200.0;
-  img->imgPixelData[1][1].blue = 30.0;
-  img->imgPixelData[1][1].alpha = 40.0;
-  img->imgPixelData[1][0].red = 10.0;
-  img->imgPixelData[1][0].green = 20.0;
-  img->imgPixelData[1][0].blue = 30.0;
-  img->imgPixelData[1][0].alpha = 40.0;
+  // img->h = 2.0;
+  // img->w = 2.0;
+  // img->imgPixelData[0][1].red = 10.0;
+  // img->imgPixelData[0][1].green = 20.0;
+  // img->imgPixelData[0][1].blue = 30.0;
+  // img->imgPixelData[0][1].alpha = 40.0;
+  // img->imgPixelData[0][0].red = 10.0;
+  // img->imgPixelData[0][0].green = 20.0;
+  // img->imgPixelData[0][0].blue = 30.0;
+  // img->imgPixelData[0][0].alpha = 40.0;
+  // img->imgPixelData[1][1].red = 10.0;
+  // img->imgPixelData[1][1].green = 200.0;
+  // img->imgPixelData[1][1].blue = 30.0;
+  // img->imgPixelData[1][1].alpha = 40.0;
+  // img->imgPixelData[1][0].red = 10.0;
+  // img->imgPixelData[1][0].green = 20.0;
+  // img->imgPixelData[1][0].blue = 30.0;
+  // img->imgPixelData[1][0].alpha = 40.0;
 
-  //Brightness(img, 30.0);
-  GrayScale(img);
+  struct ImageArr *img;
+
+  img = open("road.jpg");
+  //printImageArr(img);
+
+  //Brightness(img, 100);
+  //GrayScale(img);
+  img = CropPercentage(img, 60.0);
+  save("new.jpg", img);
 
   //struct ImageArr *returnPointer;
 
   //returnPointer = CropDimensions(img, 2.0, 4.0, 2.0, 4.0);
 
-
-  printf("%f\n", img->imgPixelData[0][0].green);
-  printf("%f\n", img->imgPixelData[0][0].blue);
-  printf("%f\n", img->imgPixelData[0][0].red);
 
   free(img);
   //free(returnPointer);
