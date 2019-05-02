@@ -97,10 +97,10 @@ let translate (globals, functions) =
       L.declare_function "save" save_t the_module in
 
 
-  let printImageArr_t : L.lltype = 
+  let printImage_t : L.lltype = 
       L.function_type i32_t [| image_t |] in
-  let printImageArr_func : L.llvalue = 
-      L.declare_function "printImageArr" printImageArr_t the_module in
+  let printImage_func : L.llvalue = 
+      L.declare_function "printImage" printImage_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -218,8 +218,8 @@ let translate (globals, functions) =
 	    "printf" builder
            | A.Pixel -> L.build_call printPix_func [| (expr builder e) |]
 	    "printPix" builder
-           | A.Image -> L.build_call printImageArr_func [| (expr builder e) |]
-	    "printImageArr" builder)
+           | A.Image -> L.build_call printImage_func [| (expr builder e) |]
+	    "printImage" builder)
       | SCall ("prints", [e]) ->
           L.build_call printf_func [| str_str; (expr builder e) |]
              "printf" builder
