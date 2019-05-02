@@ -3,7 +3,7 @@
 
 
 struct ImageArr *Image(int h, int w){
-
+    //currently not working
 
     struct ImageArr* img = (struct ImageArr *)malloc(sizeof(struct ImageArr));
     struct pixel **buf;
@@ -103,7 +103,7 @@ struct ImageArr* testSatPixel(struct ImageArr *m, int l){
 }
 
 struct ImageArr* flip(struct ImageArr *m){
- 
+    //currently not working
     int len = m->h * m->w;
     
     for(int i = 0; i<len/2; ++i){
@@ -119,7 +119,7 @@ struct ImageArr* flip(struct ImageArr *m){
 
 
 void flipRow(struct pixel *arr, int w){
-
+    //currently not working as intended. mirrors 2nd half of image to 1st half.
     for(int i=0; i<w/2; ++i){
         struct pixel *p = (struct pixel *)malloc(sizeof(struct pixel));
         p = &arr[i];
@@ -130,6 +130,7 @@ void flipRow(struct pixel *arr, int w){
 }
 
 struct ImageArr* reflect(struct ImageArr *m){
+    //currently not working
  
     int h = m->h;
     int w = m->w;
