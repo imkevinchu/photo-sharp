@@ -69,6 +69,38 @@ void freeLayer(struct ImageLayer *lay) {
 
 }
 
+//create a new Image layer of the requested dimensions
+//to handle memory allocation in image editing functions
+struct ImageLayer *newImageLayer(int hi, int wi) {
+    
+    struct ImageLayer *lay = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
+
+    struct pixel* temp;
+    int x = 0;
+
+    lay->h = hi;
+    lay->w = wi;
+
+    int j = 0;
+
+    struct pixel **buf;
+    buf = (struct pixel **)malloc(sizeof(struct pixel *)*(wi * hi)); 
+
+    lay->imgPixelData = buf;
+
+    int next = 0;
+
+    while(j < (hi * wi)) {
+        temp = makePix();
+        lay->imgPixelData[j] = temp;
+        j++;
+
+    }
+
+    return lay;
+} 
+    
+
 //create new, empty, ImageStack
 struct ImageStack *newImageStack() {
 
@@ -112,15 +144,15 @@ int save(char const *filename, struct ImageStack *img){
 //open a file and save to a new ImageLayer
 struct ImageLayer *openFile(char *fileName){
 
-    struct ImageLayer* lay = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
-
     int hi;
     int wi;
     int chan;
 
     unsigned char *data = stbi_load(fileName, &wi, &hi, &chan, 4);
 
-    struct pixel* temp = makePix();
+    struct ImageLayer *lay = newImageLayer(hi, wi);
+
+    struct pixel* temp;
     int x = 0;
 
     lay->h = hi;
@@ -128,34 +160,25 @@ struct ImageLayer *openFile(char *fileName){
 
     int j = 0;
 
-    struct pixel **buf;
-    buf = (struct pixel **)malloc(sizeof(struct pixel *)*(wi * hi)); 
-
-    lay->imgPixelData = buf;
-
     int next = 0;
 
     while(j < (hi * wi * 4))
     {
 
         if(next == 0) {
-            temp->red = (int)data[j];
+            lay->imgPixelData[x]->red = (int)data[j];
             next = 1;
         } else if(next == 1) {
-            temp->green = (int)data[j];
+            lay->imgPixelData[x]->green = (int)data[j];
             next = 2;
         } else if(next == 2) {
-            temp->blue = (int)data[j];
+            lay->imgPixelData[x]->blue = (int)data[j];
             next = 3;
         } else if(next == 3) {
-            temp->alpha = (int)data[j];
+            lay->imgPixelData[x]->alpha = (int)data[j];
             next = 0;
-                 
 
-            lay->imgPixelData[x] = temp;
             x = x + 1;
-      
-            temp = makePix();
         }
 
         j++;
