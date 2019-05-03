@@ -20,7 +20,7 @@ let () =
   let channel = ref stdin in
   Arg.parse speclist (fun filename -> channel := open_in filename) usage_msg;
   
-  let lexbuf = Lexing.from_channel Indentation.indentations !channel in
+  let lexbuf = Lexing.from_string Indentation.indentCount !channel in
   let ast = Microcparse.program Scanner.token lexbuf in  
   match !action with
     Ast -> print_string (Ast.string_of_program ast)
@@ -32,12 +32,3 @@ let () =
     | Compile -> let m = Codegen.translate sast in
 	Llvm_analysis.assert_valid_module m;
   print_string (Llvm.string_of_llmodule m)
-  
-  # LIST OF LINES FROM CHANNEL THEN TO SPLIT TO INITAL TABS
-  # in the udpate state we would keep the int and the output list
-  # the scanner is only going to accept a string
-  #need some trnaslation on the string itself to store all the information 
-  on indenats and dedents 
-  # translate somethning taht is easier to scan then 
-  can trnaslate tabs to curly braces to pass to scanner
-  # beginning of line 

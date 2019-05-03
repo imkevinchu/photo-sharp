@@ -22,9 +22,10 @@ let indentations filename =
     let f (previous_n, lines_so_far) line =
       let new_tabCount =  indentCount line 0 0 in
       let new_line = 
-        if tabCount > previous_n then append to string dedent \n } ] \n to the far
-        inputstring :: '\n}\n'
-        if tabCount < previous  then append to string indent \n { \n to the beginning of the line 
+        if new_tabCount > previous_n then inputstring :: "\n}\n"
+        
+        if new_tabCount < previous_n  then  "\n{\n" :: inputstring
+
         in
       let new_lines = lines_so_far :: new_line in
       (new_n, new_lines)
