@@ -195,7 +195,7 @@ struct ImageStack *open(char *fileName) {
     struct ImageStack *img = newImageStack();
 
     struct ImageLayer *base;
-    base = openFile("test.jpg");
+    base = openFile(fileName);
     pushLayer(img, base);
 
     return img;
@@ -230,8 +230,6 @@ int main() {
 
     save("new2.jpg", img); 
     popLayer(img);
-
-//    printImage(img);
 
     save("new.jpg", img); 
 }
