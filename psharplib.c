@@ -115,21 +115,26 @@ struct ImageArr* testSatPixel(struct ImageArr *m, int l){
 
 }
 
-struct ImageArr* flip(struct ImageArr *m){
+struct ImageArr* Rotate90(struct ImageArr *img){
     //currently not working
-    int len = m->h * m->w;
-    
-    for(int i = 0; i<len/2; ++i){
+    int idx = 0;
 
-        struct pixel *p = (struct pixel *)malloc(sizeof(struct pixel));
-        p = m->imgPixelData[i];
-        m->imgPixelData[i] = m->imgPixelData[len - 1 - i];
-        m->imgPixelData[len - 1 - i] = p;
-
+    struct pixel **dest = (struct pixel **)malloc(sizeof(struct pixel) * img->w * img->h);
+    for(int i= img->w-1; i >= 0; i--){
+        for(int j = 0; j < img->h ; j++){
+            
+            dest[idx++] = img->imgPixelData[j*(img->w+i)];
+            
+        }
     }
-    return m;
-}
+    //struct ImageArr* im = (struct ImageArr *)malloc(sizeof(struct ImageArr));
+    *(img->imgPixelData) = *(dest);
+    int tmp = img->w;
+    img->w = img->h;
+    img->h = tmp;
 
+    return img;
+}
 
 void flipRow(struct pixel *arr, int w){
     //currently not working as intended. mirrors 2nd half of image to 1st half.
@@ -261,7 +266,7 @@ struct ImageArr* addNoise(struct ImageArr *Im, float var, float mean){
 
 }
 
-struct ImageArr* Kelvin(struct ImageArr *img, float K, int level){
+struct ImageArr* Kelvin(struct ImageArr *img, float K){
     // level refers to blend strength, and is inversely related to how
     // much of the color will appear on the image. 
     // ** rbg from temp algorithm adapted from Tanner Heller **
@@ -332,8 +337,8 @@ struct ImageArr* Kelvin(struct ImageArr *img, float K, int level){
 int main() {
  
     struct ImageArr *img;
-    struct ImageArr *img2;
-    struct ImageArr *img3;
+    //struct ImageArr *img2;
+    //struct ImageArr *img3;
     img = open("babboon.jpg");
     //img2 = open("tree.jpg");
     //img3 = open("reflected.jpg");
@@ -343,11 +348,14 @@ int main() {
     //testSatPixel(img, 150);
     //img = addNoise( img, 10000, 100);
     //img = Contrast(img, 80);
-    img = Kelvin(img, 6000, 102);
+    //img = Kelvin(img, 8000);
+    img = Rotate90(img);
+    //stbi__vertical_flip(img->imgPixelData, img->w, img->h, 16);
     //save("noise.jpg", img);
     //DConv(img,img2,img3);
     //struct pixel *p;
     //p = setPix(255,255,255,100);
-    save("testKelvin6.jpg", img);  
+    save("rotate.jpg", img);
+    free(img);  
     //free(img);
 }
