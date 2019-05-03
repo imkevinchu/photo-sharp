@@ -13,7 +13,7 @@
 //Also defines ImageLayer type, which is the type used for each layer in an
 //ImageStack.
 
-//Uses public doman headers "stb_image.h" and "stb_image_write.h". See those files
+//Uses public domain headers "stb_image.h" and "stb_image_write.h". See those files
 //for more details on their author.
 
 struct ImageLayer {
@@ -37,6 +37,37 @@ void pushLayer(struct ImageStack *img, struct ImageLayer *lay) {
         img->top = 0;
     }
 } 
+
+//pop the last ImageLayer off the ImageStack. Function will return the popped layer.
+//NOTE: it is the responsibility of the calling function to free the popped layer. 
+struct ImageLayer *popLayer(struct ImageStack *img) {
+
+    struct ImageLayer *lay;
+    lay = img->imgArray[img->top -1];
+ 
+    if(img->top == 0) {
+        if(img->imgArray[4] == NULL) {
+            img->top = 0;
+        } else {
+            img->top = 4;
+        }
+    } else { 
+        (img->top)--;
+    }     
+    return lay;
+}
+
+//Free an ImageLayer and all pixel structures associated with it    
+void freeLayer(struct ImageLayer *lay) {
+
+    int i;
+    for(i = 0; i < (lay->h * lay->w); i++) {
+        free(lay->imgPixelData[i]);
+    }
+
+    free(lay);
+
+}
 
 //create new, empty, ImageStack
 struct ImageStack *newImageStack() {
@@ -171,7 +202,13 @@ int main() {
   
     img = open("test.jpg");
 
-    printImage(img);
+    struct ImageLayer* lay = openFile("test2.jpg");
+    pushLayer(img, lay);
+
+    save("new2.jpg", img); 
+    popLayer(img);
+
+//    printImage(img);
 
     save("new.jpg", img); 
 }

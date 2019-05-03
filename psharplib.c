@@ -1,12 +1,12 @@
-#include "imageArr.c"
+#include "ImageStack.c"
 #include <math.h>
 
 
 
-struct ImageArr *Image(int h, int w){
+struct ImageLayer *Image(int h, int w){
     //currently not working
 
-    struct ImageArr* img = (struct ImageArr *)malloc(sizeof(struct ImageArr));
+    struct ImageLayer* img = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
     struct pixel **buf;
     buf = (struct pixel **)malloc(sizeof(struct pixel *)*(w * h)); 
     img->imgPixelData = buf;
@@ -23,7 +23,7 @@ struct ImageArr *Image(int h, int w){
 
 
 
-struct ImageArr* Contrast(struct ImageArr* img, int level){
+struct ImageLayer* Contrast(struct ImageLayer* img, int level){
 
     double factor = (259 * (((float)level + 255))/(255 * (259 - (float)level)));
     printf("%f\n", factor);
@@ -54,7 +54,7 @@ struct ImageArr* Contrast(struct ImageArr* img, int level){
     return img;
 
 }
-struct ImageArr* Saturate(struct ImageArr* img, int l){
+struct ImageLayer* Saturate(struct ImageLayer* img, int l){
 //https://alienryderflex.com/saturation.html
     double level = (double)l/100;
     float Pr = .229;
@@ -105,7 +105,7 @@ struct pixel* SaturatePixel(struct pixel* px, int l){
 
 }
 
-struct ImageArr* testSatPixel(struct ImageArr *m, int l){
+struct ImageLayer* testSatPixel(struct ImageLayer *m, int l){
 
     int len = m->h*m->w;
     for(int i =0; i<len; i++){
@@ -115,20 +115,28 @@ struct ImageArr* testSatPixel(struct ImageArr *m, int l){
 
 }
 
-struct ImageArr* Rotate90(struct ImageArr *img){
+struct ImageLayer* Rotate90(struct ImageLayer *img){
     //currently not working
     int idx = 0;
 
-    struct pixel **dest = (struct pixel **)malloc(sizeof(struct pixel) * img->w * img->h);
+    struct pixel **dest = (struct pixel **)malloc(sizeof(struct pixel *) * img->w * img->h);
+    struct pixel* temp = makePix();
+
     for(int i= img->w-1; i >= 0; i--){
         for(int j = 0; j < img->h ; j++){
-            
-            dest[idx++] = img->imgPixelData[j*(img->w+i)];
+
+            temp->red = img->imgPixelData[j*(img->w) + i]->red;
+            temp->blue = img->imgPixelData[j*(img->w) + i]->blue;
+            temp->green = img->imgPixelData[j*(img->w) + i]->green;
+            temp->alpha = img->imgPixelData[j*(img->w) + i]->alpha;
+            dest[idx++] = temp;
+
+            temp = makePix();
             
         }
     }
-    //struct ImageArr* im = (struct ImageArr *)malloc(sizeof(struct ImageArr));
-    *(img->imgPixelData) = *(dest);
+    struct ImageLayer* im = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
+    (img->imgPixelData) = (dest);
     int tmp = img->w;
     img->w = img->h;
     img->h = tmp;
@@ -147,7 +155,7 @@ void flipRow(struct pixel *arr, int w){
 
 }
 
-struct ImageArr* reflect(struct ImageArr *m){
+struct ImageLayer* reflect(struct ImageLayer *m){
     //currently not working
  
     int h = m->h;
@@ -166,7 +174,7 @@ struct ImageArr* reflect(struct ImageArr *m){
 
     **** O(n^4) -> not tractable on large image files ****
 
-void DConv(struct ImageArr *in, struct ImageArr *mask, struct ImageArr *out){
+void DConv(struct ImageLayer *in, struct ImageLayer *mask, struct ImageLayer *out){
 
     long i,j,m,n,idx,jdx;
     int ms1,ms2,ms3,ms4,im1,im2,im3,im4,val1,val2,val3,val4;
@@ -219,7 +227,7 @@ void DConv(struct ImageArr *in, struct ImageArr *mask, struct ImageArr *out){
 }
 */
 
-struct ImageArr* addNoise(struct ImageArr *Im, float var, float mean){
+struct ImageLayer *addNoise(struct ImageLayer *Im, float var, float mean){
 //http://adaptiveart.eecs.umich.edu/2011/wp-content/uploads/2011/09/The-pocket-handbook-of-image-processing-algorithms-in-C.pdf
     /// NEEDS WORK -- SEG FAULTING // 
     int x,y,z,r;
@@ -266,7 +274,7 @@ struct ImageArr* addNoise(struct ImageArr *Im, float var, float mean){
 
 }
 
-struct ImageArr* Kelvin(struct ImageArr *img, float K){
+struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
     // level refers to blend strength, and is inversely related to how
     // much of the color will appear on the image. 
     // ** rbg from temp algorithm adapted from Tanner Heller **
@@ -336,9 +344,9 @@ struct ImageArr* Kelvin(struct ImageArr *img, float K){
 
 int main() {
  
-    struct ImageArr *img;
-    //struct ImageArr *img2;
-    //struct ImageArr *img3;
+    struct ImageStack *img;
+    //struct ImageLayer *img2;
+    //struct ImageLayer *img3;
     img = open("babboon.jpg");
     //img2 = open("tree.jpg");
     //img3 = open("reflected.jpg");
@@ -349,7 +357,7 @@ int main() {
     //img = addNoise( img, 10000, 100);
     //img = Contrast(img, 80);
     //img = Kelvin(img, 8000);
-    img = Rotate90(img);
+    Rotate90(img->imgArray[img->top - 1]);
     //stbi__vertical_flip(img->imgPixelData, img->w, img->h, 16);
     //save("noise.jpg", img);
     //DConv(img,img2,img3);
