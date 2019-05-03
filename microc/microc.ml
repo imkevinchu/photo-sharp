@@ -2,7 +2,7 @@
    check the resulting AST and generate an SAST from it, generate LLVM IR,
    and dump the module *)
 
-open indentation
+open Indentation
 
 type action = Ast | Sast | LLVM_IR | Compile
 

@@ -16,15 +16,14 @@ let indentations filename =
     
     let rec indentCount inputString n count = 
       if inputString.[n] = '\t' then indentCount inputString (n+1) (count+1)
-      else count       
+      else count 
     in
 
     let f (previous_n, lines_so_far) line =
       let new_tabCount =  indentCount line 0 0 in
       let new_line = 
         if new_tabCount > previous_n then inputstring ^ "\n}\n"
-        
-        if new_tabCount < previous_n  then  "\n{\n" ^ inputstring
+        else if new_tabCount < previous_n  then  "\n{\n" ^ inputstring
 
         in
       let new_lines = lines_so_far :: new_line in
