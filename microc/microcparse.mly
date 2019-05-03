@@ -75,7 +75,7 @@ stmt_block:
   |  INDENT SEMI stmt_list DEDENT SEMI
 
 stmt:
-    expr SEMI                               { Expr $1               }
+  | expr SEMI                               { Expr $1               }
   | RETURN expr_opt SEMI                    { Return $2             }
   | RETURN SEMI                             { Return Noexpr         }
   | LBRACE SEMI stmt_list RBRACE SEMI       { Block(List.rev $3)    }
