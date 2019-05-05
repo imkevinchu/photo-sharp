@@ -4,29 +4,40 @@
 
 
 struct ImageLayer *Image(int h, int w){
-    //currently not working
 
-    struct ImageLayer* img = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
-    struct pixel **buf;
-    buf = (struct pixel **)malloc(sizeof(struct pixel *)*(w * h)); 
-    img->imgPixelData = buf;
+    struct ImageLayer *dest = newImageLayer(h, w);
     
     for(int i =0; i< h*w; i++){
-        
-        struct pixel *p = setPix(255,255,255,50);
-        img->imgPixelData[i] = p;
+
+        dest->imgPixelData[i]->red = 255;
+        dest->imgPixelData[i]->green = 255;
+        dest->imgPixelData[i]->blue = 255;
+        dest->imgPixelData[i]->alpha = 0;
           
     }
     
-    return img;
+    return dest;
 }
 
+struct HSL
+{
+	int H;
+	float S;
+	float L;
+};
+float Min(float a, float b) {
+	return a <= b ? a : b;
+}
 
+float Max(float a, float b) {
+	return a >= b ? a : b;
+}
 
 struct ImageLayer* Contrast(struct ImageLayer* img, int level){
 
+    struct ImageLayer *dest = newImageLayer(img->h, img->w);
+
     double factor = (259 * (((float)level + 255))/(255 * (259 - (float)level)));
-    printf("%f\n", factor);
 
     for(int i =0; i< img->w*img->h; i++){
         int rv = img->imgPixelData[i]->red;
@@ -45,19 +56,21 @@ struct ImageLayer* Contrast(struct ImageLayer* img, int level){
                 b = (int)r*0.98;
                 r = (int)r*0.98;
         }
-        img->imgPixelData[i]->red = (int)r;
-        img->imgPixelData[i]->green = (int)g;
-        img->imgPixelData[i]->blue = (int)b;
+        dest->imgPixelData[i]->red = (int)r;
+        dest->imgPixelData[i]->green = (int)g;
+        dest->imgPixelData[i]->blue = (int)b;
 
     }
 
-    return img;
+    return dest;
 
 }
 struct ImageLayer* Saturate(struct ImageLayer* img, int l){
-//https://alienryderflex.com/saturation.html
+// adapted from https://alienryderflex.com/saturation.html
+
+    struct ImageLayer *dest = newImageLayer(img->h, img->w);
     double level = (double)l/100;
-    float Pr = .229;
+    float Pr = .299;
     float Pg = .587;
     float Pb = .114;
     double p;
@@ -67,24 +80,31 @@ struct ImageLayer* Saturate(struct ImageLayer* img, int l){
         int g = img->imgPixelData[i]->green;
         int b = img->imgPixelData[i]->blue;
 
+
         p = sqrt((r*r*Pr)+(g*g*Pg)+(b*b*Pb));
+
         r = p+(r-p)*level;
         if (r>255) r = 255;
-        g = p+(g-p)*level;
+
+        g = p+(g-p)*level;        
         if (g>255) g = 255;
+
         b = p+(b-p)*level;
         if (b>255) b = 255;
-        img->imgPixelData[i]->red = r;
-        img->imgPixelData[i]->green = g;
-        img->imgPixelData[i]->blue = b;
+
+        dest->imgPixelData[i]->red = r;
+        dest->imgPixelData[i]->green = g;
+        dest->imgPixelData[i]->blue = b;
     }
-    return img;
+    return dest;
 
 }
 
 struct pixel* SaturatePixel(struct pixel* px, int l){
+
+    struct pixel* dest = (struct pixel*)malloc(sizeof(struct pixel*));
     double level = (double)l/100;
-    float Pr = .229;
+    float Pr = .299;
     float Pg = .587;
     float Pb = .114;
     double p;
@@ -98,50 +118,45 @@ struct pixel* SaturatePixel(struct pixel* px, int l){
     if (g>255) g = 255;
     b = p+(b-p)*level;
     if (b>255) b = 255;
-    px->red = r;
-    px->green = g;
-    px->blue = b;
-    return px;
+    dest->red = r;
+    dest->green = g;
+    dest->blue = b;
+    dest->alpha = px->alpha;
+    return dest;
 
 }
 
 struct ImageLayer* testSatPixel(struct ImageLayer *m, int l){
 
+    struct ImageLayer *dest = newImageLayer(m->h, m->w);
+
     int len = m->h*m->w;
     for(int i =0; i<len; i++){
-        m->imgPixelData[i] = SaturatePixel(m->imgPixelData[i], l);
+        dest->imgPixelData[i] = SaturatePixel(m->imgPixelData[i], l);
     }
-    return m;
+    return dest;
 
 }
 
 struct ImageLayer* Rotate90(struct ImageLayer *img){
-    //currently not working
+    
     int idx = 0;
 
-    struct pixel **dest = (struct pixel **)malloc(sizeof(struct pixel *) * img->w * img->h);
-    struct pixel* temp = makePix();
+    struct ImageLayer *dest = newImageLayer(img->w, img->h);
 
     for(int i= img->w-1; i >= 0; i--){
         for(int j = 0; j < img->h ; j++){
 
-            temp->red = img->imgPixelData[j*(img->w) + i]->red;
-            temp->blue = img->imgPixelData[j*(img->w) + i]->blue;
-            temp->green = img->imgPixelData[j*(img->w) + i]->green;
-            temp->alpha = img->imgPixelData[j*(img->w) + i]->alpha;
-            dest[idx++] = temp;
-
-            temp = makePix();
+            dest->imgPixelData[idx]->red = img->imgPixelData[j*(img->w) + i]->red;
+            dest->imgPixelData[idx]->green = img->imgPixelData[j*(img->w) + i]->green;
+            dest->imgPixelData[idx]->blue = img->imgPixelData[j*(img->w) + i]->blue;
+            dest->imgPixelData[idx]->alpha = img->imgPixelData[j*(img->w) + i]->alpha;
+            idx++;
             
         }
     }
-    struct ImageLayer* im = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
-    (img->imgPixelData) = (dest);
-    int tmp = img->w;
-    img->w = img->h;
-    img->h = tmp;
 
-    return img;
+    return dest;
 }
 
 void flipRow(struct pixel *arr, int w){
@@ -155,6 +170,7 @@ void flipRow(struct pixel *arr, int w){
 
 }
 
+
 struct ImageLayer* reflect(struct ImageLayer *m){
     //currently not working
  
@@ -163,12 +179,19 @@ struct ImageLayer* reflect(struct ImageLayer *m){
     //int tmp = m->w;
     //m->w = m-> h;
     //m->h = tmp;
-    
-    for(int i = 0; i < h*w; i+=w){
-        flipRow(m->imgPixelData[i], w);
+    struct ImageLayer *dest = newImageLayer(m->h, m->w);
+    int idx = 0;
+    for(int i = 0; i < h; i++){
+        for(int j = w; j > 0 ; j--){
+            dest->imgPixelData[idx]->red = m->imgPixelData[j*i +1] -> red;
+            dest->imgPixelData[idx]->green = m->imgPixelData[j*i +1] -> green;
+            dest->imgPixelData[idx]->blue = m->imgPixelData[j*i +1] -> blue;
+            dest->imgPixelData[idx]->alpha = m->imgPixelData[j*i +1] -> alpha;
+            idx++;
 
+        }
     }
-    return m;
+    return dest;
 }
 /*
 
@@ -233,6 +256,7 @@ struct ImageLayer *addNoise(struct ImageLayer *Im, float var, float mean){
     int x,y,z,r;
     int cur = 0;
     float noise, theta;
+    struct ImageLayer *dest = newImageLayer(Im->h, Im->w);
     for(y =0; y < Im->h; y++){
         for(x = 0; x < Im->w; x++){
             
@@ -250,19 +274,19 @@ struct ImageLayer *addNoise(struct ImageLayer *Im, float var, float mean){
                 printf("%f\n", noise);
                 cur = rand()%3;
                 if (cur == 0){ 
-                    Im->imgPixelData[x+(long)y*Im->w]->red = (int)(noise +.5); 
+                    dest->imgPixelData[x+(long)y*Im->w]->red = (int)(noise +.5); 
                     
                 }
                 else if (cur == 1) {
-                    Im->imgPixelData[x+(long)y*Im->w]->green = (int)(noise +.5);
+                    dest->imgPixelData[x+(long)y*Im->w]->green = (int)(noise +.5);
                    
                 }
                 else if (cur == 2) {
-                    Im->imgPixelData[x+(long)y*Im->w]->blue = (int)(noise +.5);
+                    dest->imgPixelData[x+(long)y*Im->w]->blue = (int)(noise +.5);
                  
                 }
                 else if (cur == 3){
-                    Im->imgPixelData[x+(long)y*Im->w]->alpha = (int)(noise +.5);
+                    dest->imgPixelData[x+(long)y*Im->w]->alpha = (int)(noise +.5);
                 }
        
         
@@ -270,7 +294,26 @@ struct ImageLayer *addNoise(struct ImageLayer *Im, float var, float mean){
     
     }
     }
-    return Im;
+    return dest;
+
+}
+
+struct ImageLayer *Tint(struct ImageLayer *img, int level){
+
+    struct ImageLayer *dest = newImageLayer(img->h, img->w);
+    for(int i =0; i< img->h*img->w; i++){
+        
+            dest->imgPixelData[i]->red = img->imgPixelData[i]->red;
+            if (!(img->imgPixelData[i]->green + level > 255))
+                dest->imgPixelData[i]->green = img->imgPixelData[i]->green + level;
+            else
+                dest->imgPixelData[i]->green = img->imgPixelData[i]->green;
+                dest->imgPixelData[i]->blue = img->imgPixelData[i]->blue;
+                dest->imgPixelData[i]->alpha= img->imgPixelData[i]->alpha;
+        
+    }
+
+    return dest;
 
 }
 
@@ -288,7 +331,7 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
     double strength =  .95; //(double)level/110;
     printf("%f", strength);
     //double ln_minus_60 = log(k-60)
-
+    struct ImageLayer *dest = newImageLayer(img->h, img->w);
 
     for(int i =0; i< img->w*img->h; i++){
         if (k <= 66){
@@ -301,7 +344,7 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
             if(r > 255) r = 255;
             else if(r < 0 ) r = 0;
             //else 
-            img->imgPixelData[i]->red = img->imgPixelData[i]->red * strength + r*(1-strength) ;
+            dest->imgPixelData[i]->red = img->imgPixelData[i]->red * strength + r*(1-strength) ;
         }
         if (k<=66){
             temp = k;
@@ -310,7 +353,7 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
             if(g > 255) g = 255;
             if(g < 0 ) g = 0;  
             //else 
-            img->imgPixelData[i]->green = img->imgPixelData[i]->green * strength + g*(1-strength) ;         
+            dest->imgPixelData[i]->green = img->imgPixelData[i]->green * strength + g*(1-strength) ;         
         }
         else{
             temp = k - 60;
@@ -319,7 +362,7 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
             if(g > 255) g = 255;
             if(g < 0 ) g = 0;  
             //else img->imgPixelData[i]->green = 
-            img->imgPixelData[i]->green = img->imgPixelData[i]->green * strength + g*(1-strength)  ;         
+            dest->imgPixelData[i]->green = img->imgPixelData[i]->green * strength + g*(1-strength)  ;         
         }
         if (k >= 66){
             b = 255;
@@ -334,36 +377,229 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
             if(b > 255) b = 255;
             if(b < 0 ) b= 0;
             //else img->imgPixelData[i]->blue = 
-            img->imgPixelData[i]->blue = img->imgPixelData[i]->blue * strength + b*(1-strength) ; 
+            dest->imgPixelData[i]->blue = img->imgPixelData[i]->blue * strength + b*(1-strength) ; 
         }
         
     }
-    return img;
+    return dest;
 }
 
+
+void SetRGB(struct pixel* p, int r, int g, int b, int a){
+    p->red = r;
+    p->green = g;
+    p->blue = b;
+    p->alpha = a;
+}
+
+void ModRGB(struct pixel* p, int redMod, int greenMod, int blueMod, int alphaMod){
+    p->red += redMod;
+    p->green += greenMod;
+    p->blue += blueMod;
+    p->alpha += alphaMod;
+}
+
+void SetRed(struct pixel*p, int r){
+    p->red = r;
+}
+void SetGreen(struct pixel*p, int g){
+    p->green = g;
+}
+void SetBlue(struct pixel*p, int b){
+    p->blue = b;
+}
+void SetAlpha(struct pixel*p, int a){
+    p->alpha = a;
+}
+
+void modRed(struct pixel*p, int rmod){
+    p->red += rmod;
+}
+void modGreen(struct pixel*p, int gmod){
+    p->green += gmod;
+}
+void modBlue(struct pixel*p, int bmod){
+    p->blue += bmod;
+}
+void modAlpha(struct pixel*p, int amod){
+    p->alpha += amod;
+}
+
+//  **********************
+//  RGB / HSL CONVERSIONS 
+//  adapted for our data structures from
+//  https://www.programmingalgorithms.com/algorithm/hsl-to-rgb?lang=C
+//  **********************
+struct HSL *RGBToHSL(struct pixel* rgb) {
+	struct HSL *hsl = (struct HSL *)malloc(sizeof(struct HSL));
+
+	float r = (rgb->red / 255.0f);
+	float g = (rgb->green / 255.0f);
+	float b = (rgb->blue / 255.0f);
+
+	float min = Min(Min(r, g), b);
+	float max = Max(Max(r, g), b);
+	float delta = max - min;
+
+	hsl->L = (max + min) / 2;
+
+	if (delta == 0)
+	{
+		hsl->H = 0;
+		hsl->S = 0.0f;
+	}
+	else
+	{
+		hsl->S = (hsl->L <= 0.5) ? (delta / (max + min)) : (delta / (2 - max - min));
+
+		float hue;
+
+		if (r == max) hue = ((g - b) / 6) / delta;
+		
+		else if (g == max) hue = (1.1f / 3) + ((b - r) / 6) / delta;
+		else hue = (2.0f / 3) + ((r - g) / 6) / delta;
+		
+		if (hue < 0)
+			hue += 1;
+		if (hue > 1)
+			hue -= 1;
+		hsl->H = (int)(hue * 360);
+	}
+	return hsl;
+}
+
+
+float HueToRGB(float v1, float v2, float vH)
+{
+	if (vH < 0)
+		vH += 1;
+	if (vH > 1)
+		vH -= 1;
+	if ((6 * vH) < 1)
+		return (v1 + (v2 - v1) * 6 * vH);
+	if ((2 * vH) < 1)
+		return v2;
+	if ((3 * vH) < 2)
+		return (v1 + (v2 - v1) * ((2.0f / 3) - vH) * 6);
+	return v1;
+}
+
+
+struct pixel *HSLToRGB(struct HSL *hsl) {
+	struct pixel *rgb = (struct pixel *)malloc(sizeof(struct pixel));
+    int r,g,b;
+    float avg;
+
+	if (hsl->S == 0)
+	{
+		rgb->red = rgb->green = rgb->blue = hsl->L * 255;
+	}
+	else
+	{
+		float v1, v2;
+		float hue = (float)hsl->H / 360;
+		v2 = (hsl->L < 0.5) ? (hsl->L * (1 + hsl->S)) : ((hsl->L + hsl->S) - (hsl->L * hsl->S));
+		v1 = 2 * hsl->L - v2;
+		r = (int)(255 * HueToRGB(v1, v2, hue + (1.0f / 3)));
+		g = (int)(255 * HueToRGB(v1, v2, hue));
+		b = (int)(255 * HueToRGB(v1, v2, hue - (1.0f / 3)));
+        avg = (r+g+b)/3;
+        if (r > 255) r = 255;
+        if (g > 255) g = 255;
+        if (b > 255) b = 255;
+        rgb->red = r;
+        rgb->green = g;
+        rgb->blue = b;
+	}
+
+	return rgb;
+}
+
+/******* 
+        USAGE: 
+            factor:  value from 0-200;  < 100 indicates no change >
+            hsl:  1,2,3 for hue, saturation, luminance, respectively; 0 to change all. 
+            channel:  1,2,3 for red,green,blue respectively; 0 to saturate all.
+********/
+struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
+        double f = (double)factor/100;
+        printf("%f\n", f);
+        struct ImageLayer *dest = newImageLayer(m->h, m->w);
+        struct HSL *hsl_tmp = (struct HSL *)malloc(sizeof(struct HSL));
+        struct pixel *rgb_tmp = (struct pixel *)malloc(sizeof(struct pixel));
+        int r,g,b;
+        double avg;
+
+        for(int i = 0; i < m->h * m->w; i++){
+
+            dest->imgPixelData[i]->red = m->imgPixelData[i]->red;
+            dest->imgPixelData[i]->green = m->imgPixelData[i]->green;
+            dest->imgPixelData[i]->blue = m->imgPixelData[i]->blue;
+
+            hsl_tmp = RGBToHSL( m->imgPixelData[i]);
+
+
+            if(hsl == 1) hsl_tmp->H *= f;          // change hue by a factor of f
+            else if(hsl == 2) hsl_tmp->S *= f;     // change saturation by a factor of f
+            else if(hsl == 3) hsl_tmp->L *= f;     // change luminance by a factor of f
+            else if(hsl == 0){                     // change all hsl by a factor of f 
+                hsl_tmp->H *= f;
+                hsl_tmp->S *= f;
+                hsl_tmp->L *= f; 
+            }
+
+            rgb_tmp = HSLToRGB(hsl_tmp);
+            r = rgb_tmp->red;
+            g = rgb_tmp->green;
+            b = rgb_tmp->blue;
+            avg = (r+g+b)/3;
+            
+
+            if(channel == 1) dest->imgPixelData[i]->red = (rgb_tmp->red);                // only adjust red
+            else if (channel == 2) dest->imgPixelData[i]->green = (rgb_tmp->green);    // only adjust green
+            else if (channel == 3) dest->imgPixelData[i]->blue = (rgb_tmp->blue);       // only adjust blue
+            else if (channel == 0) {                                                                                    // adjust all r,g,b
+                dest->imgPixelData[i]->red = rgb_tmp->red;
+                dest->imgPixelData[i]->green = rgb_tmp->green;
+                dest->imgPixelData[i]->blue = rgb_tmp->blue;
+            }
+        } 
+    return dest;
+}
 
 int main() {
  
     struct ImageStack *img;
     //struct ImageLayer *img2;
     //struct ImageLayer *img3;
-    img = open("babboon.jpg");
+    img = open("gp2.jpg");
+    //save("d.jpg", img);
     //img2 = open("tree.jpg");
     //img3 = open("reflected.jpg");
-    //img = Image(400,400);
-    //flip(img);
-    //reflect(img);
-    //testSatPixel(img, 150);
-    //img = addNoise( img, 10000, 100);
-    //img = Contrast(img, 80);
-    //img = Kelvin(img, 8000);
-    Rotate90(img->imgArray[img->top - 1]);
-    //stbi__vertical_flip(img->imgPixelData, img->w, img->h, 16);
+    //img->imgArray[img->top - 1] = Image(400,400);
+    //save("blank.jpg", img);
+    //img->imgArray[img->top - 1] = flip(img->imgArray[img->top - 1]);
+    //save("flip.jpg", img);
+    //img->imgArray[img->top - 1] = reflect(img->imgArray[img->top - 1]);
+    // save("reflect.jpg", img);
+    //img->imgArray[img->top - 1] = testSatPixel(img->imgArray[img->top - 1], 105);
+    //save("testSatPixel.jpg", img);
+    //img->imgArray[img->top - 1] = addNoise( img->imgArray[img->top - 1], 50, 0);
+    //save("addNoise.jpg", img);
+    //img->imgArray[img->top - 1] = Contrast(img->imgArray[img->top - 1], 80);
+    //save("Contrast.jpg", img);
+    //img->imgArray[img->top - 1] = Kelvin(img->imgArray[img->top - 1], 8000);
+    //save("Kelvin8000.jpg", img);
+    //img->imgArray[img->top - 1] = Rotate90(img->imgArray[img->top - 1]);
+    //save("Rotate90.jpg", img);
+    img->imgArray[img->top-1] = HSL(img->imgArray[img->top -1], 150, 2, 2 ); // test sat green;
+    save("testsatGreen.jpg", img);
     //save("noise.jpg", img);
     //DConv(img,img2,img3);
     //struct pixel *p;
     //p = setPix(255,255,255,100);
-    save("rotate.jpg", img);
-    free(img);  
+    //save("rotate.jpg", img);
+    //free(img);  
     //free(img);
+    return 0;
 }
