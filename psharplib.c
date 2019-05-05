@@ -3,6 +3,7 @@
 
 
 
+
 struct ImageLayer *Image(int h, int w){
 
     struct ImageLayer *dest = newImageLayer(h, w);
@@ -21,7 +22,7 @@ struct ImageLayer *Image(int h, int w){
 
 struct HSL
 {
-	int H;
+	short H;
 	float S;
 	float L;
 };
@@ -317,6 +318,32 @@ struct ImageLayer *Tint(struct ImageLayer *img, int level){
 
 }
 
+struct ImageLayer *Crop(struct ImageLayer *img, float pct){
+
+    float cropPct = pct/100;
+    int maxH = img->h * cropPct;
+    int maxW = img->w * cropPct;
+    int h_off = (img->h - maxH)/2;
+    int w_off = (img->w - maxW)/2;
+
+    struct ImageLayer *dest = newImageLayer(maxH, maxW);
+     
+    int idx = 0;
+
+    for (int i = h_off ; i < maxH + h_off; i++ ){
+        for(int j = w_off; j< maxW + w_off; j++){          
+            dest->imgPixelData[idx]->red = img->imgPixelData[i*img->w + j]->red;
+            dest->imgPixelData[idx]->green = img->imgPixelData[i * img->w + j]->green; 
+            dest->imgPixelData[idx]->blue = img->imgPixelData[i * img->w + j]->blue;
+            dest->imgPixelData[idx]->alpha = img->imgPixelData[i * img->w + j]->alpha;
+            idx++;   
+        }
+    }
+
+    return dest;
+
+}
+
 struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
     // level refers to blend strength, and is inversely related to how
     // much of the color will appear on the image. 
@@ -572,7 +599,7 @@ int main() {
     struct ImageStack *img;
     //struct ImageLayer *img2;
     //struct ImageLayer *img3;
-    img = open("gp2.jpg");
+    img = open("new.jpg");
     //save("d.jpg", img);
     //img2 = open("tree.jpg");
     //img3 = open("reflected.jpg");
@@ -592,8 +619,9 @@ int main() {
     //save("Kelvin8000.jpg", img);
     //img->imgArray[img->top - 1] = Rotate90(img->imgArray[img->top - 1]);
     //save("Rotate90.jpg", img);
-    img->imgArray[img->top-1] = HSL(img->imgArray[img->top -1], 150, 2, 2 ); // test sat green;
-    save("testsatGreen.jpg", img);
+    //img->imgArray[img->top-1] = HSL(img->imgArray[img->top -1], 150, 2, 2 ); // test sat green;
+    img->imgArray[img->top-1] = Crop(img->imgArray[img->top -1], 60 ); 
+    save("testCrop.jpg", img);
     //save("noise.jpg", img);
     //DConv(img,img2,img3);
     //struct pixel *p;
