@@ -2,19 +2,19 @@
 #include <stdlib.h>
 
 struct pixel {
-  int red;
-  int green;
-  int blue;
-  int alpha;
+  unsigned char red;
+  unsigned char green;
+  unsigned char blue;
+  unsigned char alpha;
 };
 
 struct pixel *setPix(int r, int g, int b, int a) {  
   struct pixel *p = (struct pixel *)malloc(sizeof(struct pixel)); 
 
-  p->red = r;
-  p->green = g;
-  p->blue = b;
-  p->alpha = a;
+  p->red = (unsigned char)r;
+  p->green = (unsigned char)g;
+  p->blue = (unsigned char)b;
+  p->alpha = (unsigned char)a;
 
   return p;
 
@@ -37,11 +37,8 @@ void printPix(struct pixel *pix) {
 /*#ifdef BUILD_TEST
 int main() {
   struct pixel *p;
-
   p = setPix(12, 3, 4, 10);  
-
   printPix(p);
-
   return 0;
 }
 #endif*/

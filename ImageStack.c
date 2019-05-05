@@ -17,8 +17,8 @@
 //for more details on their author.
 
 struct ImageLayer {
-    int h;
-    int w;
+    short h;
+    short w;
     struct pixel **imgPixelData;
 };
 
@@ -224,13 +224,10 @@ int main() {
     struct ImageStack* img;
   
     img = open("test.jpg");
-
     struct ImageLayer* lay = openFile("test2.jpg");
     pushLayer(img, lay);
-
     save("new2.jpg", img); 
     popLayer(img);
-
     save("new.jpg", img); 
 }
 */
