@@ -1,22 +1,17 @@
 #include "ImageStack.c"
+
 #include <math.h>
-
-
+#include "Album.c"
 
 
 struct ImageLayer *Image(int h, int w){
-
     struct ImageLayer *dest = newImageLayer(h, w);
-    
     for(int i =0; i< h*w; i++){
-
         dest->imgPixelData[i]->red = 255;
         dest->imgPixelData[i]->green = 255;
         dest->imgPixelData[i]->blue = 255;
-        dest->imgPixelData[i]->alpha = 0;
-          
+        dest->imgPixelData[i]->alpha = 0;       
     }
-    
     return dest;
 }
 
@@ -160,43 +155,48 @@ struct ImageLayer* Rotate90(struct ImageLayer *img){
     return dest;
 }
 
-void flipRow(struct pixel *arr, int w){
-    //currently not working as intended. mirrors 2nd half of image to 1st half.
-    for(int i=0; i<w/2; ++i){
-        struct pixel *p = (struct pixel *)malloc(sizeof(struct pixel));
-        p = &arr[i];
-        arr[i] = arr[w - 1 - i];
-        arr[w- 1 - i] = *p;
-    }
 
-}
-
-
-struct ImageLayer* reflect(struct ImageLayer *m){
-    //currently not working
- 
+struct ImageLayer* ReflectY(struct ImageLayer *m){
     int h = m->h;
     int w = m->w;
-    //int tmp = m->w;
-    //m->w = m-> h;
-    //m->h = tmp;
     struct ImageLayer *dest = newImageLayer(m->h, m->w);
     int idx = 0;
-    for(int i = 0; i < h; i++){
-        for(int j = w; j > 0 ; j--){
-            dest->imgPixelData[idx]->red = m->imgPixelData[j*i +1] -> red;
-            dest->imgPixelData[idx]->green = m->imgPixelData[j*i +1] -> green;
-            dest->imgPixelData[idx]->blue = m->imgPixelData[j*i +1] -> blue;
-            dest->imgPixelData[idx]->alpha = m->imgPixelData[j*i +1] -> alpha;
-            idx++;
+    for(int i = h-1; i > 0; i--){
+        for(int j = 0 ; j < w ; j++){
 
+            int toChange = i*w-1 +j;            
+            dest->imgPixelData[idx]->red = m->imgPixelData[toChange] -> red;
+            dest->imgPixelData[idx]->green = m->imgPixelData[toChange] -> green;
+            dest->imgPixelData[idx]->blue = m->imgPixelData[toChange] -> blue;
+            dest->imgPixelData[idx]->alpha = m->imgPixelData[toChange] -> alpha;
+            idx++;
         }
     }
     return dest;
 }
-/*
 
-    **** O(n^4) -> not tractable on large image files ****
+
+struct ImageLayer* ReflectX(struct ImageLayer *m){
+    int h = m->h;
+    int w = m->w;
+    struct ImageLayer *dest = newImageLayer(m->h, m->w);
+    int idx = 0;
+    for(int i = 1; i < h; i++){
+        for(int j = 0 ; j < w ; j++){
+
+            int toChange = i*w -j;            
+            dest->imgPixelData[idx]->red = m->imgPixelData[toChange] -> red;
+            dest->imgPixelData[idx]->green = m->imgPixelData[toChange] -> green;
+            dest->imgPixelData[idx]->blue = m->imgPixelData[toChange] -> blue;
+            dest->imgPixelData[idx]->alpha = m->imgPixelData[toChange] -> alpha;
+            idx++;
+        }
+    }
+    return dest;
+}
+
+
+  //  **** O(n^4) -> not tractable on large image files ****
 
 void DConv(struct ImageLayer *in, struct ImageLayer *mask, struct ImageLayer *out){
 
@@ -235,10 +235,6 @@ void DConv(struct ImageLayer *in, struct ImageLayer *mask, struct ImageLayer *ou
             if(val2 < 0) val2 = 0;
             if(val3 < 0) val3 = 0;
             if(val4 < 0) val4 = 0;
-            printf("VAL1: %d\n", val1);
-            printf("VAL2: %d\n", val1);
-            printf("VAL3: %d\n", val1);
-            printf("VAL4: %d\n", val1);
             tmp->red = out->imgPixelData[i*out->h+j]->red;
             tmp->green = out->imgPixelData[i*out->h+j]->green;
             tmp->blue = out->imgPixelData[i*out->h+j]->blue;
@@ -249,7 +245,7 @@ void DConv(struct ImageLayer *in, struct ImageLayer *mask, struct ImageLayer *ou
             tmp->alpha = (int)val4;
         }
 }
-*/
+
 
 struct ImageLayer *addNoise(struct ImageLayer *Im, float var, float mean){
 //http://adaptiveart.eecs.umich.edu/2011/wp-content/uploads/2011/09/The-pocket-handbook-of-image-processing-algorithms-in-C.pdf
@@ -594,16 +590,68 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
     return dest;
 }
 
+
 int main() {
  
     struct ImageStack *img;
-    //struct ImageLayer *img2;
-    //struct ImageLayer *img3;
-    img = open("new.jpg");
+    struct ImageStack *img2;
+    struct ImageStack *img3;
+
+    img = open("d1.jpg");
+    img2 = open("d1.jpg");
+    img3 = open("d1.jpg");
+
+    struct Album *a = newAlbum();
+    addToAlbum(a, img);
+    addToAlbum(a, img2);
+    addToAlbum(a, img3);
+    
+    for(int i = 0; i<3; i++){
+        a->images[i]->imgArray[a->images[i]->top - 1] = ReflectY(a->images[i]->imgArray[a->images[i]->top - 1]);
+        if(i == 0)
+            save ("ALBUM0.jpg", a->images[i]);
+        else if(i == 1)
+            save ("ALBUM1.jpg", a->images[i]);
+        else if(i == 2)
+            save ("ALBUM2.jpg", a->images[i]);
+        else if(i == 3)
+            save ("ALBUM3.jpg", a->images[i]);
+
+    }
+
+    /*
+    addToAlbum(a, img5);
+    addToAlbum(a, img6);
+    addToAlbum(a, img7);
+        for(int i = 0; i<7; i++){
+        a->images[i]->imgArray[a->images[i]->top - 1] = ReflectY(a->images[i]->imgArray[a->images[i]->top - 1]);
+        if(i == 0)
+            save ("ALBUM0.jpg", a->images[i]);
+        else if(i == 1)
+            save ("ALBUM1.jpg", a->images[i]);
+        else if(i == 2)
+            save ("ALBUM2.jpg", a->images[i]);
+        else if(i == 3)
+            save ("ALBUM3.jpg", a->images[i]);
+        else if(i == 4)
+            save ("ALBUM4.jpg", a->images[i]);
+        else if(i == 5)
+            save ("ALBUM5.jpg", a->images[i]);
+        else if(i == 6)
+            save ("ALBUM6.jpg", a->images[i]);
+        else if(i == 7)
+            save ("ALBUM7.jpg", a->images[i]);
+            
+
+    }
+    */
+    printf("%d\n", a->size);
+
+    free(a);
+
     //save("d.jpg", img);
-    //img2 = open("tree.jpg");
-    //img3 = open("reflected.jpg");
-    //img->imgArray[img->top - 1] = Image(400,400);
+    //img2 = open("d2.jpg");
+    //img3->imgArray[img3->top - 1] = Image(100,100);
     //save("blank.jpg", img);
     //img->imgArray[img->top - 1] = flip(img->imgArray[img->top - 1]);
     //save("flip.jpg", img);
@@ -620,14 +668,17 @@ int main() {
     //img->imgArray[img->top - 1] = Rotate90(img->imgArray[img->top - 1]);
     //save("Rotate90.jpg", img);
     //img->imgArray[img->top-1] = HSL(img->imgArray[img->top -1], 150, 2, 2 ); // test sat green;
-    img->imgArray[img->top-1] = Crop(img->imgArray[img->top -1], 60 ); 
-    save("testCrop.jpg", img);
+    //img->imgArray[img->top-1] = ReflectX(img->imgArray[img->top -1]); 
+    //save("testRefX.jpg", img);
+    //img->imgArray[img->top-1] = ReflectY(ReflectX(img->imgArray[img->top -1]));
+    //save("testRefYX.jpg", img); 
     //save("noise.jpg", img);
-    //DConv(img,img2,img3);
+    //DConv(img->imgArray[img->top - 1],img2->imgArray[img2->top - 1],img3->imgArray[img3->top - 1]);
     //struct pixel *p;
     //p = setPix(255,255,255,100);
-    //save("rotate.jpg", img);
+    //save("test.jpg", img);
     //free(img);  
     //free(img);
     return 0;
 }
+
