@@ -20,6 +20,17 @@ struct pixel *setPix(int r, int g, int b, int a) {
 
 }
 
+int RedPixel(struct pixel *p) {  
+
+  p->red = 0;
+  p->green = 0;
+  p->blue = 255;
+  p->alpha = 0;
+
+  return 0;
+
+}
+
 struct pixel *makePix() {
   struct pixel *p = (struct pixel *)malloc(sizeof(struct pixel)); 
   return p;

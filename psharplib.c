@@ -96,9 +96,9 @@ struct ImageLayer* Saturate(struct ImageLayer* img, int l){
 
 }
 
-struct pixel* SaturatePixel(struct pixel* px, int l){
+int PixelSaturate(struct pixel* px, int l){
 
-    struct pixel* dest = (struct pixel*)malloc(sizeof(struct pixel*));
+//    struct pixel* dest = (struct pixel*)malloc(sizeof(struct pixel*));
     double level = (double)l/100;
     float Pr = .299;
     float Pg = .587;
@@ -114,19 +114,19 @@ struct pixel* SaturatePixel(struct pixel* px, int l){
     if (g>255) g = 255;
     b = p+(b-p)*level;
     if (b>255) b = 255;
-    dest->red = r;
-    dest->green = g;
-    dest->blue = b;
-    dest->alpha = px->alpha;
-    return dest;
+    px->red = r;
+    px->green = g;
+    px->blue = b;
+    px->alpha = px->alpha;
+    return 0;
 
 }
-
+/*
 void PixelSaturate(struct pixel *p, int s) {
     struct pixel *n;
  
-    n = p;
-    p = SaturatePixel(p, s);
+    n = *p;
+    p = saturatePixel(p, s);
     free(n);
 }
 
@@ -141,7 +141,7 @@ struct ImageLayer* testSatPixel(struct ImageLayer *m, int l){
     return dest;
 
 }
-
+*/
 struct ImageLayer* Rotate90(struct ImageLayer *img){
     
     int idx = 0;
@@ -790,5 +790,26 @@ int main() {
 
     ImageCrop(i, 65.0);
     save("smallerme.jpg", i);
+}
+*/
+/*
+int main() {
+ 
+    struct ImageStack* img;
+  
+    img = open("test.jpg");
+    int size;
+
+    size = ImageSize(img);
+
+    printf("Size: %d\n", size);
+ 
+    int i;
+    for(i = 0; i < size; i++) {
+        PixelSaturate(getPixel(img, i), 0);
+    }
+ 
+    save("tesingme.jpg", img);
+
 }
 */

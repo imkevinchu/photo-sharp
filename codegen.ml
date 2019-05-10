@@ -151,7 +151,7 @@ let translate (globals, functions) =
   let imageSize_t : L.lltype = 
       L.function_type i32_t [| image_t |] in
   let imageSize_func : L.llvalue = 
-      L.declare_function "imageSize" imageSize_t the_module in
+      L.declare_function "ImageSize" imageSize_t the_module in
 
   let getPix_t : L.lltype = 
       L.function_type pix_t [| image_t ; i32_t |] in
@@ -159,9 +159,15 @@ let translate (globals, functions) =
       L.declare_function "getPixel" getPix_t the_module in
 
   let satPix_t : L.lltype = 
-      L.function_type pix_t [| pix_t ; i32_t |] in
+      L.function_type i32_t [| pix_t ; i32_t |] in
   let satPix_func : L.llvalue = 
       L.declare_function "PixelSaturate" satPix_t the_module in
+
+  let redPixel_t : L.lltype = 
+      L.function_type i32_t [| pix_t |] in
+  let redPixel_func : L.llvalue = 
+      L.declare_function "RedPixel" redPixel_t the_module in
+
 
 
   (* Define each function (arguments and return type) so we can 
@@ -316,10 +322,12 @@ let translate (globals, functions) =
           L.build_call crop_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageCrop" builder
       | SCall ("GetPixel", e) ->
           L.build_call getPix_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "getPixel" builder
-      | SCall ("ImageSize", e) ->
-          L.build_call imageSize_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "imageSize" builder
+      | SCall ("ImageSize", [e]) ->
+          L.build_call imageSize_func [| (expr builder e)|] "ImageSize" builder
       | SCall ("SaturatePixel", e) ->
           L.build_call satPix_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "PixelSaturate" builder
+      | SCall ("RedPixel", [e]) ->
+          L.build_call redPixel_func [| (expr builder e) |] "RedPixel" builder
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let llargs = List.rev (List.map (expr builder) (List.rev args)) in

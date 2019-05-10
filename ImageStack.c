@@ -30,16 +30,18 @@ struct ImageStack {
 
 //Return a pointer to a specific pixel in the top layer
 //of an image stack -- used for iteration
-struct pixel *getPix(struct ImageStack *img, int index) {
+struct pixel *getPixel(struct ImageStack *img, int index) {
     struct ImageLayer *topLay = img->imgArray[img->top - 1];
 
     return topLay->imgPixelData[index];
 }
 
 //Return the size of the top layer of an ImageStack
-int imageSize(struct ImageStack *img) {
+int ImageSize(struct ImageStack *img) {
+    int size;
     struct ImageLayer *topLay = img->imgArray[img->top - 1];
-    return (topLay->w * topLay->h);
+    size = ((topLay->w) * (topLay->h));
+    return(size);
 }
 
 //push a previously malloc-ed ImageLayer onto a previously malloc-ed ImageStack
@@ -231,18 +233,22 @@ void PrintImage(struct ImageStack *img) {
     }
     printf("\n");
 }
-
 /*
-//test -- open a file, and save it to a new location
 int main() {
  
     struct ImageStack* img;
   
     img = open("test.jpg");
-    struct ImageLayer* lay = openFile("test2.jpg");
-    pushLayer(img, lay);
-    save("new2.jpg", img); 
-    popLayer(img);
-    save("new.jpg", img); 
+    int size;
+
+    size = ImageSize(img);
+
+    printf("Size: %d\n", size);
+ 
+    int i;
+    for(i = 0; i < size; i++) {
+        PixelSaturate(getPixel(i), 0);
+    }
+
 }
 */

@@ -58,6 +58,7 @@ let check (globals, functions) =
                                                  ("Crop", [(Image, "x"); (Float, "y")], Void);
                                                  ("GetPix", [(Image, "x"); (Int, "y")], Image);
                                                  ("SaturatePixel", [(Pixel, "x"); (Int, "y")], Pixel);
+                                                 ("RedPixel", [(Pixel, "x")], Int);
                                                  ("ImageSize", [(Image, "x")], Image);
                                                  ("save", [(String, "x"); (Image, "y")], Void)]
                                                  
