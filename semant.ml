@@ -45,7 +45,6 @@ let check (globals, functions) =
 			                         ("printbig", [(Int, "x")], Void);
                                                  ("hello", [(Int, "x")], Int);
                                                  ("open", [(String, "x")], Image);
-                                                 ("save", [(String, "x"); (Image, "y")], Void);
                                                  ("Contrast", [(Image, "x"); (Int, "y")], Void);
                                                  ("Saturate", [(Image, "x"); (Int, "y")], Void);
                                                  ("Rotate90", [(Image, "x")], Void);
@@ -55,6 +54,9 @@ let check (globals, functions) =
                                                  ("ReflectX", [(Image, "x")], Void);
                                                  ("Tint", [(Image, "x"); (Int, "y")], Void);
                                                  ("Crop", [(Image, "x"); (Float, "y")], Void)]
+                                                 ("getPix", [(Image, "x"); (Int, "y")], Image);
+                                                 ("imageSize", [(Image, "x")], Image);
+                                                 ("save", [(String, "x"); (Image, "y")], Void)]
                                                  
   in
 

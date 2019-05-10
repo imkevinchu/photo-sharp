@@ -27,6 +27,21 @@ struct ImageStack {
     struct ImageLayer **imgArray;
 };
 
+
+//Return a pointer to a specific pixel in the top layer
+//of an image stack -- used for iteration
+struct Pixel *getPix(struct ImageStack img, int index) {
+    struct ImageLayer *topLay = img->imgArray[img->top - 1];
+
+    return topLay->imgPixelData[index];
+}
+
+//Return the size of the top layer of an ImageStack
+int imageSize(struct ImageStack *img) {
+    struct ImageLayer *topLay = img->imgArray[img->top - 1];
+    return (topLay->w * topLay->h);
+}
+
 //push a previously malloc-ed ImageLayer onto a previously malloc-ed ImageStack
 void pushLayer(struct ImageStack *img, struct ImageLayer *lay) {
     

@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN DOT 
+%token SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN DOT PIXKEY IN 
 %token NOT EQ NEQ LT LEQ GT GEQ AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING IMAGE CAPTION ALBUM ARR PRESET PIXEL RED GREEN BLUE
 %token <int> LITERAL
@@ -86,6 +86,8 @@ stmt:
   | FOR LPAREN expr_opt SEMICOL expr SEMICOL expr_opt RPAREN COL SEMI stmt
                                             { For($3, $5, $7, $11)   }
   | WHILE LPAREN expr RPAREN COL SEMI stmt           { While($3, $7)         }
+  | FOR ID IN ID COL SEMI stmt           { EFor($2, $4, $7)          }
+
 
 expr_opt:
     /* nothing */ { Noexpr }

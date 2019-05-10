@@ -59,7 +59,7 @@ let translate (globals, functions) =
           A.Float -> L.const_float (ltype_of_typ t) 0.0
         | _ -> L.const_int (ltype_of_typ t) 0
       in StringMap.add n (L.define_global n init the_module) m in
-    List.fold_left global_var StringMap.empty globals in
+    List.fold_left global_var StringMap.empty ((A.Int, "Marie!") :: globals) in
 
   let printf_t : L.lltype = 
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
@@ -147,6 +147,17 @@ let translate (globals, functions) =
       L.function_type i32_t [| image_t; i32_t |] in
   let tint_func : L.llvalue = 
       L.declare_function "ImageTint" tint_t the_module in
+
+  let imageSize_t : L.lltype = 
+      L.function_type i32_t [| image_t |] in
+  let imageSize_func : L.llvalue = 
+      L.declare_function "imageSize" imageSize_t the_module in
+
+  let getPix_t : L.lltype = 
+      L.function_type pix_t [| image_t ; i32_t |] in
+  let getPix_func : L.llvalue = 
+      L.declare_function "getPix" getPix_t the_module in
+
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -363,6 +374,18 @@ let translate (globals, functions) =
       (* Implement for loops as while loops *)
       | SFor (e1, e2, e3, body) -> stmt builder
 	    ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3]) ] )
+      
+      (* Implement enhanced for loop syntax as while loops *)
+      | SEFor (p, img, body) -> 
+            (* call start and size functions, parser to traditional For syntax *)
+
+            let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
+                e2 = (A.Int, (SBinop((A.Int, SId("Marie!")), Less, (A.Int, SCall("ImageSize", [(A.Image, SId(img))]))))) and
+                e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
+                e4 = (A.Int, SAssign(p, (A.Int, SCall(("GetPixel", [(A.Image, SId(img)); (A.Int, SId("Marie!"))]))))) in
+
+
+	    stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3; SExpr e4]) ] )
     in
 
     (* Build the code for each statement in the function *)
