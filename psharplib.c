@@ -268,7 +268,6 @@ struct ImageLayer *addNoise(struct ImageLayer *Im, float var, float mean){
                 noise = 255;
                 if (noise < 0)
                 noise = 0;
-                printf("%f\n", noise);
                 cur = rand()%3;
                 if (cur == 0){ 
                     dest->imgPixelData[x+(long)y*Im->w]->red = (int)(noise +.5); 
@@ -287,7 +286,6 @@ struct ImageLayer *addNoise(struct ImageLayer *Im, float var, float mean){
                 }
        
         
-        //printf("%d\n",y);
     
     }
     }
@@ -352,7 +350,6 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
     double temp;
     int r,g,b;
     double strength =  .95; //(double)level/110;
-    printf("%f", strength);
     //double ln_minus_60 = log(k-60)
     struct ImageLayer *dest = newImageLayer(img->h, img->w);
 
@@ -590,7 +587,98 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
     return dest;
 }
 
+//Interface with codegen
+void ImageContrast(struct ImageStack *img, int lev) {
 
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Contrast(img->imgArray[topLevel], lev);
+
+    pushLayer(img, lay);
+}
+
+void ImageSaturate(struct ImageStack *img, int lev) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Saturate(img->imgArray[topLevel], lev);
+
+    pushLayer(img, lay);
+}
+
+void ImageRotate90(struct ImageStack *img) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Rotate90(img->imgArray[topLevel]);
+
+    pushLayer(img, lay);
+}
+
+void ImageAddNoise(struct ImageStack *img, float var, float mean) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = addNoise(img->imgArray[topLevel], var, mean);
+
+    pushLayer(img, lay);
+}
+
+void ImageKelvin(struct ImageStack *img, int lev) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Kelvin(img->imgArray[topLevel], lev);
+
+    pushLayer(img, lay);
+}
+
+void ImageReflectY(struct ImageStack *img) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = ReflectY(img->imgArray[topLevel]);
+
+    pushLayer(img, lay);
+}
+
+void ImageReflectX(struct ImageStack *img) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = ReflectX(img->imgArray[topLevel]);
+
+    pushLayer(img, lay);
+}
+
+void ImageTint(struct ImageStack *img, int lev) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Tint(img->imgArray[topLevel], lev);
+
+    pushLayer(img, lay);
+}
+
+void ImageCrop(struct ImageStack *img, float percentage) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Crop(img->imgArray[topLevel], percentage);
+
+    pushLayer(img, lay);
+}
+
+/*
 int main() {
  
     struct ImageStack *img;
@@ -619,7 +707,6 @@ int main() {
 
     }
 
-    /*
     addToAlbum(a, img5);
     addToAlbum(a, img6);
     addToAlbum(a, img7);
@@ -644,7 +731,6 @@ int main() {
             
 
     }
-    */
     printf("%d\n", a->size);
 
     free(a);
@@ -682,3 +768,16 @@ int main() {
     return 0;
 }
 
+int main() {
+    struct ImageStack *i;
+    i = open("marie.jpg");
+    
+    ImageAddNoise(i, 50, 0);
+    save("noisyme.jpg", i);
+
+    popLayer(i);
+
+    ImageCrop(i, 95.0);
+    save("smallerme.jpg", i);
+}
+*/

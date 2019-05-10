@@ -1,0 +1,8 @@
+preset int main():
+{
+    Image img
+    img = open("marie.jpg")
+    Contrast(img, 90)
+    save("colorfulme.jpg", img)
+    return 0
+}

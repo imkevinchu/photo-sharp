@@ -45,7 +45,16 @@ let check (globals, functions) =
 			                         ("printbig", [(Int, "x")], Void);
                                                  ("hello", [(Int, "x")], Int);
                                                  ("open", [(String, "x")], Image);
-                                                 ("save", [(String, "x"); (Image, "y")], Void)]
+                                                 ("save", [(String, "x"); (Image, "y")], Void);
+                                                 ("Contrast", [(Image, "x"); (Int, "y")], Void);
+                                                 ("Saturate", [(Image, "x"); (Int, "y")], Void);
+                                                 ("Rotate90", [(Image, "x")], Void);
+                                                 ("AddNoise", [(Image, "x"); (Float, "y"); (Float, "z")], Void);
+                                                 ("Kelvin", [(Image, "x"); (Float, "y")], Void);
+                                                 ("ReflectY", [(Image, "x")], Void);
+                                                 ("ReflectX", [(Image, "x")], Void);
+                                                 ("Tint", [(Image, "x"); (Int, "y")], Void);
+                                                 ("Crop", [(Image, "x"); (Float, "y")], Void);]
                                                  
   in
 

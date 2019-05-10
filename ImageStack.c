@@ -203,7 +203,7 @@ struct ImageStack *open(char *fileName) {
 }
 
 //Print the top layer of an ImageStack
-void printImage(struct ImageStack *img) {
+void PrintImage(struct ImageStack *img) {
 
     int topLayer = img->top - 1;
 

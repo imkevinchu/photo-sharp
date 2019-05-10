@@ -86,6 +86,8 @@ let translate (globals, functions) =
   let setPix_func : L.llvalue = 
       L.declare_function "setPix" setPix_t the_module in
 
+  (* Link Image editing functions *)
+
   let open_t : L.lltype = 
       L.function_type image_t [| L.pointer_type i8_t |] in
   let open_func : L.llvalue = 
@@ -96,11 +98,55 @@ let translate (globals, functions) =
   let save_func : L.llvalue = 
       L.declare_function "save" save_t the_module in
 
-
   let printImage_t : L.lltype = 
       L.function_type i32_t [| image_t |] in
   let printImage_func : L.llvalue = 
-      L.declare_function "printImage" printImage_t the_module in
+      L.declare_function "PrintImage" printImage_t the_module in
+
+  let contrast_t : L.lltype = 
+      L.function_type i32_t [| image_t; i32_t |] in
+  let contrast_func : L.llvalue = 
+      L.declare_function "ImageContrast" contrast_t the_module in
+
+  let saturate_t : L.lltype = 
+      L.function_type i32_t [| image_t; i32_t |] in
+  let saturate_func : L.llvalue = 
+      L.declare_function "ImageSaturate" saturate_t the_module in
+
+  let rotate90_t : L.lltype = 
+      L.function_type i32_t [| image_t |] in
+  let rotate90_func : L.llvalue = 
+      L.declare_function "ImageRotate90" rotate90_t the_module in
+
+  let addNoise_t : L.lltype = 
+      L.function_type i32_t [| image_t; float_t; float_t |] in
+  let addNoise_func : L.llvalue = 
+      L.declare_function "ImageAddNoise" addNoise_t the_module in
+
+  let kelvin_t : L.lltype = 
+      L.function_type i32_t [| image_t; float_t |] in
+  let kelvin_func : L.llvalue = 
+      L.declare_function "ImageKelvin" kelvin_t the_module in
+
+  let reflectY_t : L.lltype = 
+      L.function_type i32_t [| image_t |] in
+  let reflectY_func : L.llvalue = 
+      L.declare_function "ImageReflectY" reflectY_t the_module in
+
+  let reflectX_t : L.lltype = 
+      L.function_type i32_t [| image_t |] in
+  let reflectX_func : L.llvalue = 
+      L.declare_function "ImageReflectX" reflectX_t the_module in
+
+  let tint_t : L.lltype = 
+      L.function_type i32_t [| image_t; i32_t |] in
+  let tint_func : L.llvalue = 
+      L.declare_function "ImageTint" tint_t the_module in
+
+  let crop_t : L.lltype = 
+      L.function_type i32_t [| image_t; float_t |] in
+  let crop_func : L.llvalue = 
+      L.declare_function "ImageCrop" crop_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -219,7 +265,7 @@ let translate (globals, functions) =
            | A.Pixel -> L.build_call printPix_func [| (expr builder e) |]
 	    "printPix" builder
            | A.Image -> L.build_call printImage_func [| (expr builder e) |]
-	    "printImage" builder)
+	    "PrintImage" builder)
       | SCall ("prints", [e]) ->
           L.build_call printf_func [| str_str; (expr builder e) |]
              "printf" builder
@@ -234,6 +280,24 @@ let translate (globals, functions) =
           L.build_call open_func [| (expr builder e) |] "open" builder
       | SCall ("save", e) ->
           L.build_call save_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "save" builder
+      | SCall ("Contrast", e) ->
+          L.build_call contrast_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageContrast" builder
+      | SCall ("Saturate", e) ->
+          L.build_call saturate_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageSaturate" builder
+      | SCall ("Rotate90", [e]) ->
+          L.build_call rotate90_func [| (expr builder e) |] "ImageRotate90" builder
+      | SCall ("AddNoise", e) ->
+          L.build_call addNoise_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e))); (expr builder (List.hd (List.tl (List.tl e)))) |] "ImageAddNoise" builder
+      | SCall ("Kelvin", e) ->
+          L.build_call kelvin_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageKelvin" builder
+      | SCall ("ReflectY", [e]) ->
+          L.build_call reflectY_func [| (expr builder e) |] "ImageReflectY" builder
+      | SCall ("ReflectX", [e]) ->
+          L.build_call reflectX_func [| (expr builder e) |] "ImageReflectX" builder
+      | SCall ("Tint", e) ->
+          L.build_call tint_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageTint" builder
+      | SCall ("Crop", e) ->
+          L.build_call crop_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageCrop" builder
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let llargs = List.rev (List.map (expr builder) (List.rev args)) in
