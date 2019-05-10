@@ -24,6 +24,7 @@ type sstmt =
   | SIf of sexpr * sstmt * sstmt
   | SFor of sexpr * sexpr * sexpr * sstmt
   | SWhile of sexpr * sstmt
+  | SEFor of sexpr * sstmt
 
 type sfunc_decl = {
     styp : typ;

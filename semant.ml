@@ -45,6 +45,8 @@ let check (globals, functions) =
 			                         ("printbig", [(Int, "x")], Void);
                                                  ("hello", [(Int, "x")], Int);
                                                  ("open", [(String, "x")], Image);
+                                                 ("getPix", [(Imgae, "x"), (Int, "y")], Image);
+                                                 ("imageSize", [(Image, "x")], Image);
                                                  ("save", [(String, "x"); (Image, "y")], Void)]
                                                  
   in
