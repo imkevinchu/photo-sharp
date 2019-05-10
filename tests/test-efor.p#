@@ -2,11 +2,11 @@ preset int main():
 {
     Image i
     Pixel p
-    i = open("test.jpg")
+    i = open("test3.jpg")
     for p in i:
     {
-        SaturatePixel(p, 150)
+        SaturatePixel(p, 50)
     }
-    save("enhancedme.jpg", i)
+    save("EnhancedForTest3.jpg", i)
     return 0
 }

@@ -1,8 +1,8 @@
 preset int main():
 {
     Image i
-    i = open("marie.jpg")
+    i = open("test3.jpg")
     Crop(i, 65.0)
-    save("smallerme.jpg", i)
+    save("CropTest3.jpg", i)
     return 0
 }

@@ -1,8 +1,8 @@
 preset int main():
 {
     Image i
-    i = open("marie.jpg")
+    i = open("test3.jpg")
     Saturate(i, 20)
-    save("saturatedme.jpg", i)
+    save("SaturatedTest3.jpg", i)
     return 0
 }
