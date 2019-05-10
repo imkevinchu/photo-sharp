@@ -122,6 +122,14 @@ struct pixel* SaturatePixel(struct pixel* px, int l){
 
 }
 
+void PixelSaturate(struct pixel *p, int s) {
+    struct pixel *n;
+ 
+    n = p;
+    p = SaturatePixel(p, s);
+    free(n);
+}
+
 struct ImageLayer* testSatPixel(struct ImageLayer *m, int l){
 
     struct ImageLayer *dest = newImageLayer(m->h, m->w);

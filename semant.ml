@@ -52,10 +52,13 @@ let check (globals, functions) =
                                                  ("Kelvin", [(Image, "x"); (Float, "y")], Void);
                                                  ("ReflectY", [(Image, "x")], Void);
                                                  ("ReflectX", [(Image, "x")], Void);
+                                                 ("ImageSize", [(Image, "x")], Int);
+                                                 ("GetPixel", [(Image, "x"); (Int, "y")], Pixel);
                                                  ("Tint", [(Image, "x"); (Int, "y")], Void);
-                                                 ("Crop", [(Image, "x"); (Float, "y")], Void)]
-                                                 ("getPix", [(Image, "x"); (Int, "y")], Image);
-                                                 ("imageSize", [(Image, "x")], Image);
+                                                 ("Crop", [(Image, "x"); (Float, "y")], Void);
+                                                 ("GetPix", [(Image, "x"); (Int, "y")], Image);
+                                                 ("SaturatePixel", [(Pixel, "x"); (Int, "y")], Pixel);
+                                                 ("ImageSize", [(Image, "x")], Image);
                                                  ("save", [(String, "x"); (Image, "y")], Void)]
                                                  
   in
@@ -185,6 +188,8 @@ let check (globals, functions) =
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | For(e1, e2, e3, st) ->
 	  SFor(expr e1, check_bool_expr e2, expr e3, check_stmt st)
+      | EFor(s1, s2, st) ->
+          SEFor(s1, s2, check_stmt st)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
       | Return e -> let (t, e') = expr e in
         if t = func.typ then SReturn (t, e') 

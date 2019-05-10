@@ -156,7 +156,12 @@ let translate (globals, functions) =
   let getPix_t : L.lltype = 
       L.function_type pix_t [| image_t ; i32_t |] in
   let getPix_func : L.llvalue = 
-      L.declare_function "getPix" getPix_t the_module in
+      L.declare_function "getPixel" getPix_t the_module in
+
+  let satPix_t : L.lltype = 
+      L.function_type pix_t [| pix_t ; i32_t |] in
+  let satPix_func : L.llvalue = 
+      L.declare_function "PixelSaturate" satPix_t the_module in
 
 
   (* Define each function (arguments and return type) so we can 
@@ -309,6 +314,12 @@ let translate (globals, functions) =
           L.build_call tint_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageTint" builder
       | SCall ("Crop", e) ->
           L.build_call crop_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageCrop" builder
+      | SCall ("GetPixel", e) ->
+          L.build_call getPix_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "getPixel" builder
+      | SCall ("ImageSize", e) ->
+          L.build_call imageSize_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "imageSize" builder
+      | SCall ("SaturatePixel", e) ->
+          L.build_call satPix_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "PixelSaturate" builder
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let llargs = List.rev (List.map (expr builder) (List.rev args)) in
@@ -385,7 +396,7 @@ let translate (globals, functions) =
                 e4 = (A.Int, SAssign(p, (A.Int, SCall(("GetPixel", [(A.Image, SId(img)); (A.Int, SId("Marie!"))]))))) in
 
 
-	    stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3; SExpr e4]) ] )
+	    stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] )
     in
 
     (* Build the code for each statement in the function *)

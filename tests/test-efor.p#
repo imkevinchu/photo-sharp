@@ -1,0 +1,13 @@
+preset int main():
+{
+    Image i
+    Pixel p
+    int j
+    i = open("test.jpg")
+    for p in i:
+    {
+        SaturatePixel(p, 50)
+    }
+    save("what.jpg", i)
+    return 0
+}

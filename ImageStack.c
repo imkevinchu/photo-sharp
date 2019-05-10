@@ -30,7 +30,7 @@ struct ImageStack {
 
 //Return a pointer to a specific pixel in the top layer
 //of an image stack -- used for iteration
-struct Pixel *getPix(struct ImageStack img, int index) {
+struct pixel *getPix(struct ImageStack *img, int index) {
     struct ImageLayer *topLay = img->imgArray[img->top - 1];
 
     return topLay->imgPixelData[index];
