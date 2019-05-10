@@ -86,7 +86,7 @@ stmt:
   | FOR LPAREN expr_opt SEMICOL expr SEMICOL expr_opt RPAREN COL SEMI stmt
                                             { For($3, $5, $7, $11)   }
   | WHILE LPAREN expr RPAREN COL SEMI stmt           { While($3, $7)         }
-  | FOR PIXKEY IN ID COL SEMI stmt           { EFOR($4, $7)          }
+  | FOR ID IN ID COL SEMI stmt           { EFor($2, $4, $7)          }
 
 
 expr_opt:
