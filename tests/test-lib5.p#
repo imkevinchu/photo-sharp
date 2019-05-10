@@ -2,7 +2,7 @@ preset int main():
 {
     Image img
     img = open("marie.jpg")
-    Kelvin(img, 273.0)
+    Kelvin(img, 50.0)
     save("coldme.jpg", img)
     return 0
 }

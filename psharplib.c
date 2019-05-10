@@ -618,22 +618,22 @@ void ImageRotate90(struct ImageStack *img) {
     pushLayer(img, lay);
 }
 
-void ImageAddNoise(struct ImageStack *img, float var, float mean) {
+void ImageAddNoise(struct ImageStack *img, double var, double mean) {
 
     int topLevel = img->top - 1;
 
     struct ImageLayer *lay;
-    lay = addNoise(img->imgArray[topLevel], var, mean);
+    lay = addNoise(img->imgArray[topLevel], (float)var, (float)mean);
 
     pushLayer(img, lay);
 }
 
-void ImageKelvin(struct ImageStack *img, int lev) {
+void ImageKelvin(struct ImageStack *img, double lev) {
 
     int topLevel = img->top - 1;
 
     struct ImageLayer *lay;
-    lay = Kelvin(img->imgArray[topLevel], lev);
+    lay = Kelvin(img->imgArray[topLevel], (float)lev);
 
     pushLayer(img, lay);
 }
@@ -668,12 +668,14 @@ void ImageTint(struct ImageStack *img, int lev) {
     pushLayer(img, lay);
 }
 
-void ImageCrop(struct ImageStack *img, float percentage) {
+void ImageCrop(struct ImageStack *img, double p) {
 
     int topLevel = img->top - 1;
 
+    float f = (float)p;
+
     struct ImageLayer *lay;
-    lay = Crop(img->imgArray[topLevel], percentage);
+    lay = Crop(img->imgArray[topLevel], f);
 
     pushLayer(img, lay);
 }
@@ -767,17 +769,18 @@ int main() {
     //free(img);
     return 0;
 }
-
+*/
+/*
 int main() {
     struct ImageStack *i;
     i = open("marie.jpg");
     
-    ImageAddNoise(i, 50, 0);
+    ImageAddNoise(i, 0.5, 0);
     save("noisyme.jpg", i);
 
     popLayer(i);
 
-    ImageCrop(i, 95.0);
+    ImageCrop(i, 65.0);
     save("smallerme.jpg", i);
 }
 */

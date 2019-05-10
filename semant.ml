@@ -54,7 +54,7 @@ let check (globals, functions) =
                                                  ("ReflectY", [(Image, "x")], Void);
                                                  ("ReflectX", [(Image, "x")], Void);
                                                  ("Tint", [(Image, "x"); (Int, "y")], Void);
-                                                 ("Crop", [(Image, "x"); (Float, "y")], Void);]
+                                                 ("Crop", [(Image, "x"); (Float, "y")], Void)]
                                                  
   in
 

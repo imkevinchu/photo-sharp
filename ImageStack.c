@@ -117,7 +117,7 @@ struct ImageStack *newImageStack() {
 
 //save the top layer of an image to a designated file name
 int save(char const *filename, struct ImageStack *img){
-
+   
     int topLayer = img->top - 1;
 
     struct pixel **data = img->imgArray[topLayer]->imgPixelData;

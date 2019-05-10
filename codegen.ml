@@ -138,15 +138,15 @@ let translate (globals, functions) =
   let reflectX_func : L.llvalue = 
       L.declare_function "ImageReflectX" reflectX_t the_module in
 
-  let tint_t : L.lltype = 
-      L.function_type i32_t [| image_t; i32_t |] in
-  let tint_func : L.llvalue = 
-      L.declare_function "ImageTint" tint_t the_module in
-
   let crop_t : L.lltype = 
       L.function_type i32_t [| image_t; float_t |] in
   let crop_func : L.llvalue = 
       L.declare_function "ImageCrop" crop_t the_module in
+
+  let tint_t : L.lltype = 
+      L.function_type i32_t [| image_t; i32_t |] in
+  let tint_func : L.llvalue = 
+      L.declare_function "ImageTint" tint_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
