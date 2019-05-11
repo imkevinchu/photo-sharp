@@ -12,22 +12,18 @@ let indentations filename =
   with End_of_file ->
     close_in channel;
     List.rev !lines 
-    
-let check (previous_n, lines_so_far) line =
+
+let check (previous_n, lines_so_far) line n count = 
   let rec indentCount inputString n count = 
-    if inputString.[n] = '\t' then indentCount inputString (n+1) (count+1) else count in 
-
-  let new_tabCount =  indentCount line 0 0 in
+    if inputString.[n] = '\t' then indentCount inputString (n+1) (count+1) else count in
   
+  let new_tabCount =  indentCount line 0 0 in 
+    
   let new_line = 
-    if new_tabCount > previous_n then inputString ^ " \n}\n "
-    else if new_tabCount < previous_n  then  " \n{\n " ^ inputString
-  in
-  
-  let new_lines = lines_so_far :: new_line in
-      
-  (new_tabCount, new_lines) 
+    if new_tabCount > previous_n then line ^ " \n}\n "
+    else if new_tabCount < previous_n  then  " \n{\n " ^ line in
 
-let (tabcount,revNewList) = List.fold_left check (0,[]) !lines in 
+  let new_lines = lines_so_far :: new_line in
+
   
-print_string String.concat "\n" (List.rev revNewList) 
+  List.fold_left check (0,[]) !lines 0 0
