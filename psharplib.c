@@ -144,50 +144,57 @@ struct ImageLayer* ReflectX(struct ImageLayer *m){
 }
 
 
+/***********************************
+ *  values for var between 0-1000
+ *  values for mean between 0-100 
+***********************************/
 struct ImageLayer *addNoise(struct ImageLayer *Im, float var, float mean){
-//http://adaptiveart.eecs.umich.edu/2011/wp-content/uploads/2011/09/The-pocket-handbook-of-image-processing-algorithms-in-C.pdf
-    /// NEEDS WORK -- SEG FAULTING // 
+// addNoise() adapted from algorithm below, which applies gaussian noise to B&W images
+// http://adaptiveart.eecs.umich.edu/2011/wp-content/uploads/2011/09/The-pocket-handbook-of-image-processing-algorithms-in-C.pdf
     int x,y,z,r;
     int cur = 0;
+    int idx = 0;
     float noise, theta;
     struct ImageLayer *dest = newImageLayer(Im->h, Im->w);
     for(y =0; y < Im->h; y++){
         for(x = 0; x < Im->w; x++){
             
-                r = rand()%32767;
-        
+                r = rand()%32767;     
                 noise = sqrt(-2 * var * log(1.0-(float)r/32767.1));
                 r = rand()%32767;
-                theta = (float)r*1.9175345E-4 - 3.14159265;
+                theta = r*1.9175345E-4 - 3.14159265; 
                 noise = noise * cos(theta);
                 noise = noise + mean;
-                if(noise > 255)
-                noise = 255;
-                if (noise < 0)
-                noise = 0;
+
+                if(noise > 255) noise = 255; // normalizing extreme values
+                if (noise < 0) noise = 0; 
+
                 cur = rand()%3;
-                if (cur == 0){ 
-                    dest->imgPixelData[x+(long)y*Im->w]->red = (int)(noise +.5); 
-                    
+
+                //copying over original image data
+                dest->imgPixelData[idx]->red = Im->imgPixelData[idx]->red;
+                dest->imgPixelData[idx]->green = Im->imgPixelData[idx]->green;
+                dest->imgPixelData[idx]->blue = Im->imgPixelData[idx]->blue;
+                dest->imgPixelData[idx]->alpha = Im->imgPixelData[idx]->alpha;
+                
+                //applying gaussian noise
+                if (cur == 0){                 
+                    dest->imgPixelData[x+(long)y*Im->w]->red = (unsigned char)(noise +.5);                 
                 }
-                else if (cur == 1) {
-                    dest->imgPixelData[x+(long)y*Im->w]->green = (int)(noise +.5);
-                   
+                else if (cur == 1) {                
+                    dest->imgPixelData[x+(long)y*Im->w]->green = (unsigned char)(noise +.5);                  
                 }
-                else if (cur == 2) {
-                    dest->imgPixelData[x+(long)y*Im->w]->blue = (int)(noise +.5);
-                 
+                else if (cur == 2) {                    
+                    dest->imgPixelData[x+(long)y*Im->w]->blue = (unsigned char)(noise +.5);                 
                 }
-                else if (cur == 3){
-                    dest->imgPixelData[x+(long)y*Im->w]->alpha = (int)(noise +.5);
+                else if (cur == 3){                
+                    dest->imgPixelData[x+(long)y*Im->w]->alpha = (unsigned char)(noise +.5);
                 }
-       
-        
-    
-    }
+
+                idx++;
+        }
     }
     return dest;
-
 }
 
 struct ImageLayer *Tint(struct ImageLayer *img, int level){
@@ -239,7 +246,7 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
     // level refers to blend strength, and is inversely related to how
     // much of the color will appear on the image. 
     // ** rbg from temp algorithm adapted from Tanner Heller **
-    // added code to blend the aquiredkelvin value with each pixel's RGB channels.
+    // added code to blend the aquired kelvin value with each pixel's RGB channels.
     if (K>40000)K=40000;
     if (K<1000)K=1000;
 
@@ -536,15 +543,11 @@ int main() {
 /*
 int main() {
     struct ImageStack *i;
-    i = open("marie.jpg");
+    i = open("new.jpg");
     
     ImageAddNoise(i, 0.5, 0);
-    save("noisyme.jpg", i);
+    save("noisetest.jpg", i);
 
-    popLayer(i);
-
-    ImageCrop(i, 65.0);
-    save("smallerme.jpg", i);
 }
 */
 /*
