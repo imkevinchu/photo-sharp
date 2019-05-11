@@ -19,6 +19,7 @@ struct pixel *getPixel(struct ImageStack *img, int index);
 int ImageSize(struct ImageStack *img);
 
 //Stack functions
+void ImageRevert(struct ImageStack *im);
 void pushLayer(struct ImageStack *img, struct ImageLayer *lay);
 struct ImageLayer *popLayer(struct ImageStack *img);
 

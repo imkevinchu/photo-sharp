@@ -19,6 +19,8 @@
 //Uses public domain headers "stb_image.h" and "stb_image_write.h". See those files
 //for more details on their author.
 
+// Defines the maximim number of versions to be stored in an ImageStack
+#define STACKSIZE 5
 
 //Return a pointer to a specific pixel in the top layer
 //of an image stack -- used for iteration
@@ -42,7 +44,7 @@ void pushLayer(struct ImageStack *img, struct ImageLayer *lay) {
     img->imgArray[img->top] = lay;
     img->top++;
    
-    if(img->top == 5) {
+    if(img->top == STACKSIZE) {
         img->top = 0;
     }
 } 
@@ -80,10 +82,17 @@ void freeLayer(struct ImageLayer *lay) {
 //Free all ImageLayers belonging to an ImageStack
 void freeImageStack(struct ImageStack *stack){
 
-    for (int i = 0; i < stack->top; i++){
+    for (int i = 0; i < STACKSIZE; i++){
         freeLayer(stack->imgArray[i]);
     }
     free(stack);
+
+}
+
+void ImageRevert(struct ImageStack *im){
+
+    freeLayer(popLayer(im));
+    im->top--;
 
 }
 
@@ -125,7 +134,7 @@ struct ImageStack *newImageStack() {
     struct ImageStack* img = (struct ImageStack *)malloc(sizeof(struct ImageStack));
 
     struct ImageLayer **buf;
-    buf = (struct ImageLayer **)malloc(sizeof(struct ImageLayer *)*(5));
+    buf = (struct ImageLayer **)malloc(sizeof(struct ImageLayer *) * (STACKSIZE));
 
     img->imgArray = buf;
     img->top = 0;
