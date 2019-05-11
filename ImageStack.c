@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "pixel.c"
 #include <string.h>
+
+#include "pixel.h"
+#include "ImageStack.h"
+#include "psharplib.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -15,17 +18,6 @@
 
 //Uses public domain headers "stb_image.h" and "stb_image_write.h". See those files
 //for more details on their author.
-
-struct ImageLayer {
-    short h;
-    short w;
-    struct pixel **imgPixelData;
-};
-
-struct ImageStack {
-    int top;
-    struct ImageLayer **imgArray;
-};
 
 
 //Return a pointer to a specific pixel in the top layer
@@ -233,6 +225,110 @@ void PrintImage(struct ImageStack *img) {
     }
     printf("\n");
 }
+
+//Codegen interface functions
+//Equivalent function calls which do the heavy lifting are in the psharplib.c file
+
+void ImageContrast(struct ImageStack *img, int lev) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Contrast(img->imgArray[topLevel], lev);
+
+    pushLayer(img, lay);
+}
+
+void ImageSaturate(struct ImageStack *img, int lev) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Saturate(img->imgArray[topLevel], lev);
+
+    pushLayer(img, lay);
+}
+
+void ImageRotate90(struct ImageStack *img) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Rotate90(img->imgArray[topLevel]);
+
+    pushLayer(img, lay);
+}
+
+void ImageAddNoise(struct ImageStack *img, double var, double mean) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = addNoise(img->imgArray[topLevel], (float)var, (float)mean);
+
+    pushLayer(img, lay);
+}
+
+void ImageKelvin(struct ImageStack *img, double lev) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Kelvin(img->imgArray[topLevel], (float)lev);
+
+    pushLayer(img, lay);
+}
+
+void ImageReflectY(struct ImageStack *img) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = ReflectY(img->imgArray[topLevel]);
+
+    pushLayer(img, lay);
+}
+
+void ImageReflectX(struct ImageStack *img) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = ReflectX(img->imgArray[topLevel]);
+
+    pushLayer(img, lay);
+}
+
+void ImageTint(struct ImageStack *img, int lev) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = Tint(img->imgArray[topLevel], lev);
+
+    pushLayer(img, lay);
+}
+
+void ImageCrop(struct ImageStack *img, double p) {
+
+    int topLevel = img->top - 1;
+
+    float f = (float)p;
+
+    struct ImageLayer *lay;
+    lay = Crop(img->imgArray[topLevel], f);
+
+    pushLayer(img, lay);
+}
+
+
+
+
+
+
+
+
+
 /*
 int main() {
  

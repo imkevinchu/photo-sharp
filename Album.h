@@ -1,0 +1,18 @@
+//Header file for the Album class
+
+struct Album{
+
+    short top;
+    short size;
+    struct ImageStack **images;
+
+};
+
+struct Album *newAlbum();
+
+void checkAndResize(struct Album *a);
+
+void removeLast(struct Album *a);
+
+void addToAlbum(struct Album *a, struct ImageStack *ims);
+

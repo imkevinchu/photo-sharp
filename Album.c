@@ -1,14 +1,7 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Album{
-
-    short top;
-    short size;
-    struct ImageStack **images;
-
-};
+#include "Album.h"
 
 struct Album *newAlbum(){
 

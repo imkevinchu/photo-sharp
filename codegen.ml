@@ -395,16 +395,49 @@ let translate (globals, functions) =
 	    ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3]) ] )
       
       (* Implement enhanced for loop syntax as while loops *)
-      | SEFor (p, img, body) -> 
+      | SEFor (it, obj, body) -> 
             (* call start and size functions, parser to traditional For syntax *)
 
-            let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
-                e2 = (A.Int, (SBinop((A.Int, SId("Marie!")), Less, (A.Int, SCall("ImageSize", [(A.Image, SId(img))]))))) and
-                e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
-                e4 = (A.Int, SAssign(p, (A.Int, SCall(("GetPixel", [(A.Image, SId(img)); (A.Int, SId("Marie!"))]))))) in
+            let (t, a) = obj in
+                (match t with
+                   A.Image -> 
+                     let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
+                         e2 = (A.Int, (SBinop((A.Int, SId("Marie!")), Less, (A.Int, SCall("ImageSize", [obj]))))) and
+                         e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
+                         e4 = (A.Int, SAssign(it, (A.Int, SCall(("GetPixel", [obj; (A.Int, SId("Marie!"))]))))) in
+                         stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] )
+
+                 | A.Album ->
+                     let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
+                         e2 = (A.Int, (SBinop((A.Int, SId("Marie!")), Less, (A.Int, SCall("AlbumSize", [obj]))))) and
+                         e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
+                         e4 = (A.Int, SAssign(it, (A.Int, SCall(("GetImage", [obj; (A.Int, SId("Marie!"))]))))) in
+	                  stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] ))
 
 
-	    stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] )
+
+
+
+(*            
+            let (t, a) = (,SId(obj)) in
+                (match t with
+                   A.Image -> 
+                     let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
+                         e2 = (A.Int, (SBinop((A.Int, SId("Marie!")), Less, (A.Int, SCall("ImageSize", [(A.Image, SId(obj))]))))) and
+                         e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
+                         e4 = (A.Int, SAssign(it, (A.Int, SCall(("GetPixel", [(A.Image, SId(obj)); (A.Int, SId("Marie!"))]))))) in
+                         stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] )
+
+                 | A.Album ->
+                     let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
+                         e2 = (A.Int, (SBinop((A.Int, SId("Marie!")), Less, (A.Int, SCall("AlbumSize", [(A.Image, SId(obj))]))))) and
+                         e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
+                         e4 = (A.Int, SAssign(it, (A.Int, SCall(("GetImage", [(A.Album, SId(obj)); (A.Int, SId("Marie!"))]))))) in
+	                  stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] ))
+
+*)
+          
+
     in
 
     (* Build the code for each statement in the function *)

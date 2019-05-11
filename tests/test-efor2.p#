@@ -1,0 +1,19 @@
+preset int main():
+{
+    int i
+    Image img
+    Pixel p
+    img = open("test3.jpg")
+    i = 0
+    for p in img:
+    {
+        if(i == 98 || i == 99 || i == 100):
+        {
+            RedPixel(p)
+            i = 0
+        }
+        i = i + 1
+    }
+    save("DotsTest3.jpg", img)
+    return 0
+}

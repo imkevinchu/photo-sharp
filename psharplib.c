@@ -1,26 +1,12 @@
-#include "ImageStack.c"
-
 #include <math.h>
-#include "Album.c"
+#include <stdlib.h>
+#include <stdio.h>
 
+#include "pixel.h"
+#include "ImageStack.h"
+#include "Album.h"
+#include "psharplib.h"
 
-struct ImageLayer *Image(int h, int w){
-    struct ImageLayer *dest = newImageLayer(h, w);
-    for(int i =0; i< h*w; i++){
-        dest->imgPixelData[i]->red = 255;
-        dest->imgPixelData[i]->green = 255;
-        dest->imgPixelData[i]->blue = 255;
-        dest->imgPixelData[i]->alpha = 0;       
-    }
-    return dest;
-}
-
-struct HSL
-{
-	short H;
-	float S;
-	float L;
-};
 float Min(float a, float b) {
 	return a <= b ? a : b;
 }
@@ -96,52 +82,6 @@ struct ImageLayer* Saturate(struct ImageLayer* img, int l){
 
 }
 
-int PixelSaturate(struct pixel* px, int l){
-
-//    struct pixel* dest = (struct pixel*)malloc(sizeof(struct pixel*));
-    double level = (double)l/100;
-    float Pr = .299;
-    float Pg = .587;
-    float Pb = .114;
-    double p;
-    int r = px->red;
-    int g = px->green;
-    int b = px->blue;
-    p = sqrt((r*r*Pr)+(g*g*Pg)+(b*b*Pb));
-    r = p+(r-p)*level;
-    if (r>255) r = 255;
-    g = p+(g-p)*level;
-    if (g>255) g = 255;
-    b = p+(b-p)*level;
-    if (b>255) b = 255;
-    px->red = r;
-    px->green = g;
-    px->blue = b;
-    px->alpha = px->alpha;
-    return 0;
-
-}
-/*
-void PixelSaturate(struct pixel *p, int s) {
-    struct pixel *n;
- 
-    n = *p;
-    p = saturatePixel(p, s);
-    free(n);
-}
-
-struct ImageLayer* testSatPixel(struct ImageLayer *m, int l){
-
-    struct ImageLayer *dest = newImageLayer(m->h, m->w);
-
-    int len = m->h*m->w;
-    for(int i =0; i<len; i++){
-        dest->imgPixelData[i] = SaturatePixel(m->imgPixelData[i], l);
-    }
-    return dest;
-
-}
-*/
 struct ImageLayer* Rotate90(struct ImageLayer *img){
     
     int idx = 0;
@@ -201,57 +141,6 @@ struct ImageLayer* ReflectX(struct ImageLayer *m){
         }
     }
     return dest;
-}
-
-
-  //  **** O(n^4) -> not tractable on large image files ****
-
-void DConv(struct ImageLayer *in, struct ImageLayer *mask, struct ImageLayer *out){
-
-    long i,j,m,n,idx,jdx;
-    int ms1,ms2,ms3,ms4,im1,im2,im3,im4,val1,val2,val3,val4;
-    struct pixel *tmp;
-
-    for(i=0; i<in->h; ++i)
-        for(j=0; j< in->w; ++j){
-            val1 = val2 = val3 = val4 = 0;
-            for(m=0; m<mask->h; ++m)
-                for(n =0; n<mask->w; ++n){
-                    ms1 = mask->imgPixelData[m*mask->h+n]->red;
-                    ms2 = mask->imgPixelData[m*mask->h+n]->green;
-                    ms3 = mask->imgPixelData[m*mask->h+n]->blue;
-                    ms4 = mask->imgPixelData[m*mask->h+n]->alpha;
-                idx = i-m;
-                jdx = j-n;
-                if(idx >=0 && jdx >=0){
-                    im1 = in->imgPixelData[idx*in->h+jdx]->red;
-                    im2 = in->imgPixelData[idx*in->h+jdx]->green;
-                    im3 = in->imgPixelData[idx*in->h+jdx]->blue;
-                    im4 = in->imgPixelData[idx*in->h+jdx]->alpha;
-                }
-                val1 += ms1*im1;
-                val2 += ms2*im2;
-                val3 += ms3*im3;
-                val4 += ms4*im4;
-
-                }
-            if(val1 > 255) val1 = 255;
-            if(val2 > 255) val2 = 255;
-            if(val3 > 255) val3 = 255;
-            if(val4 > 255) val4 = 255;
-            if(val1 < 0) val1 = 0;
-            if(val2 < 0) val2 = 0;
-            if(val3 < 0) val3 = 0;
-            if(val4 < 0) val4 = 0;
-            tmp->red = out->imgPixelData[i*out->h+j]->red;
-            tmp->green = out->imgPixelData[i*out->h+j]->green;
-            tmp->blue = out->imgPixelData[i*out->h+j]->blue;
-            tmp->blue = out->imgPixelData[i*out->h+j]->alpha;
-            tmp->red = (int)val1;
-            tmp->green = (int)val2;
-            tmp->blue = (int)val3;
-            tmp->alpha = (int)val4;
-        }
 }
 
 
@@ -412,47 +301,6 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
     return dest;
 }
 
-
-void SetRGB(struct pixel* p, int r, int g, int b, int a){
-    p->red = r;
-    p->green = g;
-    p->blue = b;
-    p->alpha = a;
-}
-
-void ModRGB(struct pixel* p, int redMod, int greenMod, int blueMod, int alphaMod){
-    p->red += redMod;
-    p->green += greenMod;
-    p->blue += blueMod;
-    p->alpha += alphaMod;
-}
-
-void SetRed(struct pixel*p, int r){
-    p->red = r;
-}
-void SetGreen(struct pixel*p, int g){
-    p->green = g;
-}
-void SetBlue(struct pixel*p, int b){
-    p->blue = b;
-}
-void SetAlpha(struct pixel*p, int a){
-    p->alpha = a;
-}
-
-void modRed(struct pixel*p, int rmod){
-    p->red += rmod;
-}
-void modGreen(struct pixel*p, int gmod){
-    p->green += gmod;
-}
-void modBlue(struct pixel*p, int bmod){
-    p->blue += bmod;
-}
-void modAlpha(struct pixel*p, int amod){
-    p->alpha += amod;
-}
-
 //  **********************
 //  RGB / HSL CONVERSIONS 
 //  adapted for our data structures from
@@ -595,99 +443,6 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
     return dest;
 }
 
-//Interface with codegen
-void ImageContrast(struct ImageStack *img, int lev) {
-
-    int topLevel = img->top - 1;
-
-    struct ImageLayer *lay;
-    lay = Contrast(img->imgArray[topLevel], lev);
-
-    pushLayer(img, lay);
-}
-
-void ImageSaturate(struct ImageStack *img, int lev) {
-
-    int topLevel = img->top - 1;
-
-    struct ImageLayer *lay;
-    lay = Saturate(img->imgArray[topLevel], lev);
-
-    pushLayer(img, lay);
-}
-
-void ImageRotate90(struct ImageStack *img) {
-
-    int topLevel = img->top - 1;
-
-    struct ImageLayer *lay;
-    lay = Rotate90(img->imgArray[topLevel]);
-
-    pushLayer(img, lay);
-}
-
-void ImageAddNoise(struct ImageStack *img, double var, double mean) {
-
-    int topLevel = img->top - 1;
-
-    struct ImageLayer *lay;
-    lay = addNoise(img->imgArray[topLevel], (float)var, (float)mean);
-
-    pushLayer(img, lay);
-}
-
-void ImageKelvin(struct ImageStack *img, double lev) {
-
-    int topLevel = img->top - 1;
-
-    struct ImageLayer *lay;
-    lay = Kelvin(img->imgArray[topLevel], (float)lev);
-
-    pushLayer(img, lay);
-}
-
-void ImageReflectY(struct ImageStack *img) {
-
-    int topLevel = img->top - 1;
-
-    struct ImageLayer *lay;
-    lay = ReflectY(img->imgArray[topLevel]);
-
-    pushLayer(img, lay);
-}
-
-void ImageReflectX(struct ImageStack *img) {
-
-    int topLevel = img->top - 1;
-
-    struct ImageLayer *lay;
-    lay = ReflectX(img->imgArray[topLevel]);
-
-    pushLayer(img, lay);
-}
-
-void ImageTint(struct ImageStack *img, int lev) {
-
-    int topLevel = img->top - 1;
-
-    struct ImageLayer *lay;
-    lay = Tint(img->imgArray[topLevel], lev);
-
-    pushLayer(img, lay);
-}
-
-void ImageCrop(struct ImageStack *img, double p) {
-
-    int topLevel = img->top - 1;
-
-    float f = (float)p;
-
-    struct ImageLayer *lay;
-    lay = Crop(img->imgArray[topLevel], f);
-
-    pushLayer(img, lay);
-}
-
 /*
 int main() {
  
@@ -747,7 +502,7 @@ int main() {
 
     //save("d.jpg", img);
     //img2 = open("d2.jpg");
-    //img3->imgArray[img3->top - 1] = Image(100,100);
+    //img3->imgArray[img3->top - 1] = newImageLayer(100,100);
     //save("blank.jpg", img);
     //img->imgArray[img->top - 1] = flip(img->imgArray[img->top - 1]);
     //save("flip.jpg", img);
