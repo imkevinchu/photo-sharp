@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include "ImageStack.h"
 #include "Album.h"
 
 struct Album *newAlbum(){
@@ -34,13 +34,24 @@ void checkAndResize(struct Album *a){
 
 }
 
+//Remove the last element from Album a
 void removeLast(struct Album *a){
     
-    //freeImageStack(a->top-1);
-    a->top -= 1;
+    if(a->top > 0){
+        freeImageStack(a->images[a->top-1]);
+        a->top -= 1;
+    }
 
 }
 
+//Free all memory associated with Album a
+void freeAlbum(struct Album *a){
+
+    for(int i = 0; i< a->top; i++){
+        removeLast(a);
+    }
+    free(a);
+}
 
 void addToAlbum(struct Album *a, struct ImageStack *ims){
 

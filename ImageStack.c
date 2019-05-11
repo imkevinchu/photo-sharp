@@ -69,12 +69,21 @@ struct ImageLayer *popLayer(struct ImageStack *img) {
 //Free an ImageLayer and all pixel structures associated with it    
 void freeLayer(struct ImageLayer *lay) {
 
-    int i;
-    for(i = 0; i < (lay->h * lay->w); i++) {
+    for(int i = 0; i < (lay->h * lay->w); i++) {
         free(lay->imgPixelData[i]);
     }
 
     free(lay);
+
+}
+
+//Free all ImageLayers belonging to an ImageStack
+void freeImageStack(struct ImageStack *stack){
+
+    for (int i = 0; i < stack->top; i++){
+        freeLayer(stack->imgArray[i]);
+    }
+    free(stack);
 
 }
 
@@ -328,8 +337,8 @@ void ImageCrop(struct ImageStack *img, double p) {
 
 
 
-
 /*
+
 int main() {
  
     struct ImageStack* img;
@@ -341,10 +350,6 @@ int main() {
 
     printf("Size: %d\n", size);
  
-    int i;
-    for(i = 0; i < size; i++) {
-        PixelSaturate(getPixel(i), 0);
-    }
 
 }
 */

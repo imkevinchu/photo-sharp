@@ -23,6 +23,7 @@ void pushLayer(struct ImageStack *img, struct ImageLayer *lay);
 struct ImageLayer *popLayer(struct ImageStack *img);
 
 //Create and free layers
+void freeImageStack(struct ImageStack *stack);
 void freeLayer(struct ImageLayer *lay);
 struct ImageLayer *newImageLayer(int hi, int wi);
 struct ImageStack *newImageStack();

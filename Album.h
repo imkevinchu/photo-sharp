@@ -16,3 +16,7 @@ void removeLast(struct Album *a);
 
 void addToAlbum(struct Album *a, struct ImageStack *ims);
 
+void freeAlbum(struct Album *a);
+
+
+
