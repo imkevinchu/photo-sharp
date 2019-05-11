@@ -61,6 +61,18 @@ void addToAlbum(struct Album *a, struct ImageStack *ims){
 
 }
 
+int AlbumSize(struct Album *a){
+
+    return a->size;
+
+}
+
+struct ImageStack *GetImage(struct Album *a, int idx){
+
+    return a->images[idx];
+
+}
+
 
 /*
 int main(){

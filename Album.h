@@ -18,5 +18,7 @@ void addToAlbum(struct Album *a, struct ImageStack *ims);
 
 void freeAlbum(struct Album *a);
 
+int AlbumSize(struct Album *a);
 
+struct ImageStack *GetImage(struct Album *a, int idx);
 
