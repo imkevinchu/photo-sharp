@@ -92,7 +92,6 @@ void freeImageStack(struct ImageStack *stack){
 void ImageRevert(struct ImageStack *im){
 
     freeLayer(popLayer(im));
-    im->top--;
 
 }
 

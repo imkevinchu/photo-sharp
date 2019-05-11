@@ -153,6 +153,11 @@ let translate (globals, functions) =
   let imageSize_func : L.llvalue = 
       L.declare_function "ImageSize" imageSize_t the_module in
 
+  let imageRevert_t : L.lltype =
+      L.function_type i32_t [| image_t |] in
+  let imageRevert_func : L.llvalue =
+      L.declare_function "ImageRevert" imageRevert_t the_module in
+
   let getPix_t : L.lltype = 
       L.function_type pix_t [| image_t ; i32_t |] in
   let getPix_func : L.llvalue = 
@@ -324,6 +329,8 @@ let translate (globals, functions) =
           L.build_call getPix_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "getPixel" builder
       | SCall ("ImageSize", [e]) ->
           L.build_call imageSize_func [| (expr builder e)|] "ImageSize" builder
+      | SCall ("Revert", [e]) ->
+          L.build_call imageRevert_func [| (expr builder e)|] "ImageRevert" builder
       | SCall ("SaturatePixel", e) ->
           L.build_call satPix_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "PixelSaturate" builder
       | SCall ("RedPixel", [e]) ->

@@ -53,6 +53,7 @@ let check (globals, functions) =
                                                  ("ReflectY", [(Image, "x")], Void);
                                                  ("ReflectX", [(Image, "x")], Void);
                                                  ("ImageSize", [(Image, "x")], Int);
+                                                 ("Revert", [(Image, "x")], Int);
                                                  ("GetPixel", [(Image, "x"); (Int, "y")], Pixel);
                                                  ("Tint", [(Image, "x"); (Int, "y")], Void);
                                                  ("Crop", [(Image, "x"); (Float, "y")], Void);
