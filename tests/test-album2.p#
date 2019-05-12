@@ -17,7 +17,7 @@ preset int main():
     j = 0
     for it1 in a:
     {
-        Saturate(it1, 0)
+        it1.Saturate(0)
         ReflectY(it1)
     }
     for it2 in a:

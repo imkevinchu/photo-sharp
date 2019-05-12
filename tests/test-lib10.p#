@@ -1,0 +1,8 @@
+preset int main():
+{
+    Image i
+    i = open("test3.jpg")
+    HSL(i, 65, 2, 3)
+    save("./outputs/HSLTest3.jpg", i)
+    return 0
+}

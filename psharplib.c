@@ -406,7 +406,6 @@ struct pixel *HSLToRGB(struct HSL *hsl) {
 ********/
 struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
         double f = (double)factor/100;
-        printf("%f\n", f);
         struct ImageLayer *dest = newImageLayer(m->h, m->w);
         struct HSL *hsl_tmp = (struct HSL *)malloc(sizeof(struct HSL));
         struct pixel *rgb_tmp = (struct pixel *)malloc(sizeof(struct pixel));

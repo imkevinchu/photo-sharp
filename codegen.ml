@@ -149,6 +149,11 @@ let translate (globals, functions) =
   let tint_func : L.llvalue = 
       L.declare_function "ImageTint" tint_t the_module in
 
+  let hsl_t : L.lltype = 
+      L.function_type i32_t [| image_t; i32_t; i32_t; i32_t|] in
+  let hsl_func : L.llvalue = 
+      L.declare_function "ImageHSL" hsl_t the_module in
+
   let imageSize_t : L.lltype = 
       L.function_type i32_t [| image_t |] in
   let imageSize_func : L.llvalue = 
@@ -349,6 +354,8 @@ let translate (globals, functions) =
           L.build_call tint_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageTint" builder
       | SCall ("Crop", e) ->
           L.build_call crop_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageCrop" builder
+      | SCall ("HSL", e) ->
+          L.build_call hsl_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e))); (expr builder (List.hd (List.tl (List.tl e)))); (expr builder (List.hd (List.tl (List.tl (List.tl e))))) |] "ImageHSL" builder
       | SCall ("GetPixel", e) ->
           L.build_call getPix_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "getPixel" builder
       | SCall ("ImageSize", [e]) ->

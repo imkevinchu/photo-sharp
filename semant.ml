@@ -49,6 +49,7 @@ let check (globals, functions) =
                                                  ("Saturate", [(Image, "x"); (Int, "y")], Void);
                                                  ("Rotate90", [(Image, "x")], Void);
                                                  ("AddNoise", [(Image, "x"); (Float, "y"); (Float, "z")], Void);
+                                                 ("HSL", [(Image, "w"); (Int, "x"); (Int, "y"); (Int, "z")], Void);
                                                  ("Kelvin", [(Image, "x"); (Float, "y")], Void);
                                                  ("ReflectY", [(Image, "x")], Void);
                                                  ("ReflectX", [(Image, "x")], Void);
