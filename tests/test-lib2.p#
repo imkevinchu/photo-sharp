@@ -3,6 +3,6 @@ preset int main():
     Image i
     i = open("test3.jpg")
     Saturate(i, 20)
-    save("SaturatedTest3.jpg", i)
+    save("./outputs/SaturatedTest3.jpg", i)
     return 0
 }

@@ -3,6 +3,6 @@ preset int main():
     Image img
     img = open("test3.jpg")
     Contrast(img, 90)
-    save("ContrastTest3.jpg", img)
+    save("./outputs/ContrastTest3.jpg", img)
     return 0
 }

@@ -1,0 +1,41 @@
+preset int main():
+{
+    Image i
+    Image m
+    Image g
+    Image it1
+    Image it2
+    Album a
+    int j
+    i = open("test.jpg")
+    m = open("test2.jpg")
+    g = open("test3.jpg")
+    a = NewAlbum()
+    AddImage(a, i)
+    AddImage(a, m)
+    AddImage(a, g)
+    j = 0
+    for it1 in a:
+    {
+        Saturate(it1, 0)
+        ReflectY(it1)
+    }
+    for it2 in a:
+    {
+        if(j == 0):
+        {
+            save("./outputs/firstInAlbum.jpg", it2)
+        }
+        if(j == 1):
+        {
+            save("./outputs/secondInAlbum.jpg", it2)
+        }
+        if(j == 2):
+        {
+            save("./outputs/thirdInAlbum.jpg", it2)
+        }
+        j= j + 1
+    }
+
+
+}

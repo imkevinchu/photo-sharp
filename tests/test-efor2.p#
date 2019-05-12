@@ -14,6 +14,6 @@ preset int main():
         }
         i = i + 1
     }
-    save("DotsTest3.jpg", img)
+    save("./outputs/DotsTest3.jpg", img)
     return 0
 }

@@ -60,7 +60,12 @@ let check (globals, functions) =
                                                  ("GetPix", [(Image, "x"); (Int, "y")], Image);
                                                  ("SaturatePixel", [(Pixel, "x"); (Int, "y")], Pixel);
                                                  ("RedPixel", [(Pixel, "x")], Int);
-                                                 ("ImageSize", [(Image, "x")], Image);
+                                                 ("ImageSize", [(Image, "x")], Int);
+                                                 ("NewAlbum", [], Album);
+                                                 ("AddImage", [(Album, "x"); (Image, "y")], Void);
+                                                 ("AlbumSize", [(Album, "x")], Int);
+                                                 ("RemoveLast", [(Album, "x")], Void);
+                                                 ("GetImage", [(Album, "x"); (Int, "y")], Image);
                                                  ("save", [(String, "x"); (Image, "y")], Void)]
                                                  
   in

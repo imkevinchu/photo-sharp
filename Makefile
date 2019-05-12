@@ -26,6 +26,7 @@ microc.native :
 .PHONY : clean
 clean :
 	ocamlbuild -clean
+	rm -rf outputs/*.jpg
 	rm -rf testall.log ocamlllvm *.diff
 	rm *.err *.ll *.exe *.s *.out *.o
 

@@ -7,6 +7,6 @@ preset int main():
     {
         SaturatePixel(p, 50)
     }
-    save("EnhancedForTest3.jpg", i)
+    save("./outputs/EnhancedForTest3.jpg", i)
     return 0
 }

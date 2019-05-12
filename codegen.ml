@@ -35,6 +35,7 @@ let translate (globals, functions) =
   and void_t     = L.void_type   context
   and pix_t      = L.pointer_type (L.i32_type context)
   and image_t    = L.pointer_type (L.i32_type context)
+  and album_t    = L.pointer_type (L.i32_type context)
   and string_t   = L.pointer_type (L.i8_type context) in
 
 
@@ -47,7 +48,7 @@ let translate (globals, functions) =
     | A.String -> string_t
     | A.Image -> image_t
     | A.Caption -> string_t
-    | A.Album -> string_t
+    | A.Album -> album_t
     | A.Array -> string_t
     | A.Pixel -> pix_t
   in
@@ -173,7 +174,30 @@ let translate (globals, functions) =
   let redPixel_func : L.llvalue = 
       L.declare_function "RedPixel" redPixel_t the_module in
 
+  let newAlbum_t : L.lltype = 
+      L.function_type album_t [||] in
+  let newAlbum_func : L.llvalue = 
+      L.declare_function "newAlbum" newAlbum_t the_module in
 
+  let addImage_t : L.lltype = 
+      L.function_type i32_t [| album_t; image_t |] in
+  let addImage_func : L.llvalue = 
+      L.declare_function "addToAlbum" addImage_t the_module in
+
+  let albumSize_t : L.lltype = 
+      L.function_type i32_t [| album_t |] in
+  let albumSize_func : L.llvalue = 
+      L.declare_function "AlbumSize" albumSize_t the_module in
+
+  let getImage_t : L.lltype = 
+      L.function_type image_t [| album_t; i32_t |] in
+  let getImage_func : L.llvalue = 
+      L.declare_function "GetImage" getImage_t the_module in
+
+  let removeLast_t : L.lltype = 
+      L.function_type i32_t [| album_t |] in
+  let removeLast_func : L.llvalue = 
+      L.declare_function "removeLast" removeLast_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -335,6 +359,16 @@ let translate (globals, functions) =
           L.build_call satPix_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "PixelSaturate" builder
       | SCall ("RedPixel", [e]) ->
           L.build_call redPixel_func [| (expr builder e) |] "RedPixel" builder
+      | SCall ("NewAlbum", []) ->
+          L.build_call newAlbum_func [| |] "newAlbum" builder
+      | SCall ("AddImage", e) ->
+          L.build_call addImage_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "addToAlbum" builder
+      | SCall ("AlbumSize", [e]) ->
+          L.build_call albumSize_func [|(expr builder e) |] "AlbumSize" builder
+      | SCall ("GetImage", e) ->
+          L.build_call getImage_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "GetImage" builder
+      | SCall ("RemoveLast", [e]) ->
+          L.build_call removeLast_func [|(expr builder e) |] "removeLast" builder
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let llargs = List.rev (List.map (expr builder) (List.rev args)) in
@@ -420,30 +454,6 @@ let translate (globals, functions) =
                          e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
                          e4 = (A.Int, SAssign(it, (A.Int, SCall(("GetImage", [obj; (A.Int, SId("Marie!"))]))))) in
 	                  stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] ))
-
-
-
-
-
-(*            
-            let (t, a) = (,SId(obj)) in
-                (match t with
-                   A.Image -> 
-                     let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
-                         e2 = (A.Int, (SBinop((A.Int, SId("Marie!")), Less, (A.Int, SCall("ImageSize", [(A.Image, SId(obj))]))))) and
-                         e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
-                         e4 = (A.Int, SAssign(it, (A.Int, SCall(("GetPixel", [(A.Image, SId(obj)); (A.Int, SId("Marie!"))]))))) in
-                         stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] )
-
-                 | A.Album ->
-                     let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
-                         e2 = (A.Int, (SBinop((A.Int, SId("Marie!")), Less, (A.Int, SCall("AlbumSize", [(A.Image, SId(obj))]))))) and
-                         e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
-                         e4 = (A.Int, SAssign(it, (A.Int, SCall(("GetImage", [(A.Album, SId(obj)); (A.Int, SId("Marie!"))]))))) in
-	                  stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] ))
-
-*)
-          
 
     in
 

@@ -82,8 +82,10 @@ void freeLayer(struct ImageLayer *lay) {
 //Free all ImageLayers belonging to an ImageStack
 void freeImageStack(struct ImageStack *stack){
 
-    for (int i = 0; i < STACKSIZE; i++){
-        freeLayer(stack->imgArray[i]);
+    for (int i = 0; i < stack->top; i++){
+        if(stack->imgArray[i] != NULL) {
+            freeLayer(stack->imgArray[i]);
+        }
     }
     free(stack);
 

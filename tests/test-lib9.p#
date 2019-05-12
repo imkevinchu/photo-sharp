@@ -3,6 +3,6 @@ preset int main():
     Image i
     i = open("test3.jpg")
     Crop(i, 65.0)
-    save("CropTest3.jpg", i)
+    save("./outputs/CropTest3.jpg", i)
     return 0
 }

@@ -1,0 +1,22 @@
+preset int main():
+{
+    Image i
+    Image m
+    Image it
+    Album a
+    int j
+    i = open("test.jpg")
+    m = open("test2.jpg")
+    a = NewAlbum()
+    AddImage(a, i)
+    AddImage(a, m)
+    RemoveLast(a)
+    j = 0
+    for it in a:
+    {
+        j = j + 1
+    }
+
+    print(j)
+
+}

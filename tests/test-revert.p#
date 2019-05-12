@@ -3,7 +3,7 @@ preset int main():
     Image i
     i = open("test.jpg")
     Saturate(i, 0)
-    save("beforeRevert.jpg", i)
+    save("./outputs/beforeRevert.jpg", i)
     Revert(i)
-    save("afterRevert.jpg", i)
+    save("./outputs/afterRevert.jpg", i)
 }

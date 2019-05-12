@@ -29,16 +29,13 @@ void checkAndResize(struct Album *a){
         a->images = buf;
         a->size = newSize;
     }
-
-
-
 }
 
 //Remove the last element from Album a
 void removeLast(struct Album *a){
-    
+
     if(a->top > 0){
-        freeImageStack(a->images[a->top-1]);
+        freeImageStack(a->images[(a->top)-1]);
         a->top -= 1;
     }
 
@@ -63,7 +60,7 @@ void addToAlbum(struct Album *a, struct ImageStack *ims){
 
 int AlbumSize(struct Album *a){
 
-    return a->size;
+    return (a->top);
 
 }
 
@@ -73,11 +70,13 @@ struct ImageStack *GetImage(struct Album *a, int idx){
 
 }
 
-
 /*
 int main(){
-
+ 
+    struct ImageStack *i = open("test.jpg");
     struct Album *a = newAlbum();
+    addToAlbum(a, i);
+    removeLast(a);   
 
     return 0;
 }
