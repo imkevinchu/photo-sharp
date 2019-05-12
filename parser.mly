@@ -4,9 +4,9 @@
 open Ast
 %}
 
-%token DOT PLUSPLUS SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN PIXKEY IN 
+%token DOT SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN PIXKEY IN 
 %token NOT EQ NEQ LT LEQ GT GEQ AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING IMAGE CAPTION ALBUM ARR PRESET PIXEL RED GREEN BLUE
+%token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING IMAGE CAPTION ALBUM ARR PRESET PIXEL 
 %token <int> LITERAL
 %token <bool> BLIT
 %token <string> STRLIT
@@ -111,14 +111,11 @@ expr:
   | expr GT     expr { Binop($1, Greater, $3) }
   | expr GEQ    expr { Binop($1, Geq,   $3)   }
   | expr AND    expr { Binop($1, And,   $3)   }
-  | ID DOT RED ASSIGN expr       { Setpval($1, Red, $5) }
-  | ID DOT GREEN ASSIGN expr     { Setpval($1, Green, $5) }
-  | ID DOT BLUE ASSIGN expr      { Setpval($1, Blue, $5) }
   | expr OR     expr { Binop($1, Or,    $3)   }
   | MINUS expr %prec NOT { Unop(Neg, $2)      }
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
-  | expr PLUSPLUS ID LPAREN args_opt RPAREN { Call($3, $1 :: $5) }
+  | expr DOT ID LPAREN args_opt RPAREN { Call($3, $1 :: $5) }
   | ID LPAREN args_opt RPAREN { Call($1, $3)  }
   | LPAREN expr RPAREN { $2                   }
   | LPAREN expr RPAREN SEMI { $2                   }

@@ -23,7 +23,6 @@ rule token = parse
 | '/'      { DIVIDE }
 | '='      { ASSIGN }
 | '.'      { DOT }
-| "++"      { PLUSPLUS }
 | "=="     { EQ }
 | "!="     { NEQ }
 | '<'      { LT }
@@ -40,9 +39,6 @@ rule token = parse
 | "return" { RETURN }
 | "int"    { INT }
 | "bool"   { BOOL }
-| "red"      { RED }
-| "green"      { GREEN }
-| "blue"      { BLUE }
 | "float"  { FLOAT }
 | "void"   { VOID }
 | "string" { STRING }
