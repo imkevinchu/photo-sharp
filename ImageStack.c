@@ -127,7 +127,49 @@ struct ImageLayer *newImageLayer(int hi, int wi) {
 
     return lay;
 } 
+
+struct ImageGradient *newImageGradient(struct ImageLayer* lay, unsigned char dir){
+    struct ImageGradient *grad = (struct ImageGradient *)malloc(sizeof(struct ImageGradient));
+    struct pixel *temp;
+    struct pixel **buf; 
+    buf = (struct pixel **)malloc(sizeof(struct pixel *) * (lay->h * lay->w)); 
+    for (int i = 0 ; i < lay->h * lay->w; i++){
+        buf[i] = lay->imgPixelData[i];
+    }
+    grad->direction = dir;
+    grad->imgPixelData = buf;
+    grad->h = lay->h;
+    grad->w = lay->w;
     
+    return grad;
+    
+} 
+struct ImageGradient *newGradFromGrad(struct ImageGradient* lay){
+    struct ImageGradient *grad = (struct ImageGradient *)malloc(sizeof(struct ImageGradient));
+    struct pixel *temp;
+    struct pixel **buf; 
+    buf = (struct pixel **)malloc(sizeof(struct pixel *) * (lay->h * lay->w)); 
+    for (int i = 0 ; i < lay->h * lay->w; i++){
+        buf[i] = lay->imgPixelData[i];
+    }
+    grad->direction = lay->direction;
+    grad->imgPixelData = buf;
+    grad->h = lay->h;
+    grad->w = lay->w;
+    
+    return grad;
+    
+} 
+
+struct ImageLayer *GradToLayer(struct ImageGradient *grad){
+    struct ImageLayer *lay = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
+    lay->h = grad->h;
+    lay->w = grad->w;
+    lay->imgPixelData = grad->imgPixelData;
+    return lay;
+
+}
+
 
 //create new, empty, ImageStack
 struct ImageStack *newImageStack() {
@@ -347,6 +389,15 @@ void ImageHSL(struct ImageStack *img, int a, int b, int c) {
     lay = HSL(img->imgArray[topLevel], a, b, c);
  
     pushLayer(img, lay);
+
+}
+
+void GradientContrast(struct ImageGradient *img, int lev) {
+
+
+    struct ImageGradient *grad;
+    GradContrast(grad, lev);
+
 
 }
 

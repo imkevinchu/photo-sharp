@@ -449,6 +449,50 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
     return dest;
 }
 
+void GradContrast(struct ImageGradient *grad, int level){
+
+    struct ImageGradient *dest = newGradFromGrad(grad);
+    double factor;
+    double toScale = (259 * (((float)level + 255))/(255 * (259 - (float)level)));
+    if(grad->direction==1) factor = 0;
+    else factor = toScale;
+
+    for(int i =0; i< grad->w*grad->h; i++){
+        int rv = grad->imgPixelData[i]->red;
+        int gv = grad->imgPixelData[i]->green;
+        int bv = grad->imgPixelData[i]->blue;
+
+        if ( i % grad->w == 0){
+            if(grad->direction == 1){
+                factor += toScale/grad->h;
+            }
+            else{
+                factor -= toScale/grad->h;
+            }
+        }
+
+        double r = factor * (rv - (.5 * rv)) + (.5 * rv);
+        double g = factor * (gv - (.5 * gv)) + (.5 * gv);
+        double b = factor * (bv - (.5 * bv)) + (.5 * bv);
+        if (r>255) r = 255;
+        if (g>255) g = 255;
+        if (b>255) b = 255;
+        
+        // tuned a bit so it doesn't completely blow out highlights
+        if (r > 245 && g > 245 & b >= 245){
+                g = (int)g*0.98;
+                b = (int)r*0.98;
+                r = (int)r*0.98;
+        }
+        dest->imgPixelData[i]->red = (int)r;
+        dest->imgPixelData[i]->green = (int)g;
+        dest->imgPixelData[i]->blue = (int)b;
+
+    }
+    grad->imgPixelData = dest->imgPixelData;
+    
+}
+
 /*
 int main() {
  
@@ -539,16 +583,18 @@ int main() {
     return 0;
 }
 */
-/*
+
 int main() {
     struct ImageStack *i;
-    i = open("new.jpg");
+    i = open("test.jpg");
+    struct ImageGradient *grad = newImageGradient(i->imgArray[i->top-1], 1);
+    GradContrast(grad, 120);
+    i->imgArray[i->top-1] = GradToLayer(grad);
     
-    ImageAddNoise(i, 0.5, 0);
-    save("noisetest.jpg", i);
+    save("gradtest.jpg", i);
 
 }
-*/
+
 /*
 int main() {
  
