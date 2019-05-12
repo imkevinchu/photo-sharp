@@ -454,6 +454,18 @@ let translate (globals, functions) =
                          e3 = (A.Int, SAssign("Marie!", (A.Int, SBinop((A.Int, SId("Marie!")), Add, (A.Int, SLiteral 1))))) and
                          e4 = (A.Int, SAssign(it, (A.Int, SCall(("GetImage", [obj; (A.Int, SId("Marie!"))]))))) in
 	                  stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [SExpr e4; body ; SExpr e3]) ] ))
+      | SEEFor (it, s, e, body) ->
+            (* call start and size functions, parser to traditional For syntax *)
+            
+            let (t, a) = s in
+                (match t with
+                 | A.Int ->
+                     let e1 = (A.Int, SAssign(it, s)) and
+                         e2 = (A.Int, (SBinop((A.Int, SId(it)), Less, (e)))) and
+                         e3 = (A.Int, SAssign(it, (A.Int, SBinop((A.Int, SId(it)), Add, (A.Int, SLiteral 1))))) in
+	                  stmt builder ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3]) ] ))
+
+
 
     in
 

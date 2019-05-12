@@ -87,6 +87,7 @@ stmt:
                                             { For($3, $5, $7, $11)   }
   | WHILE LPAREN expr RPAREN COL SEMI stmt           { While($3, $7)         }
   | FOR ID IN expr COL SEMI stmt           { EFor($2, $4, $7)          }
+  | FOR ID IN LPAREN expr COMMA expr RPAREN COL SEMI stmt           { EEFor($2, $5, $7, $11)          }
 
 
 expr_opt:

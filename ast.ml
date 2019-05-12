@@ -33,6 +33,7 @@ type stmt =
   | For of expr * expr * expr * stmt
   | While of expr * stmt
   | EFor of string * expr * stmt
+  | EEFor of string * expr * expr * stmt
 
 type func_decl = {
     typ : typ;
