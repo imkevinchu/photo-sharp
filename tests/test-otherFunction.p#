@@ -1,0 +1,8 @@
+preset int main():
+{
+    Image i
+    i = open("test.jpg")
+    i++Saturate(10)
+    save("./outputs/otherFunctionProtocol.jpg", i)
+    return 0
+}
