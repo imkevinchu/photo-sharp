@@ -316,9 +316,12 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
 struct HSL *RGBToHSL(struct pixel* rgb) {
 	struct HSL *hsl = (struct HSL *)malloc(sizeof(struct HSL));
 
+    
+
 	float r = (rgb->red / 255.0f);
 	float g = (rgb->green / 255.0f);
 	float b = (rgb->blue / 255.0f);
+    
 
 	float min = Min(Min(r, g), b);
 	float max = Max(Max(r, g), b);
@@ -339,15 +342,16 @@ struct HSL *RGBToHSL(struct pixel* rgb) {
 
 		if (r == max) hue = ((g - b) / 6) / delta;
 		
-		else if (g == max) hue = (1.1f / 3) + ((b - r) / 6) / delta;
+		else if (g == max) hue = (1.0f / 3) + ((b - r) / 6) / delta;
 		else hue = (2.0f / 3) + ((r - g) / 6) / delta;
 		
 		if (hue < 0)
 			hue += 1;
 		if (hue > 1)
 			hue -= 1;
-		hsl->H = (int)(hue * 360);
+		hsl->H = (int)(hue * 365);
 	}
+    
 	return hsl;
 }
 
@@ -372,7 +376,9 @@ struct pixel *HSLToRGB(struct HSL *hsl) {
 	struct pixel *rgb = (struct pixel *)malloc(sizeof(struct pixel));
     int r,g,b;
     float avg;
-
+    
+    if (hsl->S > 1) hsl->S = 1;
+    
 	if (hsl->S == 0)
 	{
 		rgb->red = rgb->green = rgb->blue = hsl->L * 255;
@@ -380,13 +386,13 @@ struct pixel *HSLToRGB(struct HSL *hsl) {
 	else
 	{
 		float v1, v2;
-		float hue = (float)hsl->H / 360;
+		float hue = (float)hsl->H / 365;
 		v2 = (hsl->L < 0.5) ? (hsl->L * (1 + hsl->S)) : ((hsl->L + hsl->S) - (hsl->L * hsl->S));
 		v1 = 2 * hsl->L - v2;
 		r = (int)(255 * HueToRGB(v1, v2, hue + (1.0f / 3)));
 		g = (int)(255 * HueToRGB(v1, v2, hue));
 		b = (int)(255 * HueToRGB(v1, v2, hue - (1.0f / 3)));
-        avg = (r+g+b)/3;
+        
         if (r > 255) r = 255;
         if (g > 255) g = 255;
         if (b > 255) b = 255;
@@ -394,7 +400,6 @@ struct pixel *HSLToRGB(struct HSL *hsl) {
         rgb->green = g;
         rgb->blue = b;
 	}
-
 	return rgb;
 }
 
@@ -410,7 +415,7 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
         struct HSL *hsl_tmp = (struct HSL *)malloc(sizeof(struct HSL));
         struct pixel *rgb_tmp = (struct pixel *)malloc(sizeof(struct pixel));
         int r,g,b;
-        double avg;
+    
 
         for(int i = 0; i < m->h * m->w; i++){
 
@@ -421,6 +426,70 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
             hsl_tmp = RGBToHSL( m->imgPixelData[i]);
 
 
+            if(hsl == 1) hsl_tmp->H *= f;          // change hue by a factor of f
+            else if(hsl == 2) hsl_tmp->S *= f;     // change saturation by a factor of f
+            else if(hsl == 3) hsl_tmp->L *= f;     // change luminance by a factor of f
+            else if(hsl == 0){                     // change all hsl by a factor of f 
+                hsl_tmp->H *= f;
+                hsl_tmp->S *= f;
+                hsl_tmp->L *= f; 
+            }
+
+            rgb_tmp = HSLToRGB(hsl_tmp);
+            r = rgb_tmp->red < 255 ?  rgb_tmp->red : 250;
+            g = rgb_tmp->green < 255 ?  rgb_tmp->green : 250;
+            b = rgb_tmp->blue < 255 ?  rgb_tmp->blue : 250;
+            
+
+            if(channel == 1) dest->imgPixelData[i]->red = r;                // only adjust red
+            else if (channel == 2) dest->imgPixelData[i]->green = g;    // only adjust green
+            else if (channel == 3) dest->imgPixelData[i]->blue = b;       // only adjust blue
+            else if (channel == 0) {                                                                                    // adjust all r,g,b
+                dest->imgPixelData[i]->red = r;
+                dest->imgPixelData[i]->green = g;
+                dest->imgPixelData[i]->blue = b;
+            }
+        } 
+    return dest;
+}
+void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel){
+
+        double level = (double)factor/100;
+        double f;
+        if (grad->direction == 1) f = 1.0;
+        else f = level;
+
+        struct ImageGradient *dest = newGradFromGrad(grad);
+        struct HSL *hsl_tmp = (struct HSL *)malloc(sizeof(struct HSL));
+        struct pixel *rgb_tmp = (struct pixel *)malloc(sizeof(struct pixel));
+        int r,g,b;
+        double avg;
+
+        for(int i = 0; i < grad->h * grad->w; i++){
+
+            dest->imgPixelData[i]->red = grad->imgPixelData[i]->red;
+            dest->imgPixelData[i]->green = grad->imgPixelData[i]->green;
+            dest->imgPixelData[i]->blue = grad->imgPixelData[i]->blue;
+
+            hsl_tmp = RGBToHSL( grad->imgPixelData[i]);
+
+            if ( i % grad->w == 0){
+                if(grad->direction == 1){
+                    if(factor < 100){
+                        f -= (1-level)/grad->h;
+                    }
+                    else{
+                        f += (level-1)/(grad->h);
+                    }    
+                }
+                else{
+                    if(factor < 100){} 
+                        f -= (level-1)/grad->h;             
+              
+                }
+                if(level == 1.0) f = 1.0;
+            }
+            printf("%f\n", f);
             if(hsl == 1) hsl_tmp->H *= f;          // change hue by a factor of f
             else if(hsl == 2) hsl_tmp->S *= f;     // change saturation by a factor of f
             else if(hsl == 3) hsl_tmp->L *= f;     // change luminance by a factor of f
@@ -446,9 +515,8 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
                 dest->imgPixelData[i]->blue = rgb_tmp->blue;
             }
         } 
-    return dest;
-}
 
+}
 void GradContrast(struct ImageGradient *grad, int level){
 
     struct ImageGradient *dest = newGradFromGrad(grad);
@@ -583,15 +651,17 @@ int main() {
     return 0;
 }
 */
+
 /*
 int main() {
     struct ImageStack *i;
-    i = open("test.jpg");
-    struct ImageGradient *grad = newImageGradient(i->imgArray[i->top-1], 1);
-    GradContrast(grad, 120);
+    i = open("test3.jpg");
+    struct ImageGradient *grad = newImageGradient(i->imgArray[i->top-1], 0);
+    GradHSL(grad, 50, 2, 0);
     i->imgArray[i->top-1] = GradToLayer(grad);
-    
-    save("gradtest.jpg", i);
+    //i->imgArray[i->top-1] = HSL(i->imgArray[i->top-1], 150, 2, 1);
+    //i->imgArray[i->top-1] = Saturate(i->imgArray[i->top-1], 105);
+    save("grad0test.jpg", i);
 
 }
 */

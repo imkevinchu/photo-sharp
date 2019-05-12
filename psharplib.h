@@ -3,7 +3,7 @@
 //Helper structure for the HSL function
 struct HSL
 {
-        short H;
+        float H;
         float S;
         float L;
 };
@@ -25,6 +25,7 @@ struct ImageLayer *Crop(struct ImageLayer *img, float pct);
 struct ImageLayer *Kelvin(struct ImageLayer *img, float K);
 
 void GradContrast(struct ImageGradient *grad, int level);
+void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel);
 struct ImageLayer *GradToLayer(struct ImageGradient *grad);
 
 struct HSL *RGBToHSL(struct pixel* rgb);

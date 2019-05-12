@@ -133,11 +133,19 @@ struct ImageGradient *newImageGradient(struct ImageLayer* lay, unsigned char dir
     struct pixel *temp;
     struct pixel **buf; 
     buf = (struct pixel **)malloc(sizeof(struct pixel *) * (lay->h * lay->w)); 
-    for (int i = 0 ; i < lay->h * lay->w; i++){
-        buf[i] = lay->imgPixelData[i];
+    grad->imgPixelData = buf;
+    int j = 0;
+    while(j < (lay->h*lay->w)) {
+        temp = makePix();
+        temp->red = lay->imgPixelData[j]->red;
+        temp->green= lay->imgPixelData[j]->green;
+        temp->blue = lay->imgPixelData[j]->blue;
+        temp->alpha = lay->imgPixelData[j]->alpha;
+        grad->imgPixelData[j] = temp;
+        j++;
+
     }
     grad->direction = dir;
-    grad->imgPixelData = buf;
     grad->h = lay->h;
     grad->w = lay->w;
     
@@ -305,7 +313,7 @@ void ImageSaturate(struct ImageStack *img, int lev) {
     int topLevel = img->top - 1;
 
     struct ImageLayer *lay;
-    lay = HSL(img->imgArray[topLevel], lev, 2, 0);
+    lay = Saturate(img->imgArray[topLevel], lev);
 
     pushLayer(img, lay);
 }
@@ -382,24 +390,20 @@ void ImageCrop(struct ImageStack *img, double p) {
     pushLayer(img, lay);
 }
 
-void ImageHSL(struct ImageStack *img, int a, int b, int c) {
-    int topLevel = img->top - 1;
-    
-    struct ImageLayer *lay;
-    lay = HSL(img->imgArray[topLevel], a, b, c);
- 
-    pushLayer(img, lay);
-
-}
 
 void GradientContrast(struct ImageGradient *img, int lev) {
-
 
     struct ImageGradient *grad;
     GradContrast(grad, lev);
 
-
 }
+
+void GradientHSL(struct ImageGradient *img, int lev, int hsl, int channel){
+
+    struct ImageGradient *grad;
+    GradHSL(grad, lev, hsl, channel);
+}
+
 
 
 /*
