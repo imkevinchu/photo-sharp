@@ -583,7 +583,7 @@ int main() {
     return 0;
 }
 */
-
+/*
 int main() {
     struct ImageStack *i;
     i = open("test.jpg");
@@ -594,7 +594,7 @@ int main() {
     save("gradtest.jpg", i);
 
 }
-
+*/
 /*
 int main() {
  
