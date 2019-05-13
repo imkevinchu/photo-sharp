@@ -23,5 +23,5 @@ This is a line
 { indent by one
 { There's a tab here, indent two
 }} Superdeindent
-{{ Idk if a double indent is even allowed in your language
+{{ Double indent
 """
