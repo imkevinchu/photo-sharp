@@ -7,7 +7,7 @@ type pval = Red | Green | Blue
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Float | Void | String | Default | Image| Caption | Album | Array | Pixel
+type typ = Int | Bool | Float | Void | String | Default | Image| Gradient | Album | Array | Pixel
 
 type bind = typ * string
 
@@ -110,7 +110,7 @@ let string_of_typ = function
   | Default -> "default"
   | Pixel -> "Pixel"
   | Image -> "Image"
-  | Caption -> "Caption"
+  | Gradient -> "Gradient"
   | Album -> "Album"
   | Array -> "Array"
 

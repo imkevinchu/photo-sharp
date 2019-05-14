@@ -46,7 +46,7 @@ rule token = parse
 | "false"  { BLIT(false) }
 | "Pixel"   { PIXEL }
 | "Image"   { IMAGE }
-| "Caption" { CAPTION }
+| "Gradient" { GRADIENT }
 | "Album"   { ALBUM }
 | "arr"   { ARR }
 | "preset" { PRESET }

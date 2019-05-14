@@ -36,7 +36,9 @@ let translate (globals, functions) =
   and pix_t      = L.pointer_type (L.i32_type context)
   and image_t    = L.pointer_type (L.i32_type context)
   and album_t    = L.pointer_type (L.i32_type context)
-  and string_t   = L.pointer_type (L.i8_type context) in
+  and string_t   = L.pointer_type (L.i8_type context) 
+  and grad_t     = L.pointer_type (L.i32_type context)
+  in
 
 
   (* Return the LLVM type for a MicroC type *)
@@ -47,10 +49,10 @@ let translate (globals, functions) =
     | A.Void  -> void_t
     | A.String -> string_t
     | A.Image -> image_t
-    | A.Caption -> string_t
     | A.Album -> album_t
     | A.Array -> string_t
     | A.Pixel -> pix_t
+    | A.Gradient -> grad_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -183,6 +185,16 @@ let translate (globals, functions) =
       L.function_type album_t [||] in
   let newAlbum_func : L.llvalue = 
       L.declare_function "newAlbum" newAlbum_t the_module in
+
+  let newGradient_t : L.lltype = 
+        L.function_type grad_t [| image_t ; i32_t|] in
+  let newGradient_func : L.llvalue = 
+        L.declare_function "newImageGradient" newGradient_t the_module in
+
+  let applyGrad_t : L.lltype = 
+        L.function_type grad_t [| grad_t |] in
+  let applyGradient_func : L.llvalue = 
+        L.declare_function "GradToLayer" applyGrad_t the_module in
 
   let addImage_t : L.lltype = 
       L.function_type i32_t [| album_t; image_t |] in
@@ -368,6 +380,10 @@ let translate (globals, functions) =
           L.build_call redPixel_func [| (expr builder e) |] "RedPixel" builder
       | SCall ("NewAlbum", []) ->
           L.build_call newAlbum_func [| |] "newAlbum" builder
+      | SCall ("NewGradient", e) ->
+            L.build_call newGradient_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "newImageGradient" builder
+      | SCall ("ApplyGradient", [e])->
+            L.build_call applyGradient_func [| (expr builder e) |] "GradToLayer" builder
       | SCall ("AddImage", e) ->
           L.build_call addImage_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "addToAlbum" builder
       | SCall ("AlbumSize", [e]) ->
