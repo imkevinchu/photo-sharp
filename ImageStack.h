@@ -59,6 +59,7 @@ void ImageReflectY(struct ImageStack *img);
 void ImageReflectX(struct ImageStack *img);
 void ImageTint(struct ImageStack *img, int lev);
 void ImageCrop(struct ImageStack *img, double p);
+void ImageHSL(struct ImageStack *img, int a, int b, int c);
 
 //Gradient functions
 void GradContrast(struct ImageGradient *grad, int lev);

@@ -308,7 +308,7 @@ let translate (globals, functions) =
 	  | A.Neg                  -> L.build_neg
           | A.Not                  -> L.build_not) e' "tmp" builder
       | SCall ("print", [e]) | SCall ("printb", [e]) ->
-        let (t, a) = e in
+        let (t, _) = e in
           (match t with
              A.Int -> L.build_call printf_func [| int_format_str ; (expr builder e) |]
 	    "printf" builder
@@ -446,7 +446,7 @@ let translate (globals, functions) =
       | SEFor (it, obj, body) -> 
             (* call start and size functions, parser to traditional For syntax *)
 
-            let (t, a) = obj in
+            let (t, _) = obj in
                 (match t with
                    A.Image -> 
                      let e1 = (A.Int, SAssign("Marie!", (A.Int, SLiteral 0))) and
@@ -464,7 +464,7 @@ let translate (globals, functions) =
       | SEEFor (it, s, e, body) ->
             (* call start and size functions, parser to traditional For syntax *)
             
-            let (t, a) = s in
+            let (t, _) = s in
                 (match t with
                  | A.Int ->
                      let e1 = (A.Int, SAssign(it, s)) and

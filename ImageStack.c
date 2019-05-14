@@ -313,7 +313,7 @@ void ImageSaturate(struct ImageStack *img, int lev) {
     int topLevel = img->top - 1;
 
     struct ImageLayer *lay;
-    lay = Saturate(img->imgArray[topLevel], lev);
+    lay = HSL(img->imgArray[topLevel], lev, 2, 0);
 
     pushLayer(img, lay);
 }
@@ -390,6 +390,15 @@ void ImageCrop(struct ImageStack *img, double p) {
     pushLayer(img, lay);
 }
 
+void ImageHSL(struct ImageStack *img, int a, int b, int c) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = HSL(img->imgArray[topLevel], a, b, c);
+
+    pushLayer(img, lay);
+}
 
 void GradientContrast(struct ImageGradient *img, int lev) {
 
