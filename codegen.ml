@@ -192,7 +192,7 @@ let translate (globals, functions) =
         L.declare_function "newImageGradient" newGradient_t the_module in
 
   let applyGrad_t : L.lltype = 
-        L.function_type grad_t [| grad_t |] in
+        L.function_type grad_t [| image_t; grad_t |] in
   let applyGradient_func : L.llvalue = 
         L.declare_function "GradToLayer" applyGrad_t the_module in
 
@@ -382,8 +382,8 @@ let translate (globals, functions) =
           L.build_call newAlbum_func [| |] "newAlbum" builder
       | SCall ("NewGradient", e) ->
             L.build_call newGradient_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "newImageGradient" builder
-      | SCall ("ApplyGradient", [e])->
-            L.build_call applyGradient_func [| (expr builder e) |] "GradToLayer" builder
+      | SCall ("ApplyGradient", e)->
+            L.build_call applyGradient_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "GradToLayer" builder
       | SCall ("AddImage", e) ->
           L.build_call addImage_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "addToAlbum" builder
       | SCall ("AlbumSize", [e]) ->

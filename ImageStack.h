@@ -39,7 +39,7 @@ struct ImageStack *newImageStack();
 //Create and free gradients
 struct ImageGradient *newImageGradient(struct ImageStack* s, unsigned char dir);
 struct ImageGradient *newGradFromGrad(struct ImageGradient *lay);
-struct ImageLayer *GradToLayer(struct ImageGradient *grad);
+void GradToLayer(struct ImageStack* s, struct ImageGradient *grad);
 
 //Opening and saving image files
 struct ImageLayer *openFile(char *fileName);

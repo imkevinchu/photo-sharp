@@ -170,12 +170,13 @@ struct ImageGradient *newGradFromGrad(struct ImageGradient* lay){
     
 } 
 
-struct ImageLayer *GradToLayer(struct ImageGradient *grad){
+void GradToLayer(struct ImageStack *s, struct ImageGradient *grad){
     struct ImageLayer *lay = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
     lay->h = grad->h;
     lay->w = grad->w;
     lay->imgPixelData = grad->imgPixelData;
-    return lay;
+    pushLayer(s, lay);
+    
 
 }
 
