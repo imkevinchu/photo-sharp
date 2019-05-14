@@ -128,7 +128,8 @@ struct ImageLayer *newImageLayer(int hi, int wi) {
     return lay;
 } 
 
-struct ImageGradient *newImageGradient(struct ImageLayer* lay, unsigned char dir){
+struct ImageGradient *newImageGradient(struct ImageStack* s, unsigned char dir){
+    struct ImageLayer *lay = s->imgArray[s->top-1];
     struct ImageGradient *grad = (struct ImageGradient *)malloc(sizeof(struct ImageGradient));
     struct pixel *temp;
     struct pixel **buf; 

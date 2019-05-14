@@ -37,7 +37,7 @@ struct ImageLayer *newImageLayer(int hi, int wi);
 struct ImageStack *newImageStack();
 
 //Create and free gradients
-struct ImageGradient *newImageGradient(struct ImageLayer* lay, unsigned char dir);
+struct ImageGradient *newImageGradient(struct ImageStack* s, unsigned char dir);
 struct ImageGradient *newGradFromGrad(struct ImageGradient *lay);
 struct ImageLayer *GradToLayer(struct ImageGradient *grad);
 
