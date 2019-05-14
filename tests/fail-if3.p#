@@ -7,6 +7,6 @@ preset int main():
   else:
   {
     bar
-    /* Error: undeclared variable */
+    #/* Error: undeclared variable */
   }
 }

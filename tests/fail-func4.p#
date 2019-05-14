@@ -9,7 +9,6 @@ preset void bar():
 preset int print():
 {
 }
-/* Should not be able to define print */
 
 preset void baz():
 {

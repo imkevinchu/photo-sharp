@@ -3,7 +3,7 @@ preset void foo():
   if (true):
   {
     return 42
-    /* Should return void */
+    #/* Should return void */
   }
   else:
   {

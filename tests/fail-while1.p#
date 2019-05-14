@@ -9,7 +9,7 @@ preset int main():
 
   while (42):
   { 
-    /* Should be boolean */
+    #/* Should be boolean */
     i = i + 1
   }
 

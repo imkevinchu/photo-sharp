@@ -8,5 +8,5 @@ preset int main():
   b = true
   b = false
   i = false
-  /* Fail: assigning a bool to an integer */
+  # /* Fail: assigning a bool to an integer */
 }

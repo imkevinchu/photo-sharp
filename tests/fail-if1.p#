@@ -12,5 +12,5 @@ preset int main():
   if (42):
   {
   }
-  /* Error: non-bool predicate */
+  #/* Error: non-bool predicate */
 }

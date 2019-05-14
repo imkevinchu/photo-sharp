@@ -10,7 +10,7 @@ preset int main():
   while (true):
   {
     foo()
-    /* foo undefined */
+    #/* foo undefined */
   }
 
 }
