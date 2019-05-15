@@ -13,6 +13,10 @@ struct arr *makeArr(char *name, int size)
 
 };
 
-int indexArr(struct arr *array);
+int indexArr(struct arr *array)
+{
+    array->array 
+}
+
 int sizeArr(struct arr *array) ;
 int setArr (struct arr *array);
