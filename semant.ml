@@ -69,7 +69,10 @@ let check (globals, functions) =
                                                  ("GetImage", [(Album, "x"); (Int, "y")], Image);
                                                  ("save", [(String, "x"); (Image, "y")], Void);
                                                  ("NewGradient", [(Image, "x"); (Int, "y")], Gradient);
-                                                 ("ApplyGradient", [(Gradient, "x")], Void)]
+                                                 ("ApplyGradient", [(Image, "x"); (Gradient, "y")], Void);
+                                                 ("gHSL", [(Gradient, "w"); (Int, "x"); (Int, "y"); (Int, "z")], Void);
+                                                 ("gContrast", [(Gradient, "x"); (Int, "y")], Void);
+                                                 ]
                                                  
   in
 

@@ -321,7 +321,6 @@ struct HSL *RGBToHSL(struct pixel* rgb) {
 	float r = (rgb->red / 255.0f);
 	float g = (rgb->green / 255.0f);
 	float b = (rgb->blue / 255.0f);
-    
 
 	float min = Min(Min(r, g), b);
 	float max = Max(Max(r, g), b);
@@ -396,6 +395,9 @@ struct pixel *HSLToRGB(struct HSL *hsl) {
         if (r > 255) r = 255;
         if (g > 255) g = 255;
         if (b > 255) b = 255;
+        if (r < 0) r = 0;
+        if (g < 0) g = 0;
+        if (b < 0) b = 0;
         rgb->red = r;
         rgb->green = g;
         rgb->blue = b;
@@ -436,15 +438,18 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
             }
 
             rgb_tmp = HSLToRGB(hsl_tmp);
-            r = rgb_tmp->red < 255 ?  rgb_tmp->red : 250;
-            g = rgb_tmp->green < 255 ?  rgb_tmp->green : 250;
-            b = rgb_tmp->blue < 255 ?  rgb_tmp->blue : 250;
+            r = rgb_tmp->red > 255 ?  rgb_tmp->red : 255;
+            g = rgb_tmp->green > 255 ?  rgb_tmp->green : 255;
+            b = rgb_tmp->blue > 255 ?  rgb_tmp->blue : 255;
+            r = rgb_tmp->red < 0 ?  rgb_tmp->red : 0;
+            g = rgb_tmp->green < 0 ?  rgb_tmp->green : 0;
+            b = rgb_tmp->blue < 0 ?  rgb_tmp->blue : 0;
             
 
             if(channel == 1) dest->imgPixelData[i]->red = r;                // only adjust red
             else if (channel == 2) dest->imgPixelData[i]->green = g;    // only adjust green
             else if (channel == 3) dest->imgPixelData[i]->blue = b;       // only adjust blue
-            else if (channel == 0) {                                                                                    // adjust all r,g,b
+            else if (channel == 0) {                                      // adjust all r,g,b
                 dest->imgPixelData[i]->red = r;
                 dest->imgPixelData[i]->green = g;
                 dest->imgPixelData[i]->blue = b;
@@ -489,7 +494,7 @@ void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel){
                 }
                 if(level == 1.0) f = 1.0;
             }
-            printf("%f\n", f);
+            
             if(hsl == 1) hsl_tmp->H *= f;          // change hue by a factor of f
             else if(hsl == 2) hsl_tmp->S *= f;     // change saturation by a factor of f
             else if(hsl == 3) hsl_tmp->L *= f;     // change luminance by a factor of f
@@ -656,9 +661,9 @@ int main() {
 int main() {
     struct ImageStack *i;
     i = open("test3.jpg");
-    struct ImageGradient *grad = newImageGradient(i->imgArray[i->top-1], 0);
+    struct ImageGradient *grad = newImageGradient(i, 0);
     GradHSL(grad, 50, 2, 0);
-    i->imgArray[i->top-1] = GradToLayer(grad);
+    GradToLayer(i, grad);
     //i->imgArray[i->top-1] = HSL(i->imgArray[i->top-1], 150, 2, 1);
     //i->imgArray[i->top-1] = Saturate(i->imgArray[i->top-1], 105);
     save("grad0test.jpg", i);

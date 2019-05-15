@@ -128,6 +128,7 @@ struct ImageLayer *newImageLayer(int hi, int wi) {
     return lay;
 } 
 
+// dir is either 0 or 1. 0: top-down, 1: bottom-up. 
 struct ImageGradient *newImageGradient(struct ImageStack* s, unsigned char dir){
     struct ImageLayer *lay = s->imgArray[s->top-1];
     struct ImageGradient *grad = (struct ImageGradient *)malloc(sizeof(struct ImageGradient));
