@@ -1,18 +1,15 @@
 //Define the Array class
-#include <stdio.h>
-#include <stdlib.h>
-#include <vector>
 
-template <typename T>
-struct arr
+template <typename T, typename name>
+class arr 
 {
-    std::vector<T> array
+    public:
+
+    vector<T> name;
+
+    int indexArr(int index);
+    void removeArr(int index);
+    void setArr(int index, T object);
+    int sizeArr();
+
 };
-
-// constructors
-
-struct arr *makeArr();
-
-int indexArr(struct arr *array);
-int sizeArr(struct arr *array) ;
-int setArr (struct arr *array);

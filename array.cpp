@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <vector>
 
+#include "array.hpp"
+
 using namespace std;
 
 template <typename T, typename name>

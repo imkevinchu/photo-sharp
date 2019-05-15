@@ -1,0 +1,21 @@
+### Starting build.
+# Target: microc.ml.depends, tags: { extension:ml, file:microc.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules microc.ml > microc.ml.depends # cached
+# Target: ast.ml.depends, tags: { extension:ml, file:ast.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules ast.ml > ast.ml.depends # cached
+# Target: ast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:ast.cmo, file:ast.ml, implem, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o ast.cmo ast.ml # cached
+# Target: codegen.ml.depends, tags: { extension:ml, file:codegen.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules codegen.ml > codegen.ml.depends # cached
+# Target: sast.ml.depends, tags: { extension:ml, file:sast.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules sast.ml > sast.ml.depends # cached
+# Target: sast.cmo, tags: { byte, compile, extension:cmo, extension:ml, file:sast.cmo, file:sast.ml, implem, ocaml, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o sast.cmo sast.ml # cached
+# Target: indentation.ml.depends, tags: { extension:ml, file:indentation.ml, ocaml, ocamldep, package(llvm), package(llvm.analysis), quiet, traverse, warn(+a-4) }
+ocamlfind ocamldep -package llvm -package llvm.analysis -modules indentation.ml > indentation.ml.depends
+# Target: microcparse.mly, tags: { extension:mly, file:microcparse.mly, infer, ocaml, ocamlyacc, package(llvm), package(llvm.analysis), parser, quiet, traverse, warn(+a-4) }
+/usr/bin/ocamlyacc microcparse.mly
++ /usr/bin/ocamlyacc microcparse.mly
+File "microcparse.mly", line 77: no action specified for this production
+Command exited with code 1.
+# Compilation unsuccessful.
