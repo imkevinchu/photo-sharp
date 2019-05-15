@@ -1,0 +1,45 @@
+/usr/local/opt/llvm/bin/lli
+
+###### Testing test-add1
+./microc.native tests/test-add1.p# > test-add1.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-add1.ll > test-add1.s
+cc -o test-add1.exe test-add1.s printbig.o hello.o psharplib.o pixel.o Album.o ImageStack.o
+./test-add1.exe
+diff -b test-add1.out tests/test-add1.out > test-add1.diff
+###### SUCCESS
+
+###### Testing test-album
+./microc.native tests/test-album.p# > test-album.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-album.ll > test-album.s
+cc -o test-album.exe test-album.s printbig.o hello.o psharplib.o pixel.o Album.o ImageStack.o
+./test-album.exe
+diff -b test-album.out tests/test-album.out > test-album.diff
+###### SUCCESS
+
+###### Testing test-album2
+./microc.native tests/test-album2.p# > test-album2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-album2.ll > test-album2.s
+cc -o test-album2.exe test-album2.s printbig.o hello.o psharplib.o pixel.o Album.o ImageStack.o
+./test-album2.exe
+diff -b test-album2.out tests/test-album2.out > test-album2.diff
+###### SUCCESS
+
+###### Testing test-album3
+./microc.native tests/test-album3.p# > test-album3.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-album3.ll > test-album3.s
+cc -o test-album3.exe test-album3.s printbig.o hello.o psharplib.o pixel.o Album.o ImageStack.o
+./test-album3.exe
+diff -b test-album3.out tests/test-album3.out > test-album3.diff
+###### SUCCESS
+
+###### Testing test-arith1
+./microc.native tests/test-arith1.p# > test-arith1.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-arith1.ll > test-arith1.s
+cc -o test-arith1.exe test-arith1.s printbig.o hello.o psharplib.o pixel.o Album.o ImageStack.o
+./test-arith1.exe
+diff -b test-arith1.out tests/test-arith1.out > test-arith1.diff
+###### SUCCESS
+
+###### Testing test-arith2
+./microc.native tests/test-arith2.p# > test-arith2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-arith2.ll > test-arith2.s
