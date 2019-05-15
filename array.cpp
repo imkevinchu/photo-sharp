@@ -1,11 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string>
+#include <vector>
 
 #include "array.hpp"
 
 using namespace std;
 
+template <typename T>
+arr<T>::arr(string name)
+{
+    array = vector<T> name;
+}
 
 template <typename T>
 int arr<T>::indexArr(int index)

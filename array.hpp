@@ -2,15 +2,13 @@
 #ifndef ARRAY_H
 #define ARRAY_H
 
-#include <vector>
-
 template <typename T>
 class arr 
 {
-
+    arr(std::string name);
+        
     public:
-
-    std::vector<T> vector;
+    vector<T> array;
 
     int indexArr(int index);
     void removeArr(int index);
