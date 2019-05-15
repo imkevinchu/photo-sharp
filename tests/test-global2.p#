@@ -2,7 +2,7 @@ bool i
 
 preset int main():
 {
-  /* Should hide the global i */
+  # Should hide the global i 
   int i
 
   i = 42

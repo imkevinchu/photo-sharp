@@ -1,4 +1,7 @@
-/* Bug noticed by Pin-Chin Huang */
+'''
+ Bug noticed by Pin-Chin Huang 
+'''
+
 
 preset int fun(int x, int y):
 {
@@ -15,4 +18,3 @@ preset int main():
   print(i)
   return 0
 }
-

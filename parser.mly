@@ -81,6 +81,7 @@ stmt:
   | RETURN expr_opt SEMI                    { Return $2             }
   | RETURN SEMI                             { Return Noexpr         }
   | LBRACE SEMI stmt_list RBRACE SEMI       { Block(List.rev $3)    }
+  | LBRACE SEMI stmt_list RBRACE            { Block(List.rev $3)    }
   | IF LPAREN expr RPAREN COL SEMI stmt %prec NOELSE { If($3, $7, Block([])) }
   | IF LPAREN expr RPAREN COL SEMI stmt ELSE COL SEMI stmt   { If($3, $7, $11)        }
   | FOR LPAREN expr_opt SEMICOL expr SEMICOL expr_opt RPAREN COL SEMI stmt
