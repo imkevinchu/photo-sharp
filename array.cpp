@@ -6,17 +6,33 @@
 
 using namespace std;
 
-template <typename T>
-struct arr *makeArr(char *name, int size) 
+template <typename T, typename name>
+class arr 
 {
+    public:
+
     vector<T> name;
 
+    int indexArr(int index)
+    {
+        return name.at(index);
+    }
+
+    void removeArr(int index)
+    {
+        name.erase(index);
+
+    }
+
+    void setArr(int index, T object)
+    {
+        name[index] = object;
+    }
+
+    int sizeArr()
+    {
+        return name.size();
+    }
+
+
 };
-
-int indexArr(struct arr *array)
-{
-    array->array 
-}
-
-int sizeArr(struct arr *array) ;
-int setArr (struct arr *array);
