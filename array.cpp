@@ -5,19 +5,73 @@
 #include <iostream>
 
 #include "array.hpp"
+#include "pixel.h"
+#include "ImageStack.h"
 
 using namespace std;
 
-template <typename T>
-arr<T>* pointerStruct(struct arr<T> &a)
+template <typename T> 
+T getItem(arr<T> *a, int index)
 {
-    return &a;
+    return a->vec[index];
 }
+
+template <typename T>
+int getSize(arr<T> *a)
+{
+    return a->vec.size();
+}
+
+template <typename T>
+void setItem(arr<T> *a, T item, int index)
+{
+    a->vec[index] = item;
+}
+
+struct arr<int> *newArrayInt()
+{
+    return new arr<int>;
+}
+
+struct arr<float> *newArrayFloat()
+{
+    return new arr<float>;
+}
+
+struct arr<bool> *newArrayBool()
+{
+    return new arr<bool>;
+}
+
+struct arr<std::string> *newArrayString()
+{
+    return new arr<std::string>;
+}
+
+struct arr<struct pixel* > *newArrayPixel()
+{
+    return new arr<struct pixel *>;
+}
+ 
+struct arr<struct ImageGradient *> *newArrayGradient()
+{
+    return new arr<struct ImageGradient *>;
+}
+
+struct arr<struct ImageStack *> *newArrayImageStack()
+{
+    return new arr<struct ImageStack *>;
+}
+
+struct arr<struct Album*> *newArrayAlbum()
+{
+    return new arr<struct Album *>;
+}
+
 
 int main()
 {
-    /*
-    struct pixel *p;
+    struct pixel * p;
     p = setPix(100,100,100,0);
     printPix(p);
 
@@ -29,13 +83,18 @@ int main()
     size = ImageSize(img);
 
     printf("Size: %d\n", size);
-    */
 
     //struct arr 
     arr<int> Array;
-
+    arr<struct ImageStack *>* array = newArrayImageStack();
+    
     Array.vec.push_back(10);
-    cout << pointerStruct(Array) << endl;
+    array->vec.push_back(img);
+    cout << array->vec[0] << endl;
+    size = ImageSize(array->vec[0]);
+
+    printf("Size: %d\n", size);
+
 
     return 0;
 }
