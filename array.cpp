@@ -1,38 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <vector>
+
 
 #include "array.hpp"
 
 using namespace std;
 
-template <typename T, typename name>
-class arr 
+
+template <typename T>
+int arr<T>::indexArr(int index)
 {
-    public:
+    return vector.at(index);
+}
 
-    vector<T> name;
+template <typename T>
+void arr<T>::removeArr(int index)
+{
+    vector.erase(index);
 
-    int indexArr(int index)
-    {
-        return name.at(index);
-    }
+}
 
-    void removeArr(int index)
-    {
-        name.erase(index);
+template <typename T>
+void arr<T>::setArr(int index, T object)
+{
+    vector[index] = object;
+}
 
-    }
-
-    void setArr(int index, T object)
-    {
-        name[index] = object;
-    }
-
-    int sizeArr()
-    {
-        return name.size();
-    }
+template <typename T>
+int arr<T>::sizeArr()
+{
+    return vector.size();
+}
 
 
-};

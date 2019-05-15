@@ -1,11 +1,16 @@
 //Define the Array class
+#ifndef ARRAY_H
+#define ARRAY_H
 
-template <typename T, typename name>
+#include <vector>
+
+template <typename T>
 class arr 
 {
+
     public:
 
-    vector<T> name;
+    std::vector<T> vector;
 
     int indexArr(int index);
     void removeArr(int index);
@@ -13,3 +18,5 @@ class arr
     int sizeArr();
 
 };
+
+#endif 
