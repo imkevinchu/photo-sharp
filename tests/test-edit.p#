@@ -1,5 +1,5 @@
 preset Image brighten(Image i):
-{  
+{
     return i
 }
 preset Image addUpperGradient(Image i):
@@ -17,11 +17,11 @@ preset Image addUpperGradient(Image i):
 
     i.ApplyGradient(g)
     save("image.jpg", i)
-    return i   
+    return i
 }
 
 preset Image addLowerGradient(Image i):
-{   
+{
     '''
     this function applies a top-bottom gradient on the image, and adjusts some HSL values
     '''
@@ -29,20 +29,20 @@ preset Image addLowerGradient(Image i):
     Gradient h
     h = i.NewGradient(0)
 
-    h.gHSL(105, 1, 2)    
-    h.gHSL(220, 2, 1)   
-    h.gHSL(150, 2, 3)   
-    h.gHSL(105, 3, 0)  
+    h.gHSL(105, 1, 2)
+    h.gHSL(220, 2, 1)
+    h.gHSL(150, 2, 3)
+    h.gHSL(105, 3, 0)
 
     i.ApplyGradient(h)
     save("image.jpg", i)
     return i
 }
 preset Image myEdit(Image img):
-{       
+{
     img.HSL(120, 2, 0)
     save("image.jpg", img)
-    img = addLowerGradient(img) 
+    img = addLowerGradient(img)
     img = addUpperGradient(img)
     return img
 }
@@ -57,16 +57,19 @@ preset int main():
     int idx
     idx = 0
     x = open("braies.jpg")
+    save("./outputs/testing1.jpg", x)
     x = myEdit(x)
-    save("image1.jpg", x)
-    Free(x)   
+    save("./outputs/testing.jpg", x)
+    Free(x)
     y = open("carezza.jpg")
+    save("./outputs/testing1.jpg", y)
     y = myEdit(y)
-    save("image2.jpg", y)
-    Free(y)   
+    save("./outputs/testing.jpg", y)
+    Free(y)
     z = open("phiphi.jpg")
+    save("./outputs/testing1.jpg", z)
     z = myEdit(z)
-    save("image3.jpg", z)
+    save("./outputs/testing.jpg", z)
     Free(z)
     return 0
 }
