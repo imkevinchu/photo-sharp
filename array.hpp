@@ -4,24 +4,6 @@
 
 #include <vector>
 
-/*
-template <typename T>
-class arr 
-{
-
-    public:
-    std::vector<T> vector;
-
-    arr(std::string name);
-    int indexArr(int index);
-    void removeArr(int index);
-    void setArr(int index, T object);
-    int sizeArr();
-    vector<T> *pointer(vector<T> vector);
-
-};
-*/ 
-
 template <typename T>
 struct arr
 {
