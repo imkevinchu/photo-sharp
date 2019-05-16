@@ -14,7 +14,7 @@ using namespace std;
 template <typename T> 
 T getItem(arr<T> *a, int index)
 {
-    return a->vec[index];
+    return a->vec.at(index);
 }
 
 template <typename T>
@@ -26,7 +26,17 @@ int getSize(arr<T> *a)
 template <typename T>
 void setItem(arr<T> *a, T item, int index)
 {
-    a->vec[index] = item;
+    if (index == 0 && getSize(a) == 0)
+    {
+        a->vec.push_back(item);
+    }
+    else if (getSize(a) < index)
+    {
+        a->vec.resize(index+1);
+        a->vec[index] = item;
+    }
+    else
+        a->vec[index] = item;
 }
 
 struct arr<int> *newArrayInt()
@@ -82,16 +92,24 @@ int main()
     int size;
 
     //struct arr 
-    arr<int> Array;
+    arr<int> * Array = newArrayInt();
     arr<struct ImageStack *>* array = newArrayImageStack();
     
-    Array.vec.push_back(10);
-    array->vec.push_back(img);
-    cout << array->vec[0] << endl;
-    size = ImageSize(array->vec[0]);
+    
+    //array->vec.push_back(img);
+    //cout << array->vec[0] << endl;
+    //size = ImageSize(array->vec[0]);
 
-    printf("Size: %d\n", size);
+    //printf("Size: %d\n", size);
 
+    cout << "arrayBefore" << getSize(array) << endl;
+    
+    setItem(array, img, 0);
+    //Array->vec.resize(5);
+    //setItem(Array, img, 3);
+    cout << "arrayAfter" << getSize(array) << endl;
+
+    cout << getItem(array, 0) << endl;
 
     return 0;
 }
