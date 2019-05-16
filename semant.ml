@@ -76,6 +76,7 @@ let check (globals, functions) =
                                                  ("gHSL", [(Gradient, "w"); (Int, "x"); (Int, "y"); (Int, "z")], Void);
                                                  ("gContrast", [(Gradient, "x"); (Int, "y")], Void);
                                                  ("Free", [(Default, "x")], Void);
+                                                 ("gBrightness", [(Gradient, "x"); (Int, "y")], Void);
                                                  ]
 
   in

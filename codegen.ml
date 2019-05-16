@@ -201,6 +201,10 @@ let translate (globals, functions) =
         L.function_type grad_t [| grad_t; i32_t|] in
   let gradContrast_func : L.llvalue =
         L.declare_function "GradContrast" gradCon_t the_module in
+  let gradBright_t : L.lltype =
+        L.function_type grad_t [| grad_t; i32_t|] in
+  let gradBright_func : L.llvalue =
+        L.declare_function "GradBrightness" gradBright_t the_module in
   let gradHSL_t : L.lltype =
         L.function_type grad_t [| grad_t ; i32_t ; i32_t ; i32_t|] in
   let gradHSL_func : L.llvalue =
@@ -428,6 +432,8 @@ let translate (globals, functions) =
             L.build_call applyGradient_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "GradToLayer" builder
       | SCall ("gContrast", e) ->
             L.build_call gradContrast_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "GradContrast" builder
+      | SCall ("gBrightness", e) ->
+        L.build_call gradBright_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "GradBrightness" builder
       | SCall ("gHSL", e) ->
             L.build_call gradHSL_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e))); (expr builder (List.hd (List.tl (List.tl e)))); (expr builder (List.hd (List.tl (List.tl (List.tl e)))))|] "GradHSL" builder
       | SCall ("AddImage", e) ->

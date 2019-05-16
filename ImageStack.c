@@ -143,13 +143,14 @@ struct ImageGradient *newImageGradient(struct ImageStack* s, unsigned char dir){
         temp->green= lay->imgPixelData[j]->green;
         temp->blue = lay->imgPixelData[j]->blue;
         temp->alpha = lay->imgPixelData[j]->alpha;
-        grad->imgPixelData[j] = temp;
+        buf[j] = temp;
         j++;
 
     }
     grad->direction = dir;
     grad->h = lay->h;
     grad->w = lay->w;
+    grad->imgPixelData = buf;
 
     return grad;
 
@@ -173,15 +174,32 @@ struct ImageGradient *newGradFromGrad(struct ImageGradient* lay){
 
 void GradToLayer(struct ImageStack *s, struct ImageGradient *grad){
     struct ImageLayer *lay = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
+
+
     lay->h = grad->h;
     lay->w = grad->w;
-    lay->imgPixelData = grad->imgPixelData;
+    struct pixel **buf;
+    buf = (struct pixel **)malloc(sizeof(struct pixel *) * (lay->h * lay->w));
+
+    for (int i = 0; i < grad->w * grad-> h ; i++){
+
+        struct pixel *tmp = makePix();
+        tmp->red = grad->imgPixelData[i]->red;
+        tmp->green = grad->imgPixelData[i]->green;
+        tmp->blue = grad->imgPixelData[i]->blue;
+        buf[i] = tmp;
+
+    }
+
+    lay->imgPixelData = buf;
     pushLayer(s, lay);
-
-
 }
 
 void freeGradient(struct ImageGradient *grad){
+
+    for(int i = 0 ; i< grad->h*grad->w; i++){
+        free(grad->imgPixelData[i]);
+    }
     free(grad);
 }
 
@@ -409,12 +427,21 @@ void ImageHSL(struct ImageStack *img, int a, int b, int c) {
 void ImageBrightness(struct ImageStack *img, int amt) {
 
     int topLevel = img->top - 1;
-    
+
     struct ImageLayer *lay;
     lay = Brightness(img->imgArray[topLevel], amt);
 
     pushLayer(img, lay);
 }
+  void ImageRGBImage(struct ImageStack *img, int value) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = RGBImage(img->imgArray[topLevel], value);
+
+    pushLayer(img, lay);
+  }
 
 
 void GradientContrast(struct ImageGradient *img, int lev) {
@@ -439,12 +466,16 @@ int main() {
     struct ImageStack* img;
 
     img = open("test.jpg");
-    int size;
+    struct ImageGradient* g;
+    //g = newImageGradient(img, 1);
+    //GradientHSL(g, 140, 0, 0);
+    //GradToLayer(img, g);
+    //ImageHSL(img, 120, 0, 0);
+    ImageKelvin(img, 6800.0);
+    save("ttt.jpg", img);
 
-    size = ImageSize(img);
-
-    printf("Size: %d\n", size);
 
 
 }
+
 */

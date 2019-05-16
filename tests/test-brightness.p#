@@ -1,0 +1,8 @@
+preset int main():
+{
+    Image img
+    img = open("large.jpg")
+    save("./outputs/testing.jpg", img)
+    Brightness(img, 50)
+    save("./outputs/testing.jpg", img)
+}

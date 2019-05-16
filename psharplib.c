@@ -243,7 +243,6 @@ struct ImageLayer *Crop(struct ImageLayer *img, float pct){
 }
 
 struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
-
     // level refers to blend strength, and is inversely related to how
     // much of the color will appear on the image.
     // ** rbg from temp algorithm adapted from Tanner Heller **
@@ -254,11 +253,13 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
     double k = K/100;
     double temp;
     int r,g,b;
-    double strength =  .95; //(double)level/110;
+    double strength =  .999; //(double)level/110;
     //double ln_minus_60 = log(k-60)
     struct ImageLayer *dest = newImageLayer(img->h, img->w);
 
+
     for(int i =0; i< img->w*img->h; i++){
+
         if (k <= 66){
             r = 255;
         }
@@ -302,13 +303,12 @@ struct ImageLayer *Kelvin(struct ImageLayer *img, float K){
             if(b > 255) b = 255;
             if(b < 0 ) b= 0;
             //else img->imgPixelData[i]->blue =
-            dest->imgPixelData[i]->blue = img->imgPixelData[i]->blue * strength + b*(1-strength) ;
+            dest->imgPixelData[i]->green = img->imgPixelData[i]->blue * strength + b*(1-strength) ;
         }
-
     }
+
     return dest;
 }
-
 // ***********************
 // amt is the amount to increase or decrease the brightness intensity
 // ***********************
@@ -316,7 +316,7 @@ struct ImageLayer *Brightness(struct ImageLayer *img, int amt){
 
 		struct ImageLayer *dest = newImageLayer(img->h, img->w);
 
-		for(int i =0; i< img->h*img->w; i++) {
+		for(int i =0; i < img->h*img->w; i++) {
 			dest->imgPixelData[i]->red = img->imgPixelData[i]->red + amt < 255 ? img->imgPixelData[i]->red + amt : 255;
 			dest->imgPixelData[i]->blue = img->imgPixelData[i]->blue + amt < 255 ? img->imgPixelData[i]->blue + amt : 255;
 			dest->imgPixelData[i]->green = img->imgPixelData[i]->green + amt < 255 ? img->imgPixelData[i]->green + amt : 255;
@@ -324,6 +324,50 @@ struct ImageLayer *Brightness(struct ImageLayer *img, int amt){
 		}
 
 		return dest;
+}
+
+// ***********************
+// c is the character that represents the color image : g - green, b - blue, r -red
+// ***********************
+struct ImageLayer *RGBImage(struct ImageLayer *img, int value){
+
+		struct ImageLayer *dest = newImageLayer(img->h, img->w);
+
+		if (value == 1) {
+
+			for(int i =0; i < img->h*img->w; i++) {
+				dest->imgPixelData[i]->red = img->imgPixelData[i]->red;
+				dest->imgPixelData[i]->blue = 0;
+				dest->imgPixelData[i]->green = 0;
+				dest->imgPixelData[i]->alpha = img->imgPixelData[i]->alpha;
+			}
+			return dest;
+		}
+		else if (value == 2) {
+
+			for(int i =0; i < img->h*img->w; i++) {
+				dest->imgPixelData[i]->red = 0;
+				dest->imgPixelData[i]->blue = 0;
+				dest->imgPixelData[i]->green = img->imgPixelData[i]->green;
+				dest->imgPixelData[i]->alpha = img->imgPixelData[i]->alpha;
+			}
+			return dest;
+
+		}
+		else if (value == 3) {
+
+			for(int i =0; i < img->h*img->w; i++) {
+				dest->imgPixelData[i]->red = 0;
+				dest->imgPixelData[i]->blue = img->imgPixelData[i]->blue;
+				dest->imgPixelData[i]->green = 0;
+				dest->imgPixelData[i]->alpha = img->imgPixelData[i]->alpha;
+			}
+			return dest;
+
+		}
+		else {
+			return img;
+		}
 }
 
 //  **********************
@@ -339,12 +383,17 @@ struct HSL *RGBToHSL(struct pixel* rgb) {
 	float r = (rgb->red / 255.0f);
 	float g = (rgb->green / 255.0f);
 	float b = (rgb->blue / 255.0f);
+    float h,s,l;
 
 	float min = Min(Min(r, g), b);
 	float max = Max(Max(r, g), b);
 	float delta = max - min;
 
-	hsl->L = (max + min) / 2;
+	l = (max + min) / 2;
+    if (l>100) l = 100;
+    else if(l<0) l = 0;
+    hsl->L = l;
+
 
 	if (delta == 0)
 	{
@@ -353,7 +402,10 @@ struct HSL *RGBToHSL(struct pixel* rgb) {
 	}
 	else
 	{
-		hsl->S = (hsl->L <= 0.5) ? (delta / (max + min)) : (delta / (2 - max - min));
+		s = (hsl->L <= 0.5) ? (delta / (max + min)) : (delta / (2 - max - min));
+        if (s>1)s = 1;
+        else if (s<0) s = 0;
+        hsl->S = s;
 
 		float hue;
 
@@ -434,16 +486,24 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
         struct ImageLayer *dest = newImageLayer(m->h, m->w);
         struct HSL *hsl_tmp = (struct HSL *)malloc(sizeof(struct HSL));
         struct pixel *rgb_tmp = (struct pixel *)malloc(sizeof(struct pixel));
+        struct pixel **buf;
+        buf = (struct pixel **)malloc(sizeof(struct pixel *) * (m->h * m->w));
+        struct pixel *tmp;
         int r,g,b;
 
 
         for(int i = 0; i < m->h * m->w; i++){
 
+            tmp = makePix();
+            tmp->red = m->imgPixelData[i]->red;
+            tmp->green = m->imgPixelData[i]->green;
+            tmp->blue = m->imgPixelData[i]->blue;
+
             dest->imgPixelData[i]->red = m->imgPixelData[i]->red;
             dest->imgPixelData[i]->green = m->imgPixelData[i]->green;
             dest->imgPixelData[i]->blue = m->imgPixelData[i]->blue;
 
-            hsl_tmp = RGBToHSL( m->imgPixelData[i]);
+            hsl_tmp = RGBToHSL( tmp);
 
 
             if(hsl == 1) hsl_tmp->H *= f;          // change hue by a factor of f
@@ -456,20 +516,20 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
             }
 
             rgb_tmp = HSLToRGB(hsl_tmp);
-            r = rgb_tmp->red < 255 ?  rgb_tmp->red : 255;
-            g = rgb_tmp->green < 255 ?  rgb_tmp->green : 255;
-            b = rgb_tmp->blue < 255 ?  rgb_tmp->blue : 255;
 
 
-            if(channel == 1) dest->imgPixelData[i]->red = r;                // only adjust red
-            else if (channel == 2) dest->imgPixelData[i]->green = g;    // only adjust green
-            else if (channel == 3) dest->imgPixelData[i]->blue = b;       // only adjust blue
+            if(channel == 1) tmp->red = (rgb_tmp->red);                // only adjust red
+            else if (channel == 2) tmp->green = (rgb_tmp->green);    // only adjust green
+            else if (channel == 3) tmp->blue = (rgb_tmp->blue);       // only adjust blue
             else if (channel == 0) {                                      // adjust all r,g,b
-                dest->imgPixelData[i]->red = r;
-                dest->imgPixelData[i]->green = g;
-                dest->imgPixelData[i]->blue = b;
+                tmp->red = (rgb_tmp->red);
+                tmp->green = (rgb_tmp->green);
+                tmp->blue = (rgb_tmp->blue);
             }
+            buf[i] = tmp;
         }
+    dest->imgPixelData = buf;
+
     return dest;
 }
 void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel){
@@ -483,15 +543,14 @@ void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel){
         struct HSL *hsl_tmp = (struct HSL *)malloc(sizeof(struct HSL));
         struct pixel *rgb_tmp = (struct pixel *)malloc(sizeof(struct pixel));
         int r,g,b;
-        double avg;
 
         for(int i = 0; i < grad->h * grad->w; i++){
 
             dest->imgPixelData[i]->red = grad->imgPixelData[i]->red;
             dest->imgPixelData[i]->green = grad->imgPixelData[i]->green;
             dest->imgPixelData[i]->blue = grad->imgPixelData[i]->blue;
-
-            hsl_tmp = RGBToHSL( grad->imgPixelData[i]);
+            if(dest->imgPixelData[i]->red > 245 && dest->imgPixelData[i]->green > 245 && dest->imgPixelData[i]->blue >245){ continue; }
+            else hsl_tmp = RGBToHSL( grad->imgPixelData[i]);
 
             if ( i % grad->w == 0){
                 if(grad->direction == 1){
@@ -523,13 +582,18 @@ void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel){
             r = rgb_tmp->red;
             g = rgb_tmp->green;
             b = rgb_tmp->blue;
-            avg = (r+g+b)/3;
+            if(r > 255) r = 255;
+            if(r < 0) r = 0;
+            if(g>255)g=255;
+            if(g<0)g =0;
+            if(b>255)b=255;
+            if(b<0)b=0;
 
 
             if(channel == 1) dest->imgPixelData[i]->red = (rgb_tmp->red);                // only adjust red
             else if (channel == 2) dest->imgPixelData[i]->green = (rgb_tmp->green);    // only adjust green
             else if (channel == 3) dest->imgPixelData[i]->blue = (rgb_tmp->blue);       // only adjust blue
-            else if (channel == 0) {                                                                                    // adjust all r,g,b
+            else if (channel == 0) {                                                    // adjust all r,g,b
                 dest->imgPixelData[i]->red = rgb_tmp->red;
                 dest->imgPixelData[i]->green = rgb_tmp->green;
                 dest->imgPixelData[i]->blue = rgb_tmp->blue;
@@ -565,20 +629,48 @@ void GradContrast(struct ImageGradient *grad, int level){
         if (r>255) r = 255;
         if (g>255) g = 255;
         if (b>255) b = 255;
+        if (r<0) r = 0;
+        if (g<0) g = 0;
+        if (b<0) b = 0;
 
         // tuned a bit so it doesn't completely blow out highlights
         if (r > 245 && g > 245 & b >= 245){
-                g = (int)g*0.98;
-                b = (int)r*0.98;
-                r = (int)r*0.98;
+                g = g*0.98;
+                b = b*0.98;
+                r = r*0.98;
         }
-        dest->imgPixelData[i]->red = (int)r;
-        dest->imgPixelData[i]->green = (int)g;
-        dest->imgPixelData[i]->blue = (int)b;
+        dest->imgPixelData[i]->red = (unsigned char)r;
+        dest->imgPixelData[i]->green = (unsigned char)g;
+        dest->imgPixelData[i]->blue = (unsigned char)b;
 
     }
     grad->imgPixelData = dest->imgPixelData;
 
+}
+void GradBrightness(struct ImageGradient *grad, int amt){
+
+		struct ImageGradient *dest = newGradFromGrad(grad);
+        
+        double sofar;
+        if(grad->direction == 0) sofar = 0;
+        else sofar = amt;
+
+		for(int i =0; i< grad->h*grad->w; i++) {
+            if(i % grad->w == 0){
+                if(grad->direction == 0){
+                    sofar += (double)amt/grad->h;
+                }
+                else if (grad->direction == 1){
+                    sofar -= (double)amt/grad->h;
+                }
+            }
+            dest->imgPixelData[i]->red = grad->imgPixelData[i]->red + sofar < 255 ? grad->imgPixelData[i]->red + sofar : 255;
+			dest->imgPixelData[i]->blue = grad->imgPixelData[i]->blue + sofar < 255 ? grad->imgPixelData[i]->blue + sofar : 255;
+			dest->imgPixelData[i]->green = grad->imgPixelData[i]->green + sofar < 255 ? grad->imgPixelData[i]->green + sofar : 255;
+			dest->imgPixelData[i]->alpha = grad->imgPixelData[i]->alpha;
+		}
+
+        grad->imgPixelData = dest->imgPixelData;
 }
 
 /*
@@ -677,7 +769,7 @@ int main() {
     struct ImageStack *i;
     i = open("test3.jpg");
     struct ImageGradient *grad = newImageGradient(i, 0);
-    GradHSL(grad, 50, 2, 0);
+    GradBrightness(grad, 30);
     GradToLayer(i, grad);
     //i->imgArray[i->top-1] = HSL(i->imgArray[i->top-1], 150, 2, 1);
     //i->imgArray[i->top-1] = Saturate(i->imgArray[i->top-1], 105);
