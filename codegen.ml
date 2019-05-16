@@ -453,7 +453,6 @@ let translate (globals, functions) =
                     | A.Album -> L.build_call freeAlbum_func [|(expr builder e)|] "freeAlbum" builder
                     | A.Pixel -> L.build_call freePixel_func [|(expr builder e)|] "freePix" builder
                     | A.Gradient -> L.build_call freeGradient_func [|(expr builder e)|] "freeGradient" builder)
-
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let llargs = List.rev (List.map (expr builder) (List.rev args)) in

@@ -4,7 +4,6 @@
 
 
 struct array *newArrayString() {
-    printf("here i am\n");
     struct array *arr = (struct array *)malloc(sizeof(struct array *));
 
     char** buff;
@@ -24,12 +23,10 @@ struct array *newArrayString() {
 }
 
 char *getVal(struct array *a, int index) {
-    printf("here\n");
     return(a->vals[index]);
 }
 
-void setVal(struct array *a, int index, char *newVal) {
-    printf("%s\n", newVal);
+void setVal(struct array *a, char *newVal, int index) {
 
     if(a->size >= index) {
         resize(a);
@@ -61,15 +58,9 @@ void resize(struct array *a) {
     free(temp);
 }
 
-/*
-int main() {
-    struct array *a = newArrayString();
-  
-    setVal(a, 1, "a");
-    int i;
-    for(i = 1; i <21; i++)
-    {
-        setVal(a, i, "a");
-    }
+void freeArray(struct array *a) {
+    free(a->vals);
+    free(a);
+   
 }
-*/
+

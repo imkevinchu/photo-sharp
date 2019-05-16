@@ -12,7 +12,7 @@ LLI="/usr/local/opt/llvm/bin/lli"
 LLC="/usr/local/opt/llvm/bin/llc"
 
 # Path to the C++ compiler
-CC="g++"
+CC="cc"
 
 # Path to the microc compiler.  Usually "./microc.native"
 # Try "_build/microc.native" if ocamlbuild was unable to create a symbolic link.
@@ -93,7 +93,7 @@ Check() {
     generatedfiles="$generatedfiles ${basename}.ll ${basename}.s ${basename}.exe ${basename}.out" &&
     Run "$MICROC" "$1" ">" "${basename}.ll" &&
     Run "$LLC" "-relocation-model=pic" "${basename}.ll" ">" "${basename}.s" &&
-    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "printbig.o" "psharplib.o" "pixel.o" "array.o" "Album.o" "ImageStack.o" &&
+    Run "$CC" "-o" "${basename}.exe" "${basename}.s" "printbig.o" "psharplib.o" "pixel.o" "array2.o" "Album.o" "ImageStack.o" &&
     Run "./${basename}.exe" > "${basename}.out" &&
     Compare ${basename}.out ${reffile}.out ${basename}.diff
 

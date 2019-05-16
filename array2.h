@@ -6,6 +6,6 @@ struct array {
 struct array *newArrayString();
 
 char *getVal(struct array *a, int index);
-void setVal(struct array *a, int index, char *newVal);
+void setVal(struct array *a, char *newVal, int index);
 void resize(struct array *a);
 
