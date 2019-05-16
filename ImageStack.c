@@ -40,35 +40,35 @@ int ImageSize(struct ImageStack *img) {
 
 //push a previously malloc-ed ImageLayer onto a previously malloc-ed ImageStack
 void pushLayer(struct ImageStack *img, struct ImageLayer *lay) {
-    
+
     img->imgArray[img->top] = lay;
     img->top++;
-   
+
     if(img->top == STACKSIZE) {
         img->top = 0;
     }
-} 
+}
 
 //pop the last ImageLayer off the ImageStack. Function will return the popped layer.
-//NOTE: it is the responsibility of the calling function to free the popped layer. 
+//NOTE: it is the responsibility of the calling function to free the popped layer.
 struct ImageLayer *popLayer(struct ImageStack *img) {
 
     struct ImageLayer *lay;
     lay = img->imgArray[img->top -1];
- 
+
     if(img->top == 0) {
         if(img->imgArray[4] == NULL) {
             img->top = 0;
         } else {
             img->top = 4;
         }
-    } else { 
+    } else {
         (img->top)--;
-    }     
+    }
     return lay;
 }
 
-//Free an ImageLayer and all pixel structures associated with it    
+//Free an ImageLayer and all pixel structures associated with it
 void freeLayer(struct ImageLayer *lay) {
 
     for(int i = 0; i < (lay->h * lay->w); i++) {
@@ -100,7 +100,7 @@ void ImageRevert(struct ImageStack *im){
 //create a new Image layer of the requested dimensions
 //to handle memory allocation in image editing functions
 struct ImageLayer *newImageLayer(int hi, int wi) {
-    
+
     struct ImageLayer *lay = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
 
     struct pixel* temp;
@@ -112,7 +112,7 @@ struct ImageLayer *newImageLayer(int hi, int wi) {
     int j = 0;
 
     struct pixel **buf;
-    buf = (struct pixel **)malloc(sizeof(struct pixel *)*(wi * hi)); 
+    buf = (struct pixel **)malloc(sizeof(struct pixel *)*(wi * hi));
 
     lay->imgPixelData = buf;
 
@@ -126,15 +126,15 @@ struct ImageLayer *newImageLayer(int hi, int wi) {
     }
 
     return lay;
-} 
+}
 
-// dir is either 0 or 1. 0: top-down, 1: bottom-up. 
+// dir is either 0 or 1. 0: top-down, 1: bottom-up.
 struct ImageGradient *newImageGradient(struct ImageStack* s, unsigned char dir){
     struct ImageLayer *lay = s->imgArray[s->top-1];
     struct ImageGradient *grad = (struct ImageGradient *)malloc(sizeof(struct ImageGradient));
     struct pixel *temp;
-    struct pixel **buf; 
-    buf = (struct pixel **)malloc(sizeof(struct pixel *) * (lay->h * lay->w)); 
+    struct pixel **buf;
+    buf = (struct pixel **)malloc(sizeof(struct pixel *) * (lay->h * lay->w));
     grad->imgPixelData = buf;
     int j = 0;
     while(j < (lay->h*lay->w)) {
@@ -150,15 +150,15 @@ struct ImageGradient *newImageGradient(struct ImageStack* s, unsigned char dir){
     grad->direction = dir;
     grad->h = lay->h;
     grad->w = lay->w;
-    
+
     return grad;
-    
-} 
+
+}
 struct ImageGradient *newGradFromGrad(struct ImageGradient* lay){
     struct ImageGradient *grad = (struct ImageGradient *)malloc(sizeof(struct ImageGradient));
     struct pixel *temp;
-    struct pixel **buf; 
-    buf = (struct pixel **)malloc(sizeof(struct pixel *) * (lay->h * lay->w)); 
+    struct pixel **buf;
+    buf = (struct pixel **)malloc(sizeof(struct pixel *) * (lay->h * lay->w));
     for (int i = 0 ; i < lay->h * lay->w; i++){
         buf[i] = lay->imgPixelData[i];
     }
@@ -166,10 +166,10 @@ struct ImageGradient *newGradFromGrad(struct ImageGradient* lay){
     grad->imgPixelData = buf;
     grad->h = lay->h;
     grad->w = lay->w;
-    
+
     return grad;
-    
-} 
+
+}
 
 void GradToLayer(struct ImageStack *s, struct ImageGradient *grad){
     struct ImageLayer *lay = (struct ImageLayer *)malloc(sizeof(struct ImageLayer));
@@ -177,7 +177,7 @@ void GradToLayer(struct ImageStack *s, struct ImageGradient *grad){
     lay->w = grad->w;
     lay->imgPixelData = grad->imgPixelData;
     pushLayer(s, lay);
-    
+
 
 }
 
@@ -202,7 +202,7 @@ struct ImageStack *newImageStack() {
 
 //save the top layer of an image to a designated file name
 int save(char const *filename, struct ImageStack *img){
-   
+
     int topLayer = img->top - 1;
 
     struct pixel **data = img->imgArray[topLayer]->imgPixelData;
@@ -211,7 +211,7 @@ int save(char const *filename, struct ImageStack *img){
     int hi = img->imgArray[topLayer]->h;
     int wi = img->imgArray[topLayer]->w;
 
-    temp = (unsigned char *)malloc(sizeof(int)*(wi * hi * 4)); 
+    temp = (unsigned char *)malloc(sizeof(int)*(wi * hi * 4));
 
     int x = 0;
 
@@ -406,6 +406,16 @@ void ImageHSL(struct ImageStack *img, int a, int b, int c) {
 
     pushLayer(img, lay);
 }
+void ImageBrightness(struct ImageStack *img, int amt) {
+
+    int topLevel = img->top - 1;
+    
+    struct ImageLayer *lay;
+    lay = Brightness(img->imgArray[topLevel], amt);
+
+    pushLayer(img, lay);
+}
+
 
 void GradientContrast(struct ImageGradient *img, int lev) {
 
@@ -425,16 +435,16 @@ void GradientHSL(struct ImageGradient *img, int lev, int hsl, int channel){
 /*
 
 int main() {
- 
+
     struct ImageStack* img;
-  
+
     img = open("test.jpg");
     int size;
 
     size = ImageSize(img);
 
     printf("Size: %d\n", size);
- 
+
 
 }
 */
