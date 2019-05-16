@@ -181,6 +181,10 @@ void GradToLayer(struct ImageStack *s, struct ImageGradient *grad){
 
 }
 
+void freeGradient(struct ImageGradient *grad){
+    free(grad);
+}
+
 
 //create new, empty, ImageStack
 struct ImageStack *newImageStack() {

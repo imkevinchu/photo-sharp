@@ -215,6 +215,23 @@ let translate (globals, functions) =
   let getImage_func : L.llvalue = 
       L.declare_function "GetImage" getImage_t the_module in
 
+  let freeGradient_t : L.lltype =
+      L.function_type grad_t [| image_t |] in
+  let freeGradient_func : L.llvalue =
+      L.declare_function "freeGradient" freeGradient_t the_module in
+  let freeAlbum_t : L.lltype =
+      L.function_type album_t [| image_t |] in
+  let freeAlbum_func : L.llvalue =
+      L.declare_function "freeAlbum" freeAlbum_t the_module in
+  let freeImage_t : L.lltype =
+      L.function_type image_t [| image_t |] in
+  let freeImage_func : L.llvalue =
+      L.declare_function "freeImageStack" freeImage_t the_module in
+  let freePixel_t : L.lltype =
+      L.function_type pix_t [| image_t |] in
+  let freePixel_func : L.llvalue =
+      L.declare_function "freePix" freePixel_t the_module in
+
   let removeLast_t : L.lltype = 
       L.function_type i32_t [| album_t |] in
   let removeLast_func : L.llvalue = 
@@ -398,6 +415,14 @@ let translate (globals, functions) =
           L.build_call getImage_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "GetImage" builder
       | SCall ("RemoveLast", [e]) ->
           L.build_call removeLast_func [|(expr builder e) |] "removeLast" builder
+      | SCall ("Free", [e]) ->
+            let (t, _) = e in
+                (match t with
+                    A.Image -> L.build_call freeImage_func [|(expr builder e)|] "freeImageStack" builder
+                    | A.Album -> L.build_call freeAlbum_func [|(expr builder e)|] "freeAlbum" builder
+                    | A.Pixel -> L.build_call freePixel_func [|(expr builder e)|] "freePix" builder
+                    | A.Gradient -> L.build_call freeGradient_func [|(expr builder e)|] "freeGradient" builder)
+
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
 	 let llargs = List.rev (List.map (expr builder) (List.rev args)) in

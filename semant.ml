@@ -71,6 +71,7 @@ let check (globals, functions) =
                                                  ("ApplyGradient", [(Image, "x"); (Gradient, "y")], Void);
                                                  ("gHSL", [(Gradient, "w"); (Int, "x"); (Int, "y"); (Int, "z")], Void);
                                                  ("gContrast", [(Gradient, "x"); (Int, "y")], Void);
+                                                 ("free", [(Default, "x")], Void);
                                                  ]
                                                  
   in

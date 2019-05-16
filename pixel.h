@@ -13,6 +13,7 @@ struct pixel {
 //given values
 struct pixel *makePix();
 struct pixel *setPix(int r, int g, int b, int a);
+void freePix(struct pixel*p);
 
 //Modifiers to set the given pixel to a 
 //Red, Blue, or Green

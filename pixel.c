@@ -22,6 +22,9 @@ struct pixel *setPix(int r, int g, int b, int a) {
 
 }
 
+void freePix(struct pixel*p){
+  free(p);
+}
 int RedPixel(struct pixel *p) {  
 
   p->red = 255;
