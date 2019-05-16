@@ -383,12 +383,17 @@ struct HSL *RGBToHSL(struct pixel* rgb) {
 	float r = (rgb->red / 255.0f);
 	float g = (rgb->green / 255.0f);
 	float b = (rgb->blue / 255.0f);
+    float h,s,l;
 
 	float min = Min(Min(r, g), b);
 	float max = Max(Max(r, g), b);
 	float delta = max - min;
 
-	hsl->L = (max + min) / 2;
+	l = (max + min) / 2;
+    if (l>100) l = 100;
+    else if(l<0) l = 0;
+    hsl->L = l;
+
 
 	if (delta == 0)
 	{
@@ -397,7 +402,10 @@ struct HSL *RGBToHSL(struct pixel* rgb) {
 	}
 	else
 	{
-		hsl->S = (hsl->L <= 0.5) ? (delta / (max + min)) : (delta / (2 - max - min));
+		s = (hsl->L <= 0.5) ? (delta / (max + min)) : (delta / (2 - max - min));
+        if (s>1)s = 1;
+        else if (s<0) s = 0;
+        hsl->S = s;
 
 		float hue;
 
@@ -541,8 +549,8 @@ void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel){
             dest->imgPixelData[i]->red = grad->imgPixelData[i]->red;
             dest->imgPixelData[i]->green = grad->imgPixelData[i]->green;
             dest->imgPixelData[i]->blue = grad->imgPixelData[i]->blue;
-
-            hsl_tmp = RGBToHSL( grad->imgPixelData[i]);
+            if(dest->imgPixelData[i]->red > 245 && dest->imgPixelData[i]->green > 245 && dest->imgPixelData[i]->blue >245){ continue; }
+            else hsl_tmp = RGBToHSL( grad->imgPixelData[i]);
 
             if ( i % grad->w == 0){
                 if(grad->direction == 1){
@@ -574,6 +582,12 @@ void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel){
             r = rgb_tmp->red;
             g = rgb_tmp->green;
             b = rgb_tmp->blue;
+            if(r > 255) r = 255;
+            if(r < 0) r = 0;
+            if(g>255)g=255;
+            if(g<0)g =0;
+            if(b>255)b=255;
+            if(b<0)b=0;
 
 
             if(channel == 1) dest->imgPixelData[i]->red = (rgb_tmp->red);                // only adjust red
@@ -632,6 +646,31 @@ void GradContrast(struct ImageGradient *grad, int level){
     }
     grad->imgPixelData = dest->imgPixelData;
 
+}
+void GradBrightness(struct ImageGradient *grad, int amt){
+
+		struct ImageGradient *dest = newGradFromGrad(grad);
+        
+        double sofar;
+        if(grad->direction == 0) sofar = 0;
+        else sofar = amt;
+
+		for(int i =0; i< grad->h*grad->w; i++) {
+            if(i % grad->w == 0){
+                if(grad->direction == 0){
+                    sofar += (double)amt/grad->h;
+                }
+                else if (grad->direction == 1){
+                    sofar -= (double)amt/grad->h;
+                }
+            }
+            dest->imgPixelData[i]->red = grad->imgPixelData[i]->red + sofar < 255 ? grad->imgPixelData[i]->red + sofar : 255;
+			dest->imgPixelData[i]->blue = grad->imgPixelData[i]->blue + sofar < 255 ? grad->imgPixelData[i]->blue + sofar : 255;
+			dest->imgPixelData[i]->green = grad->imgPixelData[i]->green + sofar < 255 ? grad->imgPixelData[i]->green + sofar : 255;
+			dest->imgPixelData[i]->alpha = grad->imgPixelData[i]->alpha;
+		}
+
+        grad->imgPixelData = dest->imgPixelData;
 }
 
 /*
@@ -730,7 +769,7 @@ int main() {
     struct ImageStack *i;
     i = open("test3.jpg");
     struct ImageGradient *grad = newImageGradient(i, 0);
-    GradHSL(grad, 50, 2, 0);
+    GradBrightness(grad, 30);
     GradToLayer(i, grad);
     //i->imgArray[i->top-1] = HSL(i->imgArray[i->top-1], 150, 2, 1);
     //i->imgArray[i->top-1] = Saturate(i->imgArray[i->top-1], 105);

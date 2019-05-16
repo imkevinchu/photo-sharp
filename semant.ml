@@ -55,7 +55,6 @@ let check (globals, functions) =
                                                  ("ImageSize", [(Image, "x")], Int);
                                                  ("Brightness", [(Image, "x"); (Int, "y")], Void);
                                                  ("Revert", [(Image, "x")], Int);
-                                                 ("RGBImage", [(Image, "x"); (Int, "y")], Void);
                                                  ("GetPixel", [(Image, "x"); (Int, "y")], Pixel);
                                                  ("Tint", [(Image, "x"); (Int, "y")], Void);
                                                  ("Crop", [(Image, "x"); (Float, "y")], Void);
@@ -74,6 +73,7 @@ let check (globals, functions) =
                                                  ("gHSL", [(Gradient, "w"); (Int, "x"); (Int, "y"); (Int, "z")], Void);
                                                  ("gContrast", [(Gradient, "x"); (Int, "y")], Void);
                                                  ("Free", [(Default, "x")], Void);
+                                                 ("gBrightness", [(Gradient, "x"); (Int, "y")], Void);
                                                  ]
 
   in
