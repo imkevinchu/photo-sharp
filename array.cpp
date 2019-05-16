@@ -4,7 +4,7 @@
 #include <vector>
 #include <iostream>
 
-#include "array.hpp"
+#include "array.h"
 #include "pixel.h"
 #include "ImageStack.h"
 #include "psharplib.h"
@@ -12,7 +12,7 @@
 using namespace std;
 
 template <typename T> 
-T getItem(arr<T> *a, int index)
+T getVal(arr<T> *a, int index)
 {
     return a->vec.at(index);
 }
@@ -24,7 +24,7 @@ int getSize(arr<T> *a)
 }
 
 template <typename T>
-void setItem(arr<T> *a, T item, int index)
+void setVal(arr<T> *a, T item, int index)
 {
     if (index == 0 && getSize(a) == 0)
     {
@@ -79,7 +79,7 @@ struct arr<struct Album*> *newArrayAlbum()
     return new arr<struct Album *>;
 }
 
-
+/*
 int main()
 {
     struct pixel * p;
@@ -113,3 +113,4 @@ int main()
 
     return 0;
 }
+*/

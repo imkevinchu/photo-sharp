@@ -37,6 +37,7 @@ let translate (globals, functions) =
   and image_t    = L.pointer_type (L.i32_type context)
   and album_t    = L.pointer_type (L.i32_type context)
   and string_t   = L.pointer_type (L.i8_type context) 
+  and arr_t    = L.pointer_type (L.i32_type context)
   and grad_t     = L.pointer_type (L.i32_type context)
   in
 
@@ -50,7 +51,7 @@ let translate (globals, functions) =
     | A.String -> string_t
     | A.Image -> image_t
     | A.Album -> album_t
-    | A.Array -> string_t
+    | A.Array -> arr_t
     | A.Pixel -> pix_t
     | A.Gradient -> grad_t
   in
@@ -237,6 +238,21 @@ let translate (globals, functions) =
   let removeLast_func : L.llvalue = 
       L.declare_function "removeLast" removeLast_t the_module in
 
+  let newArrayString_t : L.lltype = 
+      L.function_type arr_t [| |] in
+  let newArrayString_func : L.llvalue = 
+      L.declare_function "newArrayString" newArrayString_t the_module in
+
+  let getVal_t : L.lltype = 
+      L.function_type string_t [| arr_t; i32_t |] in
+  let getVal_func : L.llvalue = 
+      L.declare_function "getVal" getVal_t the_module in
+
+  let setVal_t : L.lltype = 
+      L.function_type i32_t [| arr_t; string_t; i32_t |] in
+  let setVal_func : L.llvalue = 
+      L.declare_function "setVal" setVal_t the_module in
+
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -415,6 +431,14 @@ let translate (globals, functions) =
           L.build_call getImage_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "GetImage" builder
       | SCall ("RemoveLast", [e]) ->
           L.build_call removeLast_func [|(expr builder e) |] "removeLast" builder
+      | SCall ("newArray", []) ->
+          L.build_call newArrayString_func [| |] "newArrayString" builder
+      | SCall ("getVal", e) ->
+          L.build_call getVal_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "getVal" builder
+      | SCall ("setVal", e) ->
+          L.build_call setVal_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))); (expr builder (List.hd (List.tl (List.tl e))))|] "setVal" builder
+ 
+
       | SCall ("Free", [e]) ->
             let (t, _) = e in
                 (match t with

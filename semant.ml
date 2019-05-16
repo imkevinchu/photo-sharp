@@ -66,6 +66,9 @@ let check (globals, functions) =
                                                  ("AlbumSize", [(Album, "x")], Int);
                                                  ("RemoveLast", [(Album, "x")], Void);
                                                  ("GetImage", [(Album, "x"); (Int, "y")], Image);
+                                                 ("newArray", [], Array);
+                                                 ("getVal", [(Array, "x"); (Int, "y")], String);
+                                                 ("setVal", [(Array, "x"); (String, "y"); (Int, "z")], Void);
                                                  ("save", [(String, "x"); (Image, "y")], Void);
                                                  ("NewGradient", [(Image, "x"); (Int, "y")], Gradient);
                                                  ("ApplyGradient", [(Image, "x"); (Gradient, "y")], Void);

@@ -1,0 +1,6 @@
+preset int main():
+{
+    arr a
+    a = []
+    a[1] = "hello"
+}

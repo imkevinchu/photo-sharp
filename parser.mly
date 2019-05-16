@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token DOT SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN PIXKEY IN 
+%token LBRACK RBRACK DOT SEMI COL SEMICOL LPAREN RPAREN LBRACE RBRACE COMMA PLUS MINUS TIMES DIVIDE ASSIGN PIXKEY IN 
 %token NOT EQ NEQ LT LEQ GT GEQ AND OR
 %token RETURN IF ELSE FOR WHILE INT BOOL FLOAT VOID STRING IMAGE GRADIENT ALBUM ARR PRESET PIXEL 
 %token <int> LITERAL
@@ -118,7 +118,10 @@ expr:
   | NOT expr         { Unop(Not, $2)          }
   | ID ASSIGN expr   { Assign($1, $3)         }
   | expr DOT ID LPAREN args_opt RPAREN { Call($3, $1 :: $5) }
+  | LBRACK RBRACK    { Call("newArray", []) }
   | ID LPAREN args_opt RPAREN { Call($1, $3)  }
+  | expr LBRACK args_opt RBRACK ASSIGN expr          { Call("setVal", ($1 :: ($6 :: $3))) }
+  | expr LBRACK args_opt RBRACK           { Call("getVal", ($1 :: $3)) }
   | LPAREN expr RPAREN { $2                   }
   | LPAREN expr RPAREN SEMI { $2                   }
 

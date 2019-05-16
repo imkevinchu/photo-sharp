@@ -1,6 +1,4 @@
 //Define the Array class
-#ifndef ARRAY_H
-#define ARRAY_H
 
 #include <vector>
 
@@ -30,4 +28,3 @@ struct arr<struct ImageStack *> *newArrayImageStack();
 struct arr<struct Album*> *newArrayAlbum();
 
 
-#endif 
