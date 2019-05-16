@@ -1,4 +1,0 @@
-preset int main():
-{
-  hello(1)
-}

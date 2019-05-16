@@ -43,7 +43,6 @@ let check (globals, functions) =
 			                         ("printb", [(Bool, "x")], Void);
 			                         ("printf", [(Float, "x")], Void);
 			                         ("printbig", [(Int, "x")], Void);
-                                                 ("hello", [(Int, "x")], Int);
                                                  ("open", [(String, "x")], Image);
                                                  ("Contrast", [(Image, "x"); (Int, "y")], Void);
                                                  ("Saturate", [(Image, "x"); (Int, "y")], Void);

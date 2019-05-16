@@ -438,12 +438,9 @@ struct ImageLayer* HSL(struct ImageLayer *m, int factor, int hsl, int channel){
             }
 
             rgb_tmp = HSLToRGB(hsl_tmp);
-            r = rgb_tmp->red > 255 ?  rgb_tmp->red : 255;
-            g = rgb_tmp->green > 255 ?  rgb_tmp->green : 255;
-            b = rgb_tmp->blue > 255 ?  rgb_tmp->blue : 255;
-            r = rgb_tmp->red < 0 ?  rgb_tmp->red : 0;
-            g = rgb_tmp->green < 0 ?  rgb_tmp->green : 0;
-            b = rgb_tmp->blue < 0 ?  rgb_tmp->blue : 0;
+            r = rgb_tmp->red < 255 ?  rgb_tmp->red : 255;
+            g = rgb_tmp->green < 255 ?  rgb_tmp->green : 255;
+            b = rgb_tmp->blue < 255 ?  rgb_tmp->blue : 255;
             
 
             if(channel == 1) dest->imgPixelData[i]->red = r;                // only adjust red

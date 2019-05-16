@@ -8,7 +8,7 @@ test : all testall.sh
 # to test linking external code
 
 .PHONY : all
-all : microc.native printbig.o hello.o pixel.o Album.o ImageStack.o psharplib.o 
+all : microc.native printbig.o pixel.o Album.o ImageStack.o psharplib.o 
 
 # "make microc.native" compiles the compiler
 #
@@ -34,9 +34,6 @@ clean :
 
 printbig : printbig.c
 	cc -o printbig -DBUILD_TEST printbig.c
-
-hello : hello.c
-	cc -o hello -DBUILD_TEST hello.c
 
 psharplib: psharplib.c psharplib.h ImageStack.h pixel.h Album.h
 	cc -o psharplib -DBUILD_TEST psharplib.c
@@ -70,7 +67,6 @@ TESTFILES = $(TESTS:%=test-%.mc) $(TESTS:%=test-%.out) \
 TARFILES = ast.ml sast.ml codegen.ml Makefile _tags microc.ml microcparse.mly \
 	README scanner.mll semant.ml testall.sh \
 	printbig.c arcade-font.pbm font2c \
-        hello.c \
         psharplib.c \
         ImageStack.c \
         pixel.c \
