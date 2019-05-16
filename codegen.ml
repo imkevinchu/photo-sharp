@@ -221,11 +221,11 @@ let translate (globals, functions) =
       L.declare_function "GetImage" getImage_t the_module in
 
   let freeGradient_t : L.lltype =
-      L.function_type grad_t [| image_t |] in
+      L.function_type grad_t [| grad_t |] in
   let freeGradient_func : L.llvalue =
       L.declare_function "freeGradient" freeGradient_t the_module in
   let freeAlbum_t : L.lltype =
-      L.function_type album_t [| image_t |] in
+      L.function_type album_t [| album_t |] in
   let freeAlbum_func : L.llvalue =
       L.declare_function "freeAlbum" freeAlbum_t the_module in
   let freeImage_t : L.lltype =
@@ -233,7 +233,7 @@ let translate (globals, functions) =
   let freeImage_func : L.llvalue =
       L.declare_function "freeImageStack" freeImage_t the_module in
   let freePixel_t : L.lltype =
-      L.function_type pix_t [| image_t |] in
+      L.function_type pix_t [| pix_t |] in
   let freePixel_func : L.llvalue =
       L.declare_function "freePix" freePixel_t the_module in
 

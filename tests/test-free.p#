@@ -1,0 +1,12 @@
+preset int main():
+{
+    Image i
+    Album a
+    Pixel p
+    Gradient g
+    Free(i)
+    Free(a)
+    Free(p)
+    Free(g)
+    return 0
+}
