@@ -7,6 +7,7 @@
 #include "array.hpp"
 #include "pixel.h"
 #include "ImageStack.h"
+#include "psharplib.h"
 
 using namespace std;
 
@@ -80,10 +81,6 @@ int main()
     img = open("test.jpg");
     int size;
 
-    size = ImageSize(img);
-
-    printf("Size: %d\n", size);
-
     //struct arr 
     arr<int> Array;
     arr<struct ImageStack *>* array = newArrayImageStack();
@@ -98,41 +95,3 @@ int main()
 
     return 0;
 }
-
-/*
-template <typename T>
-arr<T>::arr(string name )
-{
-}
-
-template <typename T>
-vector<T> * arr<T>::pointer(vector<T> vector)
-{
-    return &vector;
-}
-
-template <typename T>
-int arr<T>::indexArr(int index)
-{
-    return vector.at(index);
-}
-
-template <typename T>
-void arr<T>::removeArr(int index)
-{
-    vector.erase(index);
-
-}
-
-template <typename T>
-void arr<T>::setArr(int index, T object)
-{
-    vector[index] = object;
-}
-
-template <typename T>
-int arr<T>::sizeArr()
-{
-    return vector.size();
-}
-*/
