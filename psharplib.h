@@ -28,6 +28,7 @@ struct ImageLayer *RGBImage(struct ImageLayer *img, int value);
 
 void GradContrast(struct ImageGradient *grad, int level);
 void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel);
+void GradBrightness(struct ImageGradient *grad, int amt);
 void GradToLayer(struct ImageStack *s, struct ImageGradient *grad);
 
 struct HSL *RGBToHSL(struct pixel* rgb);
