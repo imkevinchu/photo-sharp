@@ -4,7 +4,7 @@ preset int main():
     Album a
     Pixel p
     Gradient g
-    Free(g)
+    Free(i)
     Free(a)
     Free(p)
     Free(g)
