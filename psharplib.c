@@ -316,7 +316,7 @@ struct ImageLayer *Brightness(struct ImageLayer *img, int amt){
 
 		struct ImageLayer *dest = newImageLayer(img->h, img->w);
 
-		for(int i =0; i< img->h*img->w; i++) {
+		for(int i =0; i < img->h*img->w; i++) {
 			dest->imgPixelData[i]->red = img->imgPixelData[i]->red + amt < 255 ? img->imgPixelData[i]->red + amt : 255;
 			dest->imgPixelData[i]->blue = img->imgPixelData[i]->blue + amt < 255 ? img->imgPixelData[i]->blue + amt : 255;
 			dest->imgPixelData[i]->green = img->imgPixelData[i]->green + amt < 255 ? img->imgPixelData[i]->green + amt : 255;
@@ -324,6 +324,50 @@ struct ImageLayer *Brightness(struct ImageLayer *img, int amt){
 		}
 
 		return dest;
+}
+
+// ***********************
+// c is the character that represents the color image : g - green, b - blue, r -red
+// ***********************
+struct ImageLayer *RGBImage(struct ImageLayer *img, int value){
+
+		struct ImageLayer *dest = newImageLayer(img->h, img->w);
+
+		if (value == 1) {
+
+			for(int i =0; i < img->h*img->w; i++) {
+				dest->imgPixelData[i]->red = img->imgPixelData[i]->red;
+				dest->imgPixelData[i]->blue = 0;
+				dest->imgPixelData[i]->green = 0;
+				dest->imgPixelData[i]->alpha = img->imgPixelData[i]->alpha;
+			}
+			return dest;
+		}
+		else if (value == 2) {
+
+			for(int i =0; i < img->h*img->w; i++) {
+				dest->imgPixelData[i]->red = 0;
+				dest->imgPixelData[i]->blue = 0;
+				dest->imgPixelData[i]->green = img->imgPixelData[i]->green;
+				dest->imgPixelData[i]->alpha = img->imgPixelData[i]->alpha;
+			}
+			return dest;
+
+		}
+		else if (value == 3) {
+
+			for(int i =0; i < img->h*img->w; i++) {
+				dest->imgPixelData[i]->red = 0;
+				dest->imgPixelData[i]->blue = img->imgPixelData[i]->blue;
+				dest->imgPixelData[i]->green = 0;
+				dest->imgPixelData[i]->alpha = img->imgPixelData[i]->alpha;
+			}
+			return dest;
+
+		}
+		else {
+			return dest;
+		}
 }
 
 //  **********************

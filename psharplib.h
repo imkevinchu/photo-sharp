@@ -24,6 +24,7 @@ struct ImageLayer *Tint(struct ImageLayer *img, int level);
 struct ImageLayer *Crop(struct ImageLayer *img, float pct);
 struct ImageLayer *Kelvin(struct ImageLayer *img, float K);
 struct ImageLayer *Brightness(struct ImageLayer *img, int amt);
+struct ImageLayer *RGBImage(struct ImageLayer *img, int value);
 
 void GradContrast(struct ImageGradient *grad, int level);
 void GradHSL(struct ImageGradient *grad, int factor, int hsl, int channel);

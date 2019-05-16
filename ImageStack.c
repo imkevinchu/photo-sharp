@@ -409,12 +409,21 @@ void ImageHSL(struct ImageStack *img, int a, int b, int c) {
 void ImageBrightness(struct ImageStack *img, int amt) {
 
     int topLevel = img->top - 1;
-    
+
     struct ImageLayer *lay;
     lay = Brightness(img->imgArray[topLevel], amt);
 
     pushLayer(img, lay);
 }
+  void ImageRGBImage(struct ImageStack *img, int value) {
+
+    int topLevel = img->top - 1;
+
+    struct ImageLayer *lay;
+    lay = RGBImage(img->imgArray[topLevel], value);
+
+    pushLayer(img, lay);
+  }
 
 
 void GradientContrast(struct ImageGradient *img, int lev) {

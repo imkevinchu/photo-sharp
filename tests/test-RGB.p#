@@ -1,0 +1,8 @@
+preset int main():
+{
+    Image img
+    img = open("test.jpg")
+    save("./outputs/beforeRGBImage.jpg", img)
+    RGBImage(img, 2)
+    save("./outputs/afterRGBImage.jpg", img)
+}
