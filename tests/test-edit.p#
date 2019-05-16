@@ -1,0 +1,72 @@
+preset Image brighten(Image i):
+{  
+    return i
+}
+preset Image addUpperGradient(Image i):
+{
+    '''
+    this function applies a bottom-top gradient on the image and
+    adjusts HSL and brightness values
+    '''
+
+    Gradient g
+    g = i.NewGradient(1)
+
+    g.gBrightness(10)
+    g.gHSL(130, 2, 0)
+
+    i.ApplyGradient(g)
+    save("image.jpg", i)
+    return i   
+}
+
+preset Image addLowerGradient(Image i):
+{   
+    '''
+    this function applies a top-bottom gradient on the image, and adjusts some HSL values
+    '''
+
+    Gradient h
+    h = i.NewGradient(0)
+
+    h.gHSL(105, 1, 2)    
+    h.gHSL(220, 2, 1)   
+    h.gHSL(150, 2, 3)   
+    h.gHSL(105, 3, 0)  
+
+    i.ApplyGradient(h)
+    save("image.jpg", i)
+    return i
+}
+preset Image myEdit(Image img):
+{       
+    img.HSL(120, 2, 0)
+    save("image.jpg", img)
+    img = addLowerGradient(img) 
+    img = addUpperGradient(img)
+    return img
+}
+
+preset int main():
+{
+    Image x
+    Image y
+    Image z
+    Image im
+    Gradient d
+    int idx
+    idx = 0
+    x = open("braies.jpg")
+    x = myEdit(x)
+    save("image1.jpg", x)
+    Free(x)   
+    y = open("carezza.jpg")
+    y = myEdit(y)
+    save("image2.jpg", y)
+    Free(y)   
+    z = open("phiphi.jpg")
+    z = myEdit(z)
+    save("image3.jpg", z)
+    Free(z)
+    return 0
+}
