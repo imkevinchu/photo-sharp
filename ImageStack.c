@@ -198,8 +198,9 @@ void GradToLayer(struct ImageStack *s, struct ImageGradient *grad){
 void freeGradient(struct ImageGradient *grad){
     
     for(int i = 0 ; i< grad->h*grad->w; i++){
-        freePix(grad->imgPixelData[i]);
+        free(grad->imgPixelData[i]);
     }
+    free(grad);
 }
 
 
