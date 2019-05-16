@@ -57,6 +57,7 @@ let check (globals, functions) =
                                                  ("Revert", [(Image, "x")], Int);
                                                  ("GetPixel", [(Image, "x"); (Int, "y")], Pixel);
                                                  ("Tint", [(Image, "x"); (Int, "y")], Void);
+                                                 ("RGBImage", [(Image, "x"); (Int, "y")], Void);
                                                  ("Crop", [(Image, "x"); (Float, "y")], Void);
                                                  ("GetPix", [(Image, "x"); (Int, "y")], Image);
                                                  ("SaturatePixel", [(Pixel, "x"); (Int, "y")], Pixel);

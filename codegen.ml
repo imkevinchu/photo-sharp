@@ -36,7 +36,7 @@ let translate (globals, functions) =
   and pix_t      = L.pointer_type (L.i32_type context)
   and image_t    = L.pointer_type (L.i32_type context)
   and album_t    = L.pointer_type (L.i32_type context)
-  and string_t   = L.pointer_type (L.i8_type context) 
+  and string_t   = L.pointer_type (L.i8_type context)
   and arr_t    = L.pointer_type (L.i32_type context)
   and grad_t     = L.pointer_type (L.i32_type context)
   in
@@ -152,6 +152,11 @@ let translate (globals, functions) =
   let tint_func : L.llvalue =
       L.declare_function "ImageTint" tint_t the_module in
 
+  let rgb_t : L.lltype =
+      L.function_type i32_t [| image_t; i32_t |] in
+  let rgb_func : L.llvalue =
+      L.declare_function "ImageRGBImage" rgb_t the_module in
+
   let hsl_t : L.lltype =
       L.function_type i32_t [| image_t; i32_t; i32_t; i32_t|] in
   let hsl_func : L.llvalue =
@@ -247,22 +252,22 @@ let translate (globals, functions) =
   let removeLast_func : L.llvalue =
       L.declare_function "removeLast" removeLast_t the_module in
 
-  let newArrayString_t : L.lltype = 
+  let newArrayString_t : L.lltype =
       L.function_type arr_t [| |] in
-  let newArrayString_func : L.llvalue = 
+  let newArrayString_func : L.llvalue =
       L.declare_function "newArrayString" newArrayString_t the_module in
 
-  let getVal_t : L.lltype = 
+  let getVal_t : L.lltype =
       L.function_type string_t [| arr_t; i32_t |] in
-  let getVal_func : L.llvalue = 
+  let getVal_func : L.llvalue =
       L.declare_function "getVal" getVal_t the_module in
 
-  let setVal_t : L.lltype = 
+  let setVal_t : L.lltype =
       L.function_type i32_t [| arr_t; string_t; i32_t |] in
-  let setVal_func : L.llvalue = 
+  let setVal_func : L.llvalue =
       L.declare_function "setVal" setVal_t the_module in
 
-  (* Define each function (arguments and return type) so we can 
+  (* Define each function (arguments and return type) so we can
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
     let function_decl m fdecl =
@@ -408,6 +413,8 @@ let translate (globals, functions) =
           L.build_call reflectX_func [| (expr builder e) |] "ImageReflectX" builder
       | SCall ("Tint", e) ->
           L.build_call tint_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageTint" builder
+      | SCall ("RGBImage", e) ->
+          L.build_call rgb_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageRGBImage" builder
       | SCall ("Crop", e) ->
           L.build_call crop_func [| (expr builder (List.hd e)); (expr builder (List.hd (List.tl e)))|] "ImageCrop" builder
       | SCall ("Brightness", e) ->
@@ -450,7 +457,7 @@ let translate (globals, functions) =
           L.build_call getVal_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))) |] "getVal" builder
       | SCall ("setVal", e) ->
           L.build_call setVal_func [|(expr builder (List.hd e)); (expr builder (List.hd (List.tl e))); (expr builder (List.hd (List.tl (List.tl e))))|] "setVal" builder
- 
+
 
       | SCall ("Free", [e]) ->
             let (t, _) = e in

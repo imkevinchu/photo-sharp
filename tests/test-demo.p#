@@ -1,0 +1,65 @@
+preset Image firstEdits(Image img):
+{
+    '''
+    Apply significant brightness and noise
+    '''
+    Brightness(img, 100)
+    AddNoise(img, 100.0, 20.0)
+    save("image.jpg", img)
+    return img
+}
+preset Image secondEdits(Image img):
+{
+    '''
+    Apply crop and turn image red
+    '''
+    Crop(img, 50.0)
+    RGBImage(img, 3)
+    save("image.jpg", img)
+    return img
+}
+preset Image thirdEdits(Image img):
+{
+    '''
+    rotate 180 degrees
+    '''
+    Rotate90(img)
+    Rotate90(img)
+    return img
+}
+preset Image fourthEdits(Image img):
+{
+    '''
+    add noise
+    '''
+    Saturate(img, 0)
+    return img
+}
+preset int main():
+{
+    Image x
+    Image y
+    Image z
+    Image r
+    x = open("braies.jpg")
+    save("./outputs/testing1.jpg", x)
+    x = firstEdits(x)
+    save("./outputs/testing.jpg", x)
+    Free(x)
+    y = open("carezza.jpg")
+    save("./outputs/testing1.jpg", y)
+    y = secondEdits(y)
+    save("./outputs/testing.jpg", y)
+    Free(y)
+    z = open("phiphi.jpg")
+    save("./outputs/testing1.jpg", z)
+    z = thirdEdits(z)
+    save("./outputs/testing.jpg", z)
+    Free(z)
+    r = open("large.jpg")
+    save("./outputs/testing1.jpg", r)
+    r = fourthEdits(r)
+    save("./outputs/testing.jpg", r)
+    Free(r)
+    return 0
+}
